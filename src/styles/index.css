@@ -1,0 +1,241 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #f7f6f3;
+  --bg-secondary: #eae8e0;
+  --bg-card: #ffffff;
+  --text-primary: #1c1a16;
+  --text-secondary: #635a4e;
+  --text-muted: #9a8f7c;
+  --border: #d5d0c4;
+  --vermillion: #c23616;
+  --gold: #c8a45a;
+  --accent-green: #27ae60;
+  --accent-blue: #2980b9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 15px;
+}
+
+body {
+  font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+
+.loading-shimmer {
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-card) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Table styles */
+.case-table th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #332e27;
+  color: #eae8e0;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: none;
+}
+
+.case-table tr {
+  transition: background 0.15s ease;
+}
+
+.case-table tbody tr:hover {
+  background: rgba(200, 164, 90, 0.08);
+}
+
+.case-table td {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.badge-criminal {
+  background: rgba(194, 54, 22, 0.1);
+  color: var(--vermillion);
+  border: 1px solid rgba(194, 54, 22, 0.2);
+}
+
+.badge-civil {
+  background: rgba(41, 128, 185, 0.1);
+  color: var(--accent-blue);
+  border: 1px solid rgba(41, 128, 185, 0.2);
+}
+
+.badge-guilty {
+  background: rgba(194, 54, 22, 0.08);
+  color: #8b2510;
+}
+
+.badge-innocent {
+  background: rgba(39, 174, 96, 0.08);
+  color: #1e8449;
+}
+
+.badge-dismissed {
+  background: rgba(154, 143, 124, 0.12);
+  color: var(--text-secondary);
+}
+
+.badge-won {
+  background: rgba(39, 174, 96, 0.08);
+  color: #1e8449;
+}
+
+/* Stat card */
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+}
+
+.stat-card.vermillion::before { background: var(--vermillion); }
+.stat-card.gold::before { background: var(--gold); }
+.stat-card.blue::before { background: var(--accent-blue); }
+.stat-card.green::before { background: var(--accent-green); }
+
+/* Search input */
+.search-input {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.625rem 1rem 0.625rem 2.5rem;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200, 164, 90, 0.15);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Filter dropdown */
+.filter-select {
+  appearance: none;
+  background: var(--bg-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a8f7c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+  border: 1px solid var(--border);
+  padding: 0.625rem 2rem 0.625rem 0.75rem;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+/* Tooltip */
+.tooltip-wrapper {
+  position: relative;
+}
+.tooltip-wrapper .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  border-radius: 2px;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  z-index: 50;
+}
+.tooltip-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}

@@ -1,0 +1,80 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+
+export default function RecentCases({ cases }) {
+  return (
+    <div className="bg-white border border-[var(--border)]">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
+        <h3 className="font-display text-sm font-bold tracking-wide">
+          近期重要案件
+        </h3>
+        <Link
+          to="/cases"
+          className="text-xs text-[var(--vermillion)] hover:underline flex items-center gap-1"
+        >
+          查看全部 <ArrowRight size={12} />
+        </Link>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="case-table w-full text-sm">
+          <thead>
+            <tr>
+              <th className="text-left px-5 py-3 text-xs">案號</th>
+              <th className="text-left px-3 py-3 text-xs">法院</th>
+              <th className="text-center px-3 py-3 text-xs">類型</th>
+              <th className="text-center px-3 py-3 text-xs">結果</th>
+              <th className="text-left px-3 py-3 text-xs">涉案技術</th>
+              <th className="text-right px-5 py-3 text-xs">賠償金額</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cases.map((c) => (
+              <tr key={c.id}>
+                <td className="px-5 py-3">
+                  <Link
+                    to={`/cases/${encodeURIComponent(c.id)}`}
+                    className="text-[var(--vermillion)] hover:underline font-medium text-xs"
+                  >
+                    {c.caseNumber}
+                  </Link>
+                </td>
+                <td className="px-3 py-3 text-xs text-[var(--text-secondary)]">
+                  {c.court}
+                </td>
+                <td className="px-3 py-3 text-center">
+                  <span
+                    className={`badge ${
+                      c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'
+                    }`}
+                  >
+                    {c.caseType}
+                  </span>
+                </td>
+                <td className="px-3 py-3 text-center">
+                  <ResultBadge result={c.result} />
+                </td>
+                <td className="px-3 py-3 text-xs text-[var(--text-secondary)]">
+                  {c.technology}
+                </td>
+                <td className="px-5 py-3 text-right text-xs font-mono font-medium">
+                  {c.damagesFormatted}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ResultBadge({ result }) {
+  let cls = 'badge ';
+  if (result === '有罪' || result === '原告勝訴') cls += 'badge-guilty';
+  else if (result === '無罪') cls += 'badge-innocent';
+  else if (result === '駁回') cls += 'badge-dismissed';
+  else if (result === '部分勝訴') cls += 'badge-won';
+  else cls += 'bg-[rgba(41,128,185,0.08)] text-[var(--accent-blue)]';
+  return <span className={cls}>{result}</span>;
+}
