@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ExternalLink } from 'lucide-react';
+import { getLawsnoteUrl } from '../hooks/useData';
 
 export default function RecentCases({ cases }) {
   return (
-    <div className="bg-white border border-[var(--border)]">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
+    <div className="card">
+      <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-[var(--border)]">
         <h3 className="font-display text-sm font-bold tracking-wide">
           近期重要案件
         </h3>
@@ -16,22 +17,23 @@ export default function RecentCases({ cases }) {
           查看全部 <ArrowRight size={12} />
         </Link>
       </div>
-      <div className="overflow-x-auto">
+      <div className="table-container">
         <table className="case-table w-full text-sm">
           <thead>
             <tr>
-              <th className="text-left px-5 py-3 text-xs">案號</th>
+              <th className="text-left px-4 sm:px-5 py-3 text-xs">案號</th>
               <th className="text-left px-3 py-3 text-xs">法院</th>
               <th className="text-center px-3 py-3 text-xs">類型</th>
               <th className="text-center px-3 py-3 text-xs">結果</th>
               <th className="text-left px-3 py-3 text-xs">涉案技術</th>
-              <th className="text-right px-5 py-3 text-xs">賠償金額</th>
+              <th className="text-right px-4 sm:px-5 py-3 text-xs">賠償金額</th>
+              <th className="text-center px-3 py-3 text-xs">判決書</th>
             </tr>
           </thead>
           <tbody>
             {cases.map((c) => (
               <tr key={c.id}>
-                <td className="px-5 py-3">
+                <td className="px-4 sm:px-5 py-3">
                   <Link
                     to={`/cases/${encodeURIComponent(c.id)}`}
                     className="text-[var(--vermillion)] hover:underline font-medium text-xs"
@@ -43,11 +45,7 @@ export default function RecentCases({ cases }) {
                   {c.court}
                 </td>
                 <td className="px-3 py-3 text-center">
-                  <span
-                    className={`badge ${
-                      c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'
-                    }`}
-                  >
+                  <span className={`badge ${c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'}`}>
                     {c.caseType}
                   </span>
                 </td>
@@ -57,8 +55,19 @@ export default function RecentCases({ cases }) {
                 <td className="px-3 py-3 text-xs text-[var(--text-secondary)]">
                   {c.technology}
                 </td>
-                <td className="px-5 py-3 text-right text-xs font-mono font-medium">
+                <td className="px-4 sm:px-5 py-3 text-right text-xs font-mono font-medium">
                   {c.damagesFormatted}
+                </td>
+                <td className="px-3 py-3 text-center">
+                  <a
+                    href={getLawsnoteUrl(c)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="external-link-icon text-[10px]"
+                    title="在 Lawsnote 查看判決書"
+                  >
+                    <ExternalLink size={12} />
+                  </a>
                 </td>
               </tr>
             ))}

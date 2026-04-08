@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, Scale, Tag, AlertTriangle, Users, FileText } from 'lucide-react';
-import { useCase } from '../hooks/useData';
+import { ArrowLeft, Calendar, Scale, Tag, AlertTriangle, Users, FileText, ExternalLink, Clock, Building2, Bookmark } from 'lucide-react';
+import { useCase, getLawsnoteUrl, getJudgmentUrl } from '../hooks/useData';
 
 export default function CaseDetail() {
   const { id } = useParams();
@@ -19,6 +19,11 @@ export default function CaseDetail() {
       </div>
     );
 
+  // Calculate duration if both dates exist
+  const duration = c.filingDate && c.judgmentDate
+    ? Math.round((new Date(c.judgmentDate) - new Date(c.filingDate)) / (1000 * 60 * 60 * 24))
+    : null;
+
   return (
     <div className="animate-fade-in-up max-w-4xl mx-auto">
       {/* Breadcrumb */}
@@ -30,35 +35,63 @@ export default function CaseDetail() {
       </Link>
 
       {/* Header */}
-      <div className="bg-white border border-[var(--border)] p-6 mb-4">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span
-                className={`badge ${
-                  c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'
-                }`}
-              >
+      <div className="card p-4 sm:p-6 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className={`badge ${c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'}`}>
                 {c.caseType}
               </span>
               <ResultBadge result={c.result} />
               <span className="text-[10px] px-2 py-0.5 bg-[var(--bg-secondary)] text-[var(--text-muted)]">
                 {c.status}
               </span>
+              {duration && (
+                <span className="text-[10px] px-2 py-0.5 bg-[var(--bg-secondary)] text-[var(--text-muted)] flex items-center gap-1">
+                  <Clock size={10} />
+                  審理 {duration} 天
+                </span>
+              )}
             </div>
-            <h1 className="font-display text-xl font-bold mb-1">{c.caseNumber}</h1>
-            <p className="text-sm text-[var(--text-secondary)]">{c.court}</p>
+            <h1 className="font-display text-lg sm:text-xl font-bold mb-1 break-all">{c.caseNumber}</h1>
+            <p className="text-sm text-[var(--text-secondary)] flex items-center gap-1.5">
+              <Building2 size={13} />
+              {c.court}
+            </p>
           </div>
-          {c.damages > 0 && (
-            <div className="text-right">
-              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-0.5">
-                損害賠償
-              </p>
-              <p className="font-display text-2xl font-bold text-[var(--vermillion)]">
-                {c.damagesFormatted}
-              </p>
+          <div className="flex flex-col items-start sm:items-end gap-2">
+            {c.damages > 0 && (
+              <div className="sm:text-right">
+                <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-0.5">
+                  損害賠償
+                </p>
+                <p className="font-display text-xl sm:text-2xl font-bold text-[var(--vermillion)]">
+                  {c.damagesFormatted}
+                </p>
+              </div>
+            )}
+            {/* External links */}
+            <div className="flex gap-2">
+              <a
+                href={getLawsnoteUrl(c)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[var(--bg-secondary)] text-[var(--accent-blue)] hover:text-[var(--vermillion)] border border-[var(--border)] transition-colors"
+              >
+                <ExternalLink size={12} />
+                Lawsnote 查看判決
+              </a>
+              <a
+                href={getJudgmentUrl(c)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[var(--bg-secondary)] text-[var(--accent-blue)] hover:text-[var(--vermillion)] border border-[var(--border)] transition-colors"
+              >
+                <ExternalLink size={12} />
+                司法院裁判書
+              </a>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
@@ -77,7 +110,7 @@ export default function CaseDetail() {
               {c.keyIssues.map((issue) => (
                 <span
                   key={issue}
-                  className="text-xs px-3 py-1.5 bg-[rgba(200,164,90,0.1)] text-[#a07830] border border-[rgba(200,164,90,0.2)]"
+                  className="text-xs px-3 py-1.5 bg-[rgba(200,164,90,0.1)] text-[var(--gold)] border border-[rgba(200,164,90,0.2)]"
                 >
                   {issue}
                 </span>
@@ -127,6 +160,7 @@ export default function CaseDetail() {
               <InfoRow label="產業類別" value={c.industryCategory} />
               <InfoRow label="起訴日期" value={c.filingDate || '—'} />
               <InfoRow label="判決日期" value={c.judgmentDate || '尚未判決'} />
+              {duration && <InfoRow label="審理天數" value={`${duration} 天`} />}
               <InfoRow label="資料來源" value={c.source} />
             </div>
           </Section>
@@ -138,7 +172,7 @@ export default function CaseDetail() {
 
 function Section({ title, icon: Icon, children }) {
   return (
-    <div className="bg-white border border-[var(--border)] p-5">
+    <div className="card p-4 sm:p-5">
       <h3 className="font-display text-xs font-bold tracking-wide flex items-center gap-2 mb-3 text-[var(--text-secondary)] uppercase">
         <Icon size={13} />
         {title}
@@ -152,7 +186,7 @@ function InfoRow({ label, value }) {
   return (
     <div className="flex justify-between items-center py-1 border-b border-dashed border-[var(--border)] last:border-0">
       <span className="text-[var(--text-muted)]">{label}</span>
-      <span className="font-medium text-[var(--text-primary)]">{value}</span>
+      <span className="font-medium text-[var(--text-primary)] text-right max-w-[60%]">{value}</span>
     </div>
   );
 }

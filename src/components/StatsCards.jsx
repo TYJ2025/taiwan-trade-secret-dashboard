@@ -1,25 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FileText, Gavel, Scale, TrendingUp } from 'lucide-react';
+
+function AnimatedNumber({ value, duration = 800 }) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef(null);
+  const numValue = typeof value === 'number' ? value : parseInt(value) || 0;
+
+  useEffect(() => {
+    if (numValue === 0) return;
+    let start = null;
+    const animate = (ts) => {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(eased * numValue));
+      if (progress < 1) ref.current = requestAnimationFrame(animate);
+    };
+    ref.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(ref.current);
+  }, [numValue, duration]);
+
+  return <>{display}</>;
+}
 
 export default function StatsCards({ stats }) {
   const cards = [
     {
       label: '案件總數',
       value: stats.totalCases,
+      displayValue: stats.totalCases,
+      animated: true,
       sub: `刑事 ${stats.criminalCases} / 民事 ${stats.civilCases}`,
       icon: FileText,
       accent: 'vermillion',
     },
     {
       label: '定罪率',
-      value: `${(stats.convictionRate * 100).toFixed(0)}%`,
+      value: stats.convictionRate,
+      displayValue: `${(stats.convictionRate * 100).toFixed(0)}%`,
+      animated: false,
       sub: `${stats.pendingCases} 件審理中`,
       icon: Gavel,
       accent: 'gold',
     },
     {
       label: '損害賠償總額',
-      value: formatCurrency(stats.totalDamagesAwarded),
+      value: stats.totalDamagesAwarded,
+      displayValue: formatCurrency(stats.totalDamagesAwarded),
+      animated: false,
       sub: `平均 ${formatCurrency(stats.averageDamages)}`,
       icon: TrendingUp,
       accent: 'blue',
@@ -27,6 +55,8 @@ export default function StatsCards({ stats }) {
     {
       label: '平均審理天數',
       value: stats.medianCaseDuration,
+      displayValue: stats.medianCaseDuration,
+      animated: true,
       sub: '自起訴至判決',
       icon: Scale,
       accent: 'green',
@@ -34,22 +64,22 @@ export default function StatsCards({ stats }) {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {cards.map((card, i) => (
         <div
           key={card.label}
           className={`stat-card ${card.accent} animate-fade-in-up stagger-${i + 1}`}
         >
-          <div className="flex items-start justify-between mb-3">
-            <span className="text-xs font-medium text-[var(--text-muted)] tracking-wider uppercase">
+          <div className="flex items-start justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-medium text-[var(--text-muted)] tracking-wider uppercase">
               {card.label}
             </span>
-            <card.icon size={16} className="text-[var(--text-muted)]" />
+            <card.icon size={14} className="text-[var(--text-muted)] hidden sm:block" />
           </div>
-          <p className="font-display text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-none mb-1">
-            {card.value}
+          <p className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-none mb-1">
+            {card.animated ? <AnimatedNumber value={card.value} /> : card.displayValue}
           </p>
-          <p className="text-xs text-[var(--text-muted)]">{card.sub}</p>
+          <p className="text-[10px] sm:text-xs text-[var(--text-muted)]">{card.sub}</p>
         </div>
       ))}
     </div>
