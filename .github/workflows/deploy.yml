@@ -28,10 +28,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Copy data to public
-        run: mkdir -p public/data && cp -r data/* public/data/
+        run: cp -r data/ public/data/
 
       - name: Build
         run: npm run build
