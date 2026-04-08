@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-04-08T12:00:00+08:00",
+  "lastUpdated": "2026-04-08T14:00:00+08:00",
   "overview": {
-    "totalCases": 50,
-    "criminalCases": 35,
-    "civilCases": 15,
+    "totalCases": 52,
+    "criminalCases": 36,
+    "civilCases": 16,
     "pendingCases": 5,
     "convictionRate": 0.81,
-    "totalDamagesAwarded": 589770000,
-    "averageDamages": 73721250,
+    "totalDamagesAwarded": 2112240639,
+    "averageDamages": 234693404,
     "medianCaseDuration": 563
   },
   "byYear": [
@@ -236,29 +236,29 @@
   ],
   "topDamages": [
     {
-      "case": "113民營訴5",
-      "amount": 230000000,
-      "tech": "記憶體製程參"
+      "case": "107年度民營上字第1號",
+      "amount": 1522470639,
+      "tech": "光學鏡頭自動化生"
     },
     {
-      "case": "112民營訴8",
+      "case": "113年度民營訴字第5號",
+      "amount": 230000000,
+      "tech": "記憶體製程參數"
+    },
+    {
+      "case": "112年度民營訴字第8號",
       "amount": 156000000,
       "tech": "面板顯示技術"
     },
     {
-      "case": "113刑營訴1",
+      "case": "113年度刑營訴字第1號",
       "amount": 85000000,
-      "tech": "半導體製程技"
+      "tech": "半導體製程技術"
     },
     {
-      "case": "113民營訴2",
+      "case": "113年度民營訴字第2號",
       "amount": 45000000,
       "tech": "化學配方"
-    },
-    {
-      "case": "113刑營訴3",
-      "amount": 32000000,
-      "tech": "IC設計電路"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-04-08T12:00:00+08:00",
-  "totalCases": 50,
+  "lastUpdated": "2026-04-08T14:00:00+08:00",
+  "totalCases": 52,
   "sources": [
     "司法院裁判書查詢系統",
     "智慧財產及商業法院",
@@ -764,6 +764,38 @@
       "source": "智慧財產局精選判決彙編"
     },
     {
+      "id": "IPC-107-民營上-1",
+      "caseNumber": "107年度民營上字第1號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2018-02-01",
+      "judgmentDate": "2021-01-28",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第10條",
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "員工跳槽竊密",
+        "三倍懲罰性賠償",
+        "上訴駁回"
+      ],
+      "damages": 1522470639,
+      "damagesFormatted": "15.22億",
+      "technology": "光學鏡頭自動化生產設備",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "大立光電股份有限公司",
+        "defendant": "先進光電科技股份有限公司等"
+      },
+      "summary": "二審維持一審15.22億元之損害賠償判決，為台灣營業秘密訴訟史上最高賠償金額案件。後雙方和解收場。",
+      "status": "已判決（和解）",
+      "source": "司法院裁判書查詢系統"
+    },
+    {
       "id": "TCD-107-智訴-1",
       "caseNumber": "107年度智訴字第1號",
       "court": "臺灣臺中地方法院",
@@ -905,6 +937,35 @@
       "summary": "員工竊取商業資訊案，法人科罰金100萬元，被告徒刑5月",
       "status": "已判決",
       "source": "智慧財產局法人併罰分析"
+    },
+    {
+      "id": "TCD-106-智訴-8",
+      "caseNumber": "106年度智訴字第8號",
+      "court": "臺灣臺中地方法院",
+      "courtCode": "TCD",
+      "caseType": "刑事",
+      "filingDate": "2017-03-15",
+      "judgmentDate": "2022-06-30",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "著作權法"
+      ],
+      "keyIssues": [
+        "員工跳槽竊密",
+        "營業秘密與著作權競合"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "光學鏡頭自動化生產設備",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "鄒博丞、謝炘穎、朱威丞、翁宗震等"
+      },
+      "summary": "4名工程師竊取大立光自動化設備營業秘密跳槽先進光，一審各判6月徒刑，先進光罰金60萬。二審智財法院改判緩刑2年。",
+      "status": "已判決",
+      "source": "司法院裁判書查詢系統"
     },
     {
       "id": "IPC-106-刑智上訴-30",
@@ -1339,25 +1400,30 @@
       "courtCode": "IPC",
       "caseType": "民事",
       "filingDate": "2013-04-15",
-      "judgmentDate": "2017-12-06",
-      "result": "部分勝訴",
+      "judgmentDate": "2017-12-07",
+      "result": "原告勝訴",
       "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第10條",
         "營業秘密法第12條",
         "營業秘密法第13條"
       ],
       "keyIssues": [
-        "損害賠償計算"
+        "員工跳槽竊密",
+        "三倍懲罰性賠償",
+        "研發成本計算",
+        "新型專利申請權歸屬"
       ],
-      "damages": 0,
-      "damagesFormatted": "—",
-      "technology": "製程技術",
-      "industryCategory": "製造業",
+      "damages": 1522470639,
+      "damagesFormatted": "15.22億",
+      "technology": "光學鏡頭自動化生產設備",
+      "industryCategory": "光電",
       "parties": {
-        "plaintiff": "某公司",
-        "defendant": "競爭公司"
+        "plaintiff": "大立光電股份有限公司",
+        "defendant": "先進光電科技股份有限公司、鄒博丞等4人"
       },
-      "summary": "法院就營業秘密侵害損害賠償額之酌定提出重要見解",
-      "status": "已判決",
+      "summary": "4名工程師自大立光跳槽至先進光，竊取自動化生產設備等7項營業秘密並以之申請專利。法院依研發成本5.1億元之3倍懲罰性賠償，判賠15.22億元。後以認購私募股份5.984億元和解。",
+      "status": "已判決（和解）",
       "source": "智慧財產局判決彙編"
     },
     {
