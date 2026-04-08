@@ -1,14 +1,14 @@
 {
-  "lastUpdated": "2026-04-08T14:00:00+08:00",
+  "lastUpdated": "2026-04-08T21:00:25.136Z",
   "overview": {
     "totalCases": 52,
     "criminalCases": 36,
     "civilCases": 16,
     "pendingCases": 5,
-    "convictionRate": 0.81,
-    "totalDamagesAwarded": 2112240639,
-    "averageDamages": 234693404,
-    "medianCaseDuration": 563
+    "convictionRate": 0.8,
+    "totalDamagesAwarded": 3634711278,
+    "averageDamages": 363471128,
+    "medianCaseDuration": 485
   },
   "byYear": [
     {
@@ -44,14 +44,14 @@
     {
       "year": "106",
       "yearAD": 2017,
-      "criminal": 4,
+      "criminal": 5,
       "civil": 1
     },
     {
       "year": "107",
       "yearAD": 2018,
       "criminal": 1,
-      "civil": 0
+      "civil": 1
     },
     {
       "year": "108",
@@ -100,165 +100,180 @@
     {
       "name": "半導體",
       "count": 13,
-      "percentage": 26.0
+      "percentage": 25
     },
     {
       "name": "製造業",
-      "count": 8,
-      "percentage": 16.0
+      "count": 7,
+      "percentage": 13.5
+    },
+    {
+      "name": "光電",
+      "count": 6,
+      "percentage": 11.5
     },
     {
       "name": "機械",
       "count": 4,
-      "percentage": 8.0
+      "percentage": 7.7
     },
     {
       "name": "貿易",
       "count": 4,
-      "percentage": 8.0
+      "percentage": 7.7
     },
     {
       "name": "電子",
       "count": 4,
-      "percentage": 8.0
+      "percentage": 7.7
     },
     {
       "name": "IC設計",
       "count": 3,
-      "percentage": 6.0
-    },
-    {
-      "name": "光電",
-      "count": 3,
-      "percentage": 6.0
+      "percentage": 5.8
     },
     {
       "name": "生技",
       "count": 2,
-      "percentage": 4.0
+      "percentage": 3.8
     },
     {
       "name": "食品",
       "count": 2,
-      "percentage": 4.0
+      "percentage": 3.8
     },
     {
       "name": "不動產",
       "count": 2,
-      "percentage": 4.0
+      "percentage": 3.8
     },
     {
       "name": "金融科技",
       "count": 1,
-      "percentage": 2.0
+      "percentage": 1.9
     },
     {
       "name": "化工",
       "count": 1,
-      "percentage": 2.0
+      "percentage": 1.9
     },
     {
       "name": "軟體",
       "count": 1,
-      "percentage": 2.0
+      "percentage": 1.9
     },
     {
       "name": "國防",
       "count": 1,
-      "percentage": 2.0
+      "percentage": 1.9
     },
     {
       "name": "服務業",
       "count": 1,
-      "percentage": 2.0
+      "percentage": 1.9
     }
   ],
   "byResult": [
     {
-      "name": "有罪/勝訴",
-      "count": 31,
+      "name": "有罪",
+      "count": 26,
       "color": "#c23616"
     },
     {
-      "name": "無罪/駁回",
-      "count": 9,
+      "name": "原告勝訴",
+      "count": 8,
+      "color": "#c23616"
+    },
+    {
+      "name": "無罪",
+      "count": 6,
       "color": "#9a8f7c"
     },
     {
       "name": "部分勝訴",
-      "count": 5,
+      "count": 4,
       "color": "#c8a45a"
     },
     {
-      "name": "和解/調解",
+      "name": "審理中",
+      "count": 3,
+      "color": "#2980b9"
+    },
+    {
+      "name": "駁回",
+      "count": 3,
+      "color": "#9a8f7c"
+    },
+    {
+      "name": "調解中",
       "count": 1,
       "color": "#27ae60"
     },
     {
-      "name": "審理中",
-      "count": 4,
+      "name": "偵查中",
+      "count": 1,
       "color": "#2980b9"
     }
   ],
   "byStatute": [
     {
       "statute": "§13-1（國內）",
-      "count": 25
+      "count": 26
     },
     {
-      "statute": "§2（定義）",
-      "count": 12
+      "statute": "§2",
+      "count": 14
     },
     {
       "statute": "§13-2（域外）",
       "count": 11
     },
     {
-      "statute": "§12（損害賠償）",
-      "count": 7
+      "statute": "§12",
+      "count": 8
     },
     {
-      "statute": "§13（損害賠償）",
+      "statute": "§13",
+      "count": 6
+    },
+    {
+      "statute": "§10",
       "count": 5
     },
     {
-      "statute": "§10（不正方法）",
+      "statute": "§13之4",
+      "count": 4
+    },
+    {
+      "statute": "刑法第342",
       "count": 3
-    },
-    {
-      "statute": "國家安全法",
-      "count": 2
-    },
-    {
-      "statute": "§11（防止侵害）",
-      "count": 1
     }
   ],
   "topDamages": [
     {
-      "case": "107年度民營上字第1號",
+      "case": "民營上字第1號",
       "amount": 1522470639,
-      "tech": "光學鏡頭自動化生"
+      "tech": "光學鏡頭自動化生產設備"
     },
     {
-      "case": "113年度民營訴字第5號",
+      "case": "民營訴字第6號",
+      "amount": 1522470639,
+      "tech": "光學鏡頭自動化生產設備"
+    },
+    {
+      "case": "民營訴字第5號",
       "amount": 230000000,
       "tech": "記憶體製程參數"
     },
     {
-      "case": "112年度民營訴字第8號",
+      "case": "民營訴字第8號",
       "amount": 156000000,
       "tech": "面板顯示技術"
     },
     {
-      "case": "113年度刑營訴字第1號",
+      "case": "刑營訴字第1號",
       "amount": 85000000,
       "tech": "半導體製程技術"
-    },
-    {
-      "case": "113年度民營訴字第2號",
-      "amount": 45000000,
-      "tech": "化學配方"
     }
   ]
 }
