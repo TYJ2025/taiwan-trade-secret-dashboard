@@ -1,6 +1,6 @@
 {
   "lastUpdated": "2026-04-08T04:06:00+08:00",
-  "totalCases": 42,
+  "totalCases": 15,
   "sources": [
     "司法院裁判書查詢系統",
     "智慧財產及商業法院",
@@ -10,6 +10,39 @@
   ],
   "cases": [
     {
+      "id": "IPC-102-民營訴-6",
+      "caseNumber": "102年度民營訴字第6號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2013-10-01",
+      "judgmentDate": "2021-01-28",
+      "result": "原告勝訴（和解）",
+      "statutes": [
+        "營業秘密法第11條",
+        "營業秘密法第12條",
+        "營業秘密法第13條第2項",
+        "著作權法"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施",
+        "損害賠償計算",
+        "懲罰性賠償"
+      ],
+      "damages": 1522470639,
+      "damagesFormatted": "15億2,247萬",
+      "technology": "光學鏡頭自動化製程技術",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "大立光電",
+        "defendant": "先進光電、鄒博丞等4名工程師"
+      },
+      "summary": "4名前工程師竊取點膠針頭結構等營業秘密至先進光並申請專利，法院判3倍懲罰性賠償15.22億元，創台灣智財訴訟最高紀錄",
+      "status": "已判決（和解確定）",
+      "source": "智慧財產及商業法院"
+    },
+    {
       "id": "IPCM-113-刑營訴-1",
       "caseNumber": "113年度刑營訴字第1號",
       "court": "智慧財產及商業法院",
@@ -18,8 +51,16 @@
       "filingDate": "2024-03-15",
       "judgmentDate": "2025-08-20",
       "result": "有罪",
-      "statutes": ["營業秘密法第13-1條", "營業秘密法第13-2條", "刑法第342條"],
-      "keyIssues": ["秘密性認定", "合理保密措施", "域外使用"],
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13-2條",
+        "刑法第342條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施",
+        "域外使用"
+      ],
       "damages": 85000000,
       "damagesFormatted": "8,500萬",
       "technology": "半導體製程技術",
@@ -41,8 +82,14 @@
       "filingDate": "2024-05-10",
       "judgmentDate": "2025-11-15",
       "result": "有罪",
-      "statutes": ["營業秘密法第13-1條", "刑法第359條"],
-      "keyIssues": ["經濟價值性", "不正方法取得"],
+      "statutes": [
+        "營業秘密法第13-1條",
+        "刑法第359條"
+      ],
+      "keyIssues": [
+        "經濟價值性",
+        "不正方法取得"
+      ],
       "damages": 32000000,
       "damagesFormatted": "3,200萬",
       "technology": "IC設計電路佈局",
@@ -64,8 +111,16 @@
       "filingDate": "2023-09-01",
       "judgmentDate": "2025-03-28",
       "result": "部分勝訴",
-      "statutes": ["營業秘密法第12條", "營業秘密法第13條", "民法第184條"],
-      "keyIssues": ["損害賠償計算", "懲罰性賠償", "合理保密措施"],
+      "statutes": [
+        "營業秘密法第12條",
+        "營業秘密法第13條",
+        "民法第184條"
+      ],
+      "keyIssues": [
+        "損害賠償計算",
+        "懲罰性賠償",
+        "合理保密措施"
+      ],
       "damages": 156000000,
       "damagesFormatted": "1億5,600萬",
       "technology": "面板顯示技術",
@@ -87,8 +142,13 @@
       "filingDate": "2023-06-20",
       "judgmentDate": "2024-12-10",
       "result": "無罪",
-      "statutes": ["營業秘密法第13-1條"],
-      "keyIssues": ["秘密性認定", "公開資訊抗辯"],
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "公開資訊抗辯"
+      ],
       "damages": 0,
       "damagesFormatted": "—",
       "technology": "軟體演算法",
@@ -110,8 +170,15 @@
       "filingDate": "2024-08-05",
       "judgmentDate": null,
       "result": "審理中",
-      "statutes": ["營業秘密法第13-2條", "國家安全法"],
-      "keyIssues": ["國家核心關鍵技術", "域外使用", "偵查保密令"],
+      "statutes": [
+        "營業秘密法第13-2條",
+        "國家安全法"
+      ],
+      "keyIssues": [
+        "國家核心關鍵技術",
+        "域外使用",
+        "偵查保密令"
+      ],
       "damages": null,
       "damagesFormatted": "—",
       "technology": "先進封裝技術",
@@ -133,8 +200,15 @@
       "filingDate": "2024-02-14",
       "judgmentDate": "2025-07-30",
       "result": "原告勝訴",
-      "statutes": ["營業秘密法第11條", "營業秘密法第12條", "營業秘密法第13條"],
-      "keyIssues": ["防止侵害請求權", "損害賠償計算"],
+      "statutes": [
+        "營業秘密法第11條",
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "防止侵害請求權",
+        "損害賠償計算"
+      ],
       "damages": 45000000,
       "damagesFormatted": "4,500萬",
       "technology": "化學配方",
@@ -156,8 +230,15 @@
       "filingDate": "2023-04-12",
       "judgmentDate": "2024-06-30",
       "result": "有罪",
-      "statutes": ["營業秘密法第13-1條", "刑法第317條"],
-      "keyIssues": ["秘密性認定", "合理保密措施", "竊取行為"],
+      "statutes": [
+        "營業秘密法第13-1條",
+        "刑法第317條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施",
+        "竊取行為"
+      ],
       "damages": 12000000,
       "damagesFormatted": "1,200萬",
       "technology": "客戶名單與報價資訊",
@@ -179,8 +260,14 @@
       "filingDate": "2024-10-22",
       "judgmentDate": null,
       "result": "審理中",
-      "statutes": ["營業秘密法第13-2條"],
-      "keyIssues": ["域外使用", "經濟價值性", "合理保密措施"],
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "經濟價值性",
+        "合理保密措施"
+      ],
       "damages": null,
       "damagesFormatted": "—",
       "technology": "EDA工具與晶片驗證方法",
@@ -202,8 +289,14 @@
       "filingDate": "2023-11-05",
       "judgmentDate": "2025-05-18",
       "result": "駁回",
-      "statutes": ["營業秘密法第2條", "營業秘密法第12條"],
-      "keyIssues": ["合理保密措施不足", "秘密性舉證"],
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第12條"
+      ],
+      "keyIssues": [
+        "合理保密措施不足",
+        "秘密性舉證"
+      ],
       "damages": 0,
       "damagesFormatted": "—",
       "technology": "生技製藥配方",
@@ -225,8 +318,16 @@
       "filingDate": "2025-01-20",
       "judgmentDate": null,
       "result": "審理中",
-      "statutes": ["營業秘密法第13-1條", "營業秘密法第13-2條", "國家安全法"],
-      "keyIssues": ["國家核心關鍵技術", "偵查保密令", "域外使用"],
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13-2條",
+        "國家安全法"
+      ],
+      "keyIssues": [
+        "國家核心關鍵技術",
+        "偵查保密令",
+        "域外使用"
+      ],
       "damages": null,
       "damagesFormatted": "—",
       "technology": "車用晶片設計",
@@ -248,8 +349,16 @@
       "filingDate": "2024-04-08",
       "judgmentDate": "2025-10-05",
       "result": "原告勝訴",
-      "statutes": ["營業秘密法第10條", "營業秘密法第12條", "營業秘密法第13條"],
-      "keyIssues": ["不正方法取得", "損害賠償計算", "懲罰性賠償"],
+      "statutes": [
+        "營業秘密法第10條",
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "不正方法取得",
+        "損害賠償計算",
+        "懲罰性賠償"
+      ],
       "damages": 230000000,
       "damagesFormatted": "2億3,000萬",
       "technology": "記憶體製程參數",
@@ -271,8 +380,14 @@
       "filingDate": "2024-06-15",
       "judgmentDate": "2025-09-22",
       "result": "有罪",
-      "statutes": ["營業秘密法第13-1條", "刑法第318條"],
-      "keyIssues": ["秘密性認定", "合理保密措施"],
+      "statutes": [
+        "營業秘密法第13-1條",
+        "刑法第318條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施"
+      ],
       "damages": 8000000,
       "damagesFormatted": "800萬",
       "technology": "精密機械製造參數",
@@ -294,8 +409,13 @@
       "filingDate": "2025-02-10",
       "judgmentDate": null,
       "result": "偵查中",
-      "statutes": ["營業秘密法第13-2條"],
-      "keyIssues": ["域外使用", "國家核心關鍵技術"],
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "國家核心關鍵技術"
+      ],
       "damages": null,
       "damagesFormatted": "—",
       "technology": "AI晶片設計",
@@ -317,8 +437,13 @@
       "filingDate": "2025-03-01",
       "judgmentDate": null,
       "result": "調解中",
-      "statutes": ["營業秘密法第10條"],
-      "keyIssues": ["合理保密措施", "競業禁止條款效力"],
+      "statutes": [
+        "營業秘密法第10條"
+      ],
+      "keyIssues": [
+        "合理保密措施",
+        "競業禁止條款效力"
+      ],
       "damages": null,
       "damagesFormatted": "—",
       "technology": "金融科技演算法",
