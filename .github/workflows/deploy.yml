@@ -25,19 +25,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: npm
 
       - name: Install dependencies
         run: npm install
 
       - name: Copy data to public
-        run: cp -r data/ public/data/
+        run: mkdir -p public/data && cp -r data/* public/data/
 
       - name: Build
         run: npm run build
 
       - name: Copy data to dist
-        run: cp -r data/ dist/data/
+        run: cp -r data/* dist/data/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
