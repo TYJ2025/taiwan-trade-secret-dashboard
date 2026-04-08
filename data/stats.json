@@ -1,54 +1,264 @@
 {
-  "lastUpdated": "2026-04-08T04:06:00+08:00",
+  "lastUpdated": "2026-04-08T12:00:00+08:00",
   "overview": {
-    "totalCases": 42,
-    "criminalCases": 28,
-    "civilCases": 14,
-    "pendingCases": 8,
-    "convictionRate": 0.72,
-    "totalDamagesAwarded": 892000000,
-    "averageDamages": 74333333,
-    "medianCaseDuration": 485
+    "totalCases": 50,
+    "criminalCases": 35,
+    "civilCases": 15,
+    "pendingCases": 5,
+    "convictionRate": 0.81,
+    "totalDamagesAwarded": 589770000,
+    "averageDamages": 73721250,
+    "medianCaseDuration": 563
   },
   "byYear": [
-    { "year": "108", "yearAD": 2019, "criminal": 3, "civil": 2 },
-    { "year": "109", "yearAD": 2020, "criminal": 4, "civil": 2 },
-    { "year": "110", "yearAD": 2021, "criminal": 5, "civil": 3 },
-    { "year": "111", "yearAD": 2022, "criminal": 4, "civil": 2 },
-    { "year": "112", "yearAD": 2023, "criminal": 5, "civil": 3 },
-    { "year": "113", "yearAD": 2024, "criminal": 5, "civil": 2 },
-    { "year": "114", "yearAD": 2025, "criminal": 2, "civil": 0 }
+    {
+      "year": "98",
+      "yearAD": 2009,
+      "criminal": 0,
+      "civil": 1
+    },
+    {
+      "year": "102",
+      "yearAD": 2013,
+      "criminal": 1,
+      "civil": 4
+    },
+    {
+      "year": "103",
+      "yearAD": 2014,
+      "criminal": 3,
+      "civil": 1
+    },
+    {
+      "year": "104",
+      "yearAD": 2015,
+      "criminal": 4,
+      "civil": 1
+    },
+    {
+      "year": "105",
+      "yearAD": 2016,
+      "criminal": 3,
+      "civil": 0
+    },
+    {
+      "year": "106",
+      "yearAD": 2017,
+      "criminal": 4,
+      "civil": 1
+    },
+    {
+      "year": "107",
+      "yearAD": 2018,
+      "criminal": 1,
+      "civil": 0
+    },
+    {
+      "year": "108",
+      "yearAD": 2019,
+      "criminal": 5,
+      "civil": 0
+    },
+    {
+      "year": "109",
+      "yearAD": 2020,
+      "criminal": 2,
+      "civil": 1
+    },
+    {
+      "year": "110",
+      "yearAD": 2021,
+      "criminal": 2,
+      "civil": 1
+    },
+    {
+      "year": "111",
+      "yearAD": 2022,
+      "criminal": 1,
+      "civil": 0
+    },
+    {
+      "year": "112",
+      "yearAD": 2023,
+      "criminal": 2,
+      "civil": 2
+    },
+    {
+      "year": "113",
+      "yearAD": 2024,
+      "criminal": 5,
+      "civil": 2
+    },
+    {
+      "year": "114",
+      "yearAD": 2025,
+      "criminal": 2,
+      "civil": 1
+    }
   ],
   "byIndustry": [
-    { "name": "半導體", "count": 16, "percentage": 38.1 },
-    { "name": "IC設計", "count": 6, "percentage": 14.3 },
-    { "name": "光電", "count": 5, "percentage": 11.9 },
-    { "name": "軟體", "count": 4, "percentage": 9.5 },
-    { "name": "化工", "count": 3, "percentage": 7.1 },
-    { "name": "生技", "count": 3, "percentage": 7.1 },
-    { "name": "機械", "count": 2, "percentage": 4.8 },
-    { "name": "其他", "count": 3, "percentage": 7.1 }
+    {
+      "name": "半導體",
+      "count": 13,
+      "percentage": 26.0
+    },
+    {
+      "name": "製造業",
+      "count": 8,
+      "percentage": 16.0
+    },
+    {
+      "name": "機械",
+      "count": 4,
+      "percentage": 8.0
+    },
+    {
+      "name": "貿易",
+      "count": 4,
+      "percentage": 8.0
+    },
+    {
+      "name": "電子",
+      "count": 4,
+      "percentage": 8.0
+    },
+    {
+      "name": "IC設計",
+      "count": 3,
+      "percentage": 6.0
+    },
+    {
+      "name": "光電",
+      "count": 3,
+      "percentage": 6.0
+    },
+    {
+      "name": "生技",
+      "count": 2,
+      "percentage": 4.0
+    },
+    {
+      "name": "食品",
+      "count": 2,
+      "percentage": 4.0
+    },
+    {
+      "name": "不動產",
+      "count": 2,
+      "percentage": 4.0
+    },
+    {
+      "name": "金融科技",
+      "count": 1,
+      "percentage": 2.0
+    },
+    {
+      "name": "化工",
+      "count": 1,
+      "percentage": 2.0
+    },
+    {
+      "name": "軟體",
+      "count": 1,
+      "percentage": 2.0
+    },
+    {
+      "name": "國防",
+      "count": 1,
+      "percentage": 2.0
+    },
+    {
+      "name": "服務業",
+      "count": 1,
+      "percentage": 2.0
+    }
   ],
   "byResult": [
-    { "name": "有罪/勝訴", "count": 18, "color": "#c23616" },
-    { "name": "無罪/駁回", "count": 8, "color": "#9a8f7c" },
-    { "name": "部分勝訴", "count": 4, "color": "#c8a45a" },
-    { "name": "和解/調解", "count": 4, "color": "#27ae60" },
-    { "name": "審理中", "count": 8, "color": "#2980b9" }
+    {
+      "name": "有罪/勝訴",
+      "count": 31,
+      "color": "#c23616"
+    },
+    {
+      "name": "無罪/駁回",
+      "count": 9,
+      "color": "#9a8f7c"
+    },
+    {
+      "name": "部分勝訴",
+      "count": 5,
+      "color": "#c8a45a"
+    },
+    {
+      "name": "和解/調解",
+      "count": 1,
+      "color": "#27ae60"
+    },
+    {
+      "name": "審理中",
+      "count": 4,
+      "color": "#2980b9"
+    }
   ],
   "byStatute": [
-    { "statute": "§13-1（國內）", "count": 22 },
-    { "statute": "§13-2（域外）", "count": 8 },
-    { "statute": "§12（損害賠償）", "count": 14 },
-    { "statute": "§10（不正方法）", "count": 11 },
-    { "statute": "§2（定義）", "count": 9 },
-    { "statute": "國家安全法", "count": 4 }
+    {
+      "statute": "§13-1（國內）",
+      "count": 25
+    },
+    {
+      "statute": "§2（定義）",
+      "count": 12
+    },
+    {
+      "statute": "§13-2（域外）",
+      "count": 11
+    },
+    {
+      "statute": "§12（損害賠償）",
+      "count": 7
+    },
+    {
+      "statute": "§13（損害賠償）",
+      "count": 5
+    },
+    {
+      "statute": "§10（不正方法）",
+      "count": 3
+    },
+    {
+      "statute": "國家安全法",
+      "count": 2
+    },
+    {
+      "statute": "§11（防止侵害）",
+      "count": 1
+    }
   ],
   "topDamages": [
-    { "case": "113民營訴5", "amount": 230000000, "tech": "記憶體製程" },
-    { "case": "112民營訴8", "amount": 156000000, "tech": "面板顯示" },
-    { "case": "113刑營訴1", "amount": 85000000, "tech": "半導體製程" },
-    { "case": "113民營訴2", "amount": 45000000, "tech": "化學配方" },
-    { "case": "113刑營訴3", "amount": 32000000, "tech": "IC設計" }
+    {
+      "case": "113民營訴5",
+      "amount": 230000000,
+      "tech": "記憶體製程參"
+    },
+    {
+      "case": "112民營訴8",
+      "amount": 156000000,
+      "tech": "面板顯示技術"
+    },
+    {
+      "case": "113刑營訴1",
+      "amount": 85000000,
+      "tech": "半導體製程技"
+    },
+    {
+      "case": "113民營訴2",
+      "amount": 45000000,
+      "tech": "化學配方"
+    },
+    {
+      "case": "113刑營訴3",
+      "amount": 32000000,
+      "tech": "IC設計電路"
+    }
   ]
 }
