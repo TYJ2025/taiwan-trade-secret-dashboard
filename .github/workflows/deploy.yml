@@ -31,7 +31,7 @@ jobs:
         run: npm install
 
       - name: Copy data to public
-        run: cp -r data/ public/data/
+        run: mkdir -p public/data && cp -r data/* public/data/
 
       - name: Build
         run: npm run build
