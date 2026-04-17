@@ -31,3 +31,6 @@ venv/
 
 # OS
 Thumbs.db
+
+# Vite build 暫存檔
+vite.config.js.timestamp-*.mjs
