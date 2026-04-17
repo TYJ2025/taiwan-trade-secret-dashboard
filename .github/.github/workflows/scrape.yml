@@ -1,0 +1,47 @@
+name: Daily Scrape - 營業秘密案件抓取
+
+on:
+  schedule:
+    # 20:06 UTC = 04:06 AM Taiwan time (UTC+8)
+    - cron: '6 20 * * *'
+  workflow_dispatch: # 允許手動觸發
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run scraper
+        env:
+          JUDICIAL_USER: ${{ secrets.JUDICIAL_USER }}
+          JUDICIAL_PASS: ${{ secrets.JUDICIAL_PASS }}
+        run: node scripts/scrape-api.js
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet data/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push data
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "Trade Secret Bot"
+          git config user.email "bot@trade-secret-dashboard.dev"
+          git add data/
+          git commit -m "data: 每日自動更新 $(TZ='Asia/Taipei' date +'%Y-%m-%d %H:%M')"
+          git push

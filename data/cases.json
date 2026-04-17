@@ -1,0 +1,1515 @@
+{
+  "lastUpdated": "2026-04-16T21:00:13.253Z",
+  "totalCases": 52,
+  "sources": [
+    "司法院裁判書查詢系統",
+    "智慧財產及商業法院",
+    "智慧財產局營業秘密專區",
+    "法務部調查局",
+    "新聞媒體報導"
+  ],
+  "cases": [
+    {
+      "id": "PRE-2025-002",
+      "caseNumber": "調解中案件",
+      "court": "訴訟前階段",
+      "courtCode": "MEDIATION",
+      "caseType": "民事（調解中）",
+      "filingDate": "2025-03-01",
+      "judgmentDate": null,
+      "result": "調解中",
+      "statutes": [
+        "營業秘密法第10條"
+      ],
+      "keyIssues": [
+        "合理保密措施",
+        "競業禁止條款效力"
+      ],
+      "damages": null,
+      "damagesFormatted": "—",
+      "technology": "金融科技演算法",
+      "industryCategory": "金融科技",
+      "parties": {
+        "plaintiff": "某金融科技公司",
+        "defendant": "前CTO及新創團隊"
+      },
+      "summary": "前技術長攜團隊離職後設立同業公司，雙方進入調解程序",
+      "status": "調解中",
+      "source": "新聞媒體報導"
+    },
+    {
+      "id": "PRE-2025-001",
+      "caseNumber": "偵查中案件（調查局移送）",
+      "court": "偵查階段",
+      "courtCode": "INVEST",
+      "caseType": "刑事（偵查中）",
+      "filingDate": "2025-02-10",
+      "judgmentDate": null,
+      "result": "偵查中",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "國家核心關鍵技術"
+      ],
+      "damages": null,
+      "damagesFormatted": "—",
+      "technology": "AI晶片設計",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "法務部調查局",
+        "defendant": "涉案人數名（偵查不公開）"
+      },
+      "summary": "調查局查獲AI晶片設計資料涉嫌外洩至境外，案件偵辦中",
+      "status": "偵查中",
+      "source": "新聞媒體報導"
+    },
+    {
+      "id": "IPCM-114-刑營訴-2",
+      "caseNumber": "114年度刑營訴字第2號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2025-01-20",
+      "judgmentDate": null,
+      "result": "審理中",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13-2條",
+        "國家安全法"
+      ],
+      "keyIssues": [
+        "國家核心關鍵技術",
+        "偵查保密令",
+        "域外使用"
+      ],
+      "damages": null,
+      "damagesFormatted": "—",
+      "technology": "車用晶片設計",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "某車用晶片公司前副總癸○○等4人"
+      },
+      "summary": "涉及車用晶片核心IP外洩至中國大陸新創公司，為國安法加重案件",
+      "status": "審理中",
+      "source": "法務部調查局"
+    },
+    {
+      "id": "IPCM-113-刑營訴-12",
+      "caseNumber": "113年度刑營訴字第12號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2024-10-22",
+      "judgmentDate": null,
+      "result": "審理中",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "經濟價值性",
+        "合理保密措施"
+      ],
+      "damages": null,
+      "damagesFormatted": "—",
+      "technology": "EDA工具與晶片驗證方法",
+      "industryCategory": "IC設計",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "某EDA公司前工程師辛○○等2人"
+      },
+      "summary": "被告涉嫌將EDA軟體核心演算法洩漏予中國大陸企業",
+      "status": "審理中",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "IPCM-113-刑營訴-7",
+      "caseNumber": "113年度刑營訴字第7號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2024-08-05",
+      "judgmentDate": null,
+      "result": "審理中",
+      "statutes": [
+        "營業秘密法第13-2條",
+        "國家安全法"
+      ],
+      "keyIssues": [
+        "國家核心關鍵技術",
+        "域外使用",
+        "偵查保密令"
+      ],
+      "damages": null,
+      "damagesFormatted": "—",
+      "technology": "先進封裝技術",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "某封裝廠前廠長戊○○等5人"
+      },
+      "summary": "涉及國家核心關鍵技術外洩至中國大陸，檢方以13-2條起訴",
+      "status": "審理中",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "TCD-113-智訴-3",
+      "caseNumber": "113年度智訴字第3號",
+      "court": "臺灣臺中地方法院",
+      "courtCode": "TCD",
+      "caseType": "刑事",
+      "filingDate": "2024-06-15",
+      "judgmentDate": "2025-09-22",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "刑法第318條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施"
+      ],
+      "damages": 8000000,
+      "damagesFormatted": "800萬",
+      "technology": "精密機械製造參數",
+      "industryCategory": "機械",
+      "parties": {
+        "plaintiff": "某工具機公司",
+        "defendant": "前技師子○○"
+      },
+      "summary": "被告竊取CNC加工參數資料庫，提供予其創設之競爭公司使用",
+      "status": "已判決",
+      "source": "司法院裁判書查詢系統"
+    },
+    {
+      "id": "IPCM-113-刑營訴-3",
+      "caseNumber": "113年度刑營訴字第3號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2024-05-10",
+      "judgmentDate": "2025-11-15",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "刑法第359條"
+      ],
+      "keyIssues": [
+        "經濟價值性",
+        "不正方法取得"
+      ],
+      "damages": 32000000,
+      "damagesFormatted": "3,200萬",
+      "technology": "IC設計電路佈局",
+      "industryCategory": "IC設計",
+      "parties": {
+        "plaintiff": "某IC設計公司",
+        "defendant": "前研發主管乙○○"
+      },
+      "summary": "被告利用職務之便複製核心電路設計圖，設立競爭公司使用",
+      "status": "已判決",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "IPCV-113-民營訴-5",
+      "caseNumber": "113年度民營訴字第5號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2024-04-08",
+      "judgmentDate": "2025-10-05",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第10條",
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "不正方法取得",
+        "損害賠償計算",
+        "懲罰性賠償"
+      ],
+      "damages": 230000000,
+      "damagesFormatted": "2億3,000萬",
+      "technology": "記憶體製程參數",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "某記憶體大廠",
+        "defendant": "競爭公司及前員工等6人"
+      },
+      "summary": "法院認定系統性挖角並竊取DRAM製程技術，判處最高額懲罰性賠償",
+      "status": "已判決",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "IPCM-113-刑營訴-1",
+      "caseNumber": "113年度刑營訴字第1號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2024-03-15",
+      "judgmentDate": "2025-08-20",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13-2條",
+        "刑法第342條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施",
+        "域外使用"
+      ],
+      "damages": 85000000,
+      "damagesFormatted": "8,500萬",
+      "technology": "半導體製程技術",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "某半導體公司",
+        "defendant": "前工程師甲○○等3人"
+      },
+      "summary": "被告於離職前大量下載先進製程參數，攜至中國大陸競爭廠商使用",
+      "status": "已判決",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "IPCV-113-民營訴-2",
+      "caseNumber": "113年度民營訴字第2號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2024-02-14",
+      "judgmentDate": "2025-07-30",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第11條",
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "防止侵害請求權",
+        "損害賠償計算"
+      ],
+      "damages": 45000000,
+      "damagesFormatted": "4,500萬",
+      "technology": "化學配方",
+      "industryCategory": "化工",
+      "parties": {
+        "plaintiff": "某化工公司",
+        "defendant": "前研發經理己○○"
+      },
+      "summary": "被告攜帶獨家化學配方跳槽至競爭公司，法院核發禁制令",
+      "status": "已判決",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "IPCV-112-民營訴-12",
+      "caseNumber": "112年度民營訴字第12號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2023-11-05",
+      "judgmentDate": "2025-05-18",
+      "result": "駁回",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第12條"
+      ],
+      "keyIssues": [
+        "合理保密措施不足",
+        "秘密性舉證"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "生技製藥配方",
+      "industryCategory": "生技",
+      "parties": {
+        "plaintiff": "某生技公司",
+        "defendant": "前研究員壬○○"
+      },
+      "summary": "法院認定原告未採取合理保密措施（共用密碼、未設權限），駁回請求",
+      "status": "已判決",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "IPCV-112-民營訴-8",
+      "caseNumber": "112年度民營訴字第8號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2023-09-01",
+      "judgmentDate": "2025-03-28",
+      "result": "部分勝訴",
+      "statutes": [
+        "營業秘密法第12條",
+        "營業秘密法第13條",
+        "民法第184條"
+      ],
+      "keyIssues": [
+        "損害賠償計算",
+        "懲罰性賠償",
+        "合理保密措施"
+      ],
+      "damages": 156000000,
+      "damagesFormatted": "1億5,600萬",
+      "technology": "面板顯示技術",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "某面板廠",
+        "defendant": "前副總丙○○及競爭公司"
+      },
+      "summary": "法院認定被告竊取OLED製程技術，判處3倍懲罰性賠償",
+      "status": "已判決",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "IPCM-112-刑營訴-5",
+      "caseNumber": "112年度刑營訴字第5號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2023-06-20",
+      "judgmentDate": "2024-12-10",
+      "result": "無罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "公開資訊抗辯"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "軟體演算法",
+      "industryCategory": "軟體",
+      "parties": {
+        "plaintiff": "某科技公司",
+        "defendant": "前軟體工程師丁○○"
+      },
+      "summary": "法院認為系爭技術資訊已見於公開論文，不具秘密性要件",
+      "status": "已判決",
+      "source": "智慧財產及商業法院"
+    },
+    {
+      "id": "TPD-112-智訴-15",
+      "caseNumber": "112年度智訴字第15號",
+      "court": "臺灣臺北地方法院",
+      "courtCode": "TPD",
+      "caseType": "刑事",
+      "filingDate": "2023-04-12",
+      "judgmentDate": "2024-06-30",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "刑法第317條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施",
+        "竊取行為"
+      ],
+      "damages": 12000000,
+      "damagesFormatted": "1,200萬",
+      "technology": "客戶名單與報價資訊",
+      "industryCategory": "貿易",
+      "parties": {
+        "plaintiff": "某國際貿易公司",
+        "defendant": "前業務主管庚○○"
+      },
+      "summary": "被告離職時複製完整客戶資料庫及歷史報價單，自設公司搶奪客戶",
+      "status": "已判決（上訴中）",
+      "source": "司法院裁判書查詢系統"
+    },
+    {
+      "id": "TPD-111-智重訴-2",
+      "caseNumber": "111年度智重訴字第2號",
+      "court": "臺灣臺北地方法院",
+      "courtCode": "TPD",
+      "caseType": "刑事",
+      "filingDate": "2022-03-10",
+      "judgmentDate": "2023-05-16",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "經濟價值性",
+        "詐術取得"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "鑽石刀具（增亮膜製造）",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "友輝光電公司",
+        "defendant": "前模具組工程師安○○"
+      },
+      "summary": "被告以詐術取得公司營業秘密標的之鑽石刀具並交付競爭公司，構成洩漏營業秘密罪",
+      "status": "已判決",
+      "source": "營業秘密判決雙月刊"
+    },
+    {
+      "id": "IPC-110-民營訴-8",
+      "caseNumber": "110年度民營訴字第8號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2021-05-15",
+      "judgmentDate": "2023-04-13",
+      "result": "駁回",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "食品配方（醬料/麵糊比例）",
+      "industryCategory": "食品",
+      "parties": {
+        "plaintiff": "飯飯堂企業社",
+        "defendant": "前員工滕○緯等"
+      },
+      "summary": "飯糰業者主張食材比例、成本表等為營業秘密，法院認定大部分資訊不具秘密性，且未採取合理保密措施",
+      "status": "已判決",
+      "source": "營業秘密判決雙月刊"
+    },
+    {
+      "id": "IPC-110-刑智上重訴-1",
+      "caseNumber": "110年度刑智上重訴字第1號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2021-02-10",
+      "judgmentDate": "2021-12-29",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "竊取行為",
+        "製程參數"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "機台製程參數",
+      "industryCategory": "製造業",
+      "parties": {
+        "plaintiff": "某製造公司",
+        "defendant": "維修廠商人員"
+      },
+      "summary": "維修廠商未經同意抄錄與維修無關之他公司機台內部製程參數",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "KSD-110-智訴-1",
+      "caseNumber": "110年度智訴字第1號",
+      "court": "臺灣高雄地方法院",
+      "courtCode": "KSD",
+      "caseType": "刑事",
+      "filingDate": "2021-01-15",
+      "judgmentDate": "2021-08-20",
+      "result": "無罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "案源資料"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "不動產案源資料",
+      "industryCategory": "不動產",
+      "parties": {
+        "plaintiff": "某房屋公司",
+        "defendant": "前營業員"
+      },
+      "summary": "房屋公司逾期案源資料不涉及客戶特殊需求等經篩選分析之資訊，不具秘密性",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "TCD-109-智訴-13",
+      "caseNumber": "109年度智訴字第13號",
+      "court": "臺灣臺中地方法院",
+      "courtCode": "TCD",
+      "caseType": "刑事",
+      "filingDate": "2020-06-01",
+      "judgmentDate": "2021-06-29",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13條之4"
+      ],
+      "keyIssues": [
+        "法人併罰"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "機械技術",
+      "industryCategory": "機械",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "法人及自然人"
+      },
+      "summary": "營業秘密法第13條之4法人併罰之認定",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "IPC-109-重附民上-9",
+      "caseNumber": "109年度重附民上字第9號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2020-03-15",
+      "judgmentDate": "2021-09-01",
+      "result": "部分勝訴",
+      "statutes": [
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "損害賠償計算"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "製程技術",
+      "industryCategory": "製造業",
+      "parties": {
+        "plaintiff": "某公司",
+        "defendant": "前員工及競爭公司"
+      },
+      "summary": "營業秘密損害賠償之酌定，110年度重要民事判決",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "TYD-109-智訴-3",
+      "caseNumber": "109年度智訴字第3號",
+      "court": "臺灣桃園地方法院",
+      "courtCode": "TYD",
+      "caseType": "刑事",
+      "filingDate": "2020-01-10",
+      "judgmentDate": "2021-01-07",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "未經授權洩漏",
+        "不動產交易資訊"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "不動產交易資訊",
+      "industryCategory": "不動產",
+      "parties": {
+        "plaintiff": "某房屋公司",
+        "defendant": "前營業員"
+      },
+      "summary": "不同房屋公司之營業員私自交流公司成屋交易資訊，觸犯營業秘密法",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "IPC-109-刑智上更一-8",
+      "caseNumber": "109年度刑智上更(一)字第8號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2019-10-15",
+      "judgmentDate": "2021-11-19",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "大陸地區"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "半導體技術",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "前員工"
+      },
+      "summary": "意圖在外國、大陸地區使用，知悉及持有營業秘密，未經授權而洩漏營業秘密罪",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "IPC-109-刑智上重訴-1",
+      "caseNumber": "109年度刑智上重訴字第1號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2019-08-20",
+      "judgmentDate": "2021-11-03",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "主觀不法意圖"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "半導體製程",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "前工程師"
+      },
+      "summary": "營業秘密犯罪主觀不法意圖之認定，二審重訴案件",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "IPC-109-刑智上重訴-2",
+      "caseNumber": "109年度刑智上重訴字第2號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2019-08-01",
+      "judgmentDate": "2023-04-27",
+      "result": "無罪",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "合理保密措施",
+        "第三人授權機密告訴權"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "BLDC微型控制器軟硬體",
+      "industryCategory": "電子",
+      "parties": {
+        "plaintiff": "增你強公司",
+        "defendant": "智亮公司及前員工等"
+      },
+      "summary": "公司未使機密資料不易被任意接觸、未限制接觸機密資料者之使用權限，難認已採取合理保密措施",
+      "status": "已判決",
+      "source": "營業秘密判決雙月刊"
+    },
+    {
+      "id": "IPC-108-刑智上訴-54",
+      "caseNumber": "108年度刑智上訴字第54號",
+      "court": "智慧財產及商業法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2019-06-10",
+      "judgmentDate": "2021-08-26",
+      "result": "無罪",
+      "statutes": [
+        "營業秘密法第2條"
+      ],
+      "keyIssues": [
+        "合理保密措施",
+        "權限控管不足"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "製程參數",
+      "industryCategory": "製造業",
+      "parties": {
+        "plaintiff": "某公司",
+        "defendant": "前員工"
+      },
+      "summary": "公司未做好機密資訊權限控管作為，難認已採取合理保密措施",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "IPC-109-刑智上重訴-3",
+      "caseNumber": "109年度刑智上重訴字第3號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2019-05-10",
+      "judgmentDate": "2021-01-17",
+      "result": "無罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "經濟性認定",
+        "公開資訊"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "乳酸菌配方",
+      "industryCategory": "食品",
+      "parties": {
+        "plaintiff": "葡萄王公司",
+        "defendant": "前副總經理等"
+      },
+      "summary": "法院認定乳酸菌成分書產品成份已對外公開，不具營業秘密之秘密性及經濟性",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "IPC-107-民營上-1",
+      "caseNumber": "107年度民營上字第1號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2018-02-01",
+      "judgmentDate": "2021-01-28",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第10條",
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "員工跳槽竊密",
+        "三倍懲罰性賠償",
+        "上訴駁回"
+      ],
+      "damages": 1522470639,
+      "damagesFormatted": "15.22億",
+      "technology": "光學鏡頭自動化生產設備",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "大立光電股份有限公司",
+        "defendant": "先進光電科技股份有限公司等"
+      },
+      "summary": "二審維持一審15.22億元之損害賠償判決，為台灣營業秘密訴訟史上最高賠償金額案件。後雙方和解收場。",
+      "status": "已判決（和解）",
+      "source": "司法院裁判書查詢系統"
+    },
+    {
+      "id": "TCD-107-智訴-1",
+      "caseNumber": "107年度智訴字第1號",
+      "court": "臺灣臺中地方法院",
+      "courtCode": "TCD",
+      "caseType": "刑事",
+      "filingDate": "2018-01-10",
+      "judgmentDate": "2019-06-11",
+      "result": "無罪",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "不正方法取得",
+        "未遂"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "機械技術",
+      "industryCategory": "機械",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "佑順發公司前員工"
+      },
+      "summary": "法院認定意圖在大陸使用而以其他不正方法取得營業秘密未遂，判無罪",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "IPC-107-刑智上訴-43",
+      "caseNumber": "107年度刑智上訴字第43號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2017-08-15",
+      "judgmentDate": "2021-02-24",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "經濟性認定",
+        "人力資源檔案"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "人力資源檔案",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "聯發科技公司",
+        "defendant": "前人資主管"
+      },
+      "summary": "人力資源檔案案之秘密性及經濟性認定，確認具營業秘密要件",
+      "status": "已判決",
+      "source": "智慧財產局精選判決彙編"
+    },
+    {
+      "id": "SCC-108-台上-36",
+      "caseNumber": "108年度台上字第36號",
+      "court": "最高法院",
+      "courtCode": "SCC",
+      "caseType": "民事",
+      "filingDate": "2017-06-15",
+      "judgmentDate": "2019-05-23",
+      "result": "駁回",
+      "statutes": [
+        "營業秘密法第2條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "藥品配方"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "藥品配方",
+      "industryCategory": "生技",
+      "parties": {
+        "plaintiff": "製藥公司",
+        "defendant": "前研發人員"
+      },
+      "summary": "最高法院就藥品配方之秘密性判斷提出重要見解",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "IPC-107-刑智上訴-5",
+      "caseNumber": "107年度刑智上訴字第5號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2017-04-15",
+      "judgmentDate": "2018-09-20",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "未經授權重製"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "半導體製程",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "前工程師"
+      },
+      "summary": "意圖在大陸地區使用，未經授權而重製營業秘密罪之認定",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "KSD-106-智訴-6",
+      "caseNumber": "106年度智訴字第6號",
+      "court": "臺灣橋頭地方法院",
+      "courtCode": "KSD",
+      "caseType": "刑事",
+      "filingDate": "2017-04-15",
+      "judgmentDate": "2018-10-30",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13條之4"
+      ],
+      "keyIssues": [
+        "法人併罰",
+        "商業資訊"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "商業資訊",
+      "industryCategory": "貿易",
+      "parties": {
+        "plaintiff": "詠興公司",
+        "defendant": "前員工及法人"
+      },
+      "summary": "員工竊取商業資訊案，法人科罰金100萬元，被告徒刑5月",
+      "status": "已判決",
+      "source": "智慧財產局法人併罰分析"
+    },
+    {
+      "id": "TCD-106-智訴-8",
+      "caseNumber": "106年度智訴字第8號",
+      "court": "臺灣臺中地方法院",
+      "courtCode": "TCD",
+      "caseType": "刑事",
+      "filingDate": "2017-03-15",
+      "judgmentDate": "2022-06-30",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "著作權法"
+      ],
+      "keyIssues": [
+        "員工跳槽竊密",
+        "營業秘密與著作權競合"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "光學鏡頭自動化生產設備",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "鄒博丞、謝炘穎、朱威丞、翁宗震等"
+      },
+      "summary": "4名工程師竊取大立光自動化設備營業秘密跳槽先進光，一審各判6月徒刑，先進光罰金60萬。二審智財法院改判緩刑2年。",
+      "status": "已判決",
+      "source": "司法院裁判書查詢系統"
+    },
+    {
+      "id": "IPC-106-刑智上訴-30",
+      "caseNumber": "106年度刑智上訴字第30號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2017-01-15",
+      "judgmentDate": "2018-03-14",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "逾越授權範圍",
+        "重製洩漏"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "電子零組件技術",
+      "industryCategory": "電子",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "前員工"
+      },
+      "summary": "知悉或持有營業秘密，逾越授權範圍而重製、洩漏該營業秘密罪之認定",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "HCD-106-智訴-2",
+      "caseNumber": "106年度智訴字第2號",
+      "court": "臺灣新竹地方法院",
+      "courtCode": "HCD",
+      "caseType": "刑事",
+      "filingDate": "2016-10-05",
+      "judgmentDate": "2017-07-12",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "未經授權重製"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "半導體製程",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "前工程師"
+      },
+      "summary": "未經授權而重製營業秘密罪之認定",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "CHD-105-訴-1109",
+      "caseNumber": "105年度訴字第1109號",
+      "court": "臺灣彰化地方法院",
+      "courtCode": "CHD",
+      "caseType": "刑事",
+      "filingDate": "2016-03-10",
+      "judgmentDate": "2017-01-24",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "擅自重製",
+        "洩漏營業秘密"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "製造技術",
+      "industryCategory": "製造業",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "被告"
+      },
+      "summary": "擅自重製及洩漏營業秘密罪之認定，為早期刑事營業秘密案",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "IPC-105-刑智上訴-35",
+      "caseNumber": "105年度刑智上訴字第35號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2016-02-20",
+      "judgmentDate": "2018-01-17",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "意圖在大陸地區使用"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "半導體技術",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "前員工"
+      },
+      "summary": "意圖在大陸地區使用而非法使用、洩漏營業秘密罪之認定",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "IPC-105-刑智上訴-11",
+      "caseNumber": "105年度刑智上訴字第11號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "刑事",
+      "filingDate": "2015-08-10",
+      "judgmentDate": "2016-10-27",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "客戶資料"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "客戶名單",
+      "industryCategory": "貿易",
+      "parties": {
+        "plaintiff": "某貿易公司",
+        "defendant": "前業務人員"
+      },
+      "summary": "法院認定客戶名單及銷售價格等資料具有秘密性",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "HCD-104-重勞訴-11",
+      "caseNumber": "104年度重勞訴字第11號",
+      "court": "臺灣新竹地方法院",
+      "courtCode": "HCD",
+      "caseType": "民事",
+      "filingDate": "2015-06-01",
+      "judgmentDate": "2023-03-30",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第10條",
+        "營業秘密法第12條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "經濟價值性",
+        "合理保密措施"
+      ],
+      "damages": 21770000,
+      "damagesFormatted": "2,177萬",
+      "technology": "八輪甲車動力底盤設計藍圖",
+      "industryCategory": "國防",
+      "parties": {
+        "plaintiff": "財團法人工業技術研究院",
+        "defendant": "前工程師林○○、劉○○"
+      },
+      "summary": "被告將工研院研製之八輪甲車動力底盤設計藍圖及商業資料重製並對外洩漏，判賠2,177萬元",
+      "status": "已判決",
+      "source": "營業秘密判決雙月刊"
+    },
+    {
+      "id": "KSD-104-智訴-13",
+      "caseNumber": "104年度智訴字第13號",
+      "court": "臺灣橋頭地方法院",
+      "courtCode": "KSD",
+      "caseType": "刑事",
+      "filingDate": "2015-05-01",
+      "judgmentDate": "2018-01-25",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13條之4"
+      ],
+      "keyIssues": [
+        "法人併罰",
+        "協力廠商侵害",
+        "合理保密措施"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "無塵衣(鞋)靜電技術",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "日月光半導體公司",
+        "defendant": "宏久科技公司及陳○○"
+      },
+      "summary": "協力廠商違反保密契約將無塵衣設計申請專利，法人科罰金200萬元（二審改180萬）",
+      "status": "已判決",
+      "source": "智慧財產局法人併罰分析"
+    },
+    {
+      "id": "TCD-104-智訴-13",
+      "caseNumber": "104年度智訴字第13號",
+      "court": "臺灣臺中地方法院",
+      "courtCode": "TCD",
+      "caseType": "刑事",
+      "filingDate": "2015-03-01",
+      "judgmentDate": "2018-05-30",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "營業秘密法第13條之4"
+      ],
+      "keyIssues": [
+        "未經授權洩漏",
+        "法人併罰"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "機械設計圖",
+      "industryCategory": "機械",
+      "parties": {
+        "plaintiff": "卡蓮達機械工業公司",
+        "defendant": "前開發部協理陳○○及璧宏公司"
+      },
+      "summary": "被告離職後將機械設計圖洩漏予競爭公司，法人科罰金180萬元",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "TYD-104-智訴-2",
+      "caseNumber": "104年度智訴字第2號",
+      "court": "臺灣桃園地方法院",
+      "courtCode": "TYD",
+      "caseType": "刑事",
+      "filingDate": "2015-02-01",
+      "judgmentDate": "2017-09-15",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "半導體製程"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "砷化鎵半導體製程",
+      "industryCategory": "半導體",
+      "parties": {
+        "plaintiff": "穩懋半導體公司",
+        "defendant": "前工程師"
+      },
+      "summary": "桃園地檢偵辦穩懋半導體關鍵製程技術外洩至中國大陸案",
+      "status": "已判決",
+      "source": "東吳大學碩士論文"
+    },
+    {
+      "id": "TPD-103-訴-500",
+      "caseNumber": "103年度訴字第500號",
+      "court": "臺灣臺北地方法院",
+      "courtCode": "TPD",
+      "caseType": "刑事",
+      "filingDate": "2014-06-10",
+      "judgmentDate": "2019-04-11",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-2條"
+      ],
+      "keyIssues": [
+        "域外使用",
+        "未經授權重製"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "電子技術",
+      "industryCategory": "電子",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "被告"
+      },
+      "summary": "意圖在大陸地區使用而未經授權重複營業秘密罪之認定",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "TPD-103-智訴-10",
+      "caseNumber": "103年度智訴字第10號",
+      "court": "臺灣臺北地方法院",
+      "courtCode": "TPD",
+      "caseType": "刑事",
+      "filingDate": "2014-04-01",
+      "judgmentDate": "2016-08-25",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條",
+        "刑法第342條"
+      ],
+      "keyIssues": [
+        "背信",
+        "設計圖"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "手機設計技術",
+      "industryCategory": "電子",
+      "parties": {
+        "plaintiff": "宏達國際電子公司",
+        "defendant": "前設計部副總簡○○"
+      },
+      "summary": "宏達電副總涉及洩露營業秘密予中國大陸廠商遭起訴",
+      "status": "已判決",
+      "source": "東吳大學碩士論文"
+    },
+    {
+      "id": "IPC-103-民營訴-3",
+      "caseNumber": "103年度民營訴字第3號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2014-03-20",
+      "judgmentDate": "2016-04-15",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第2條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "非公知性"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "製程技術",
+      "industryCategory": "製造業",
+      "parties": {
+        "plaintiff": "技術公司",
+        "defendant": "前員工"
+      },
+      "summary": "法院闡明「非公知性」係指在資訊所有人之管理以外，一般人無法得知",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "HCD-103-智訴-5",
+      "caseNumber": "103年度智訴字第5號",
+      "court": "臺灣新竹地方法院",
+      "courtCode": "HCD",
+      "caseType": "刑事",
+      "filingDate": "2014-01-15",
+      "judgmentDate": "2016-06-30",
+      "result": "有罪",
+      "statutes": [
+        "營業秘密法第13-1條"
+      ],
+      "keyIssues": [
+        "洩密中國企業",
+        "IC設計"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "IC設計技術",
+      "industryCategory": "IC設計",
+      "parties": {
+        "plaintiff": "聯發科技公司",
+        "defendant": "前人資主管表○○"
+      },
+      "summary": "聯發科人資主管將公司營業秘密洩漏予中國展訊科技",
+      "status": "已判決",
+      "source": "東吳大學碩士論文"
+    },
+    {
+      "id": "IPC-103-民營上-5",
+      "caseNumber": "103年度民營上字第5號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2013-09-10",
+      "judgmentDate": "2015-05-21",
+      "result": "部分勝訴",
+      "statutes": [
+        "營業秘密法第2條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "合理保密措施"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "商業性營業秘密",
+      "industryCategory": "服務業",
+      "parties": {
+        "plaintiff": "某公司",
+        "defendant": "前員工"
+      },
+      "summary": "法院區分商業性與技術性營業秘密，該等資訊並非涉及其他同業所知悉，始具秘密性",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "IPC-103-民營上-1",
+      "caseNumber": "103年度民營上字第1號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2013-06-15",
+      "judgmentDate": "2014-11-27",
+      "result": "部分勝訴",
+      "statutes": [
+        "營業秘密法第2條"
+      ],
+      "keyIssues": [
+        "秘密性認定",
+        "專利新穎性區別"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "技術性營業秘密",
+      "industryCategory": "製造業",
+      "parties": {
+        "plaintiff": "技術授權公司",
+        "defendant": "被授權方"
+      },
+      "summary": "法院闡明營業秘密之秘密性與專利新穎性不同，營業秘密秘密性為相對性概念",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "IPC-102-民營訴-6",
+      "caseNumber": "102年度民營訴字第6號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2013-04-15",
+      "judgmentDate": "2017-12-07",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第2條",
+        "營業秘密法第10條",
+        "營業秘密法第12條",
+        "營業秘密法第13條"
+      ],
+      "keyIssues": [
+        "員工跳槽竊密",
+        "三倍懲罰性賠償",
+        "研發成本計算",
+        "新型專利申請權歸屬"
+      ],
+      "damages": 1522470639,
+      "damagesFormatted": "15.22億",
+      "technology": "光學鏡頭自動化生產設備",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "大立光電股份有限公司",
+        "defendant": "先進光電科技股份有限公司、鄒博丞等4人"
+      },
+      "summary": "4名工程師自大立光跳槽至先進光，竊取自動化生產設備等7項營業秘密並以之申請專利。法院依研發成本5.1億元之3倍懲罰性賠償，判賠15.22億元。後以認購私募股份5.984億元和解。",
+      "status": "已判決（和解）",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "HCD-102-智易-12",
+      "caseNumber": "102年度智易字第12號",
+      "court": "臺灣新竹地方法院",
+      "courtCode": "HCD",
+      "caseType": "刑事",
+      "filingDate": "2013-03-01",
+      "judgmentDate": "2015-10-15",
+      "result": "有罪",
+      "statutes": [
+        "刑法第317條",
+        "刑法第342條"
+      ],
+      "keyIssues": [
+        "洩密中國企業",
+        "面板技術"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "OLED面板技術",
+      "industryCategory": "光電",
+      "parties": {
+        "plaintiff": "檢察官",
+        "defendant": "友達光電前副總等"
+      },
+      "summary": "友達光電OLED技術部研發副總等人涉嫌洩漏面板關鍵技術予中國華星光電",
+      "status": "已判決",
+      "source": "東吳大學碩士論文"
+    },
+    {
+      "id": "IPC-102-民營訴-2",
+      "caseNumber": "102年度民營訴字第2號",
+      "court": "智慧財產法院",
+      "courtCode": "IPC",
+      "caseType": "民事",
+      "filingDate": "2013-02-20",
+      "judgmentDate": "2014-04-29",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第2條"
+      ],
+      "keyIssues": [
+        "合理保密措施",
+        "分類分級授權"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "製程技術",
+      "industryCategory": "製造業",
+      "parties": {
+        "plaintiff": "技術公司",
+        "defendant": "前員工"
+      },
+      "summary": "法院定義合理保密措施係指所有人按其人力、財力，依社會通常所可能之方法或技術，將不被公眾知悉之情報資訊，分類、分級授權使用",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    },
+    {
+      "id": "SCC-99-台上-2425",
+      "caseNumber": "99年度台上字第2425號",
+      "court": "最高法院",
+      "courtCode": "SCC",
+      "caseType": "民事",
+      "filingDate": "2009-06-01",
+      "judgmentDate": "2010-12-30",
+      "result": "原告勝訴",
+      "statutes": [
+        "營業秘密法第2條"
+      ],
+      "keyIssues": [
+        "經濟價值性",
+        "客戶名單"
+      ],
+      "damages": 0,
+      "damagesFormatted": "—",
+      "technology": "客戶名單與銷售價格",
+      "industryCategory": "貿易",
+      "parties": {
+        "plaintiff": "某公司",
+        "defendant": "前業務主管"
+      },
+      "summary": "最高法院確認客戶名單、銷售價格之經濟價值判斷標準",
+      "status": "已判決",
+      "source": "智慧財產局判決彙編"
+    }
+  ]
+}

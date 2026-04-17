@@ -1,0 +1,279 @@
+{
+  "lastUpdated": "2026-04-16T21:00:13.255Z",
+  "overview": {
+    "totalCases": 52,
+    "criminalCases": 36,
+    "civilCases": 16,
+    "pendingCases": 5,
+    "convictionRate": 0.8,
+    "totalDamagesAwarded": 3634711278,
+    "averageDamages": 363471128,
+    "medianCaseDuration": 485
+  },
+  "byYear": [
+    {
+      "year": "98",
+      "yearAD": 2009,
+      "criminal": 0,
+      "civil": 1
+    },
+    {
+      "year": "102",
+      "yearAD": 2013,
+      "criminal": 1,
+      "civil": 4
+    },
+    {
+      "year": "103",
+      "yearAD": 2014,
+      "criminal": 3,
+      "civil": 1
+    },
+    {
+      "year": "104",
+      "yearAD": 2015,
+      "criminal": 4,
+      "civil": 1
+    },
+    {
+      "year": "105",
+      "yearAD": 2016,
+      "criminal": 3,
+      "civil": 0
+    },
+    {
+      "year": "106",
+      "yearAD": 2017,
+      "criminal": 5,
+      "civil": 1
+    },
+    {
+      "year": "107",
+      "yearAD": 2018,
+      "criminal": 1,
+      "civil": 1
+    },
+    {
+      "year": "108",
+      "yearAD": 2019,
+      "criminal": 5,
+      "civil": 0
+    },
+    {
+      "year": "109",
+      "yearAD": 2020,
+      "criminal": 2,
+      "civil": 1
+    },
+    {
+      "year": "110",
+      "yearAD": 2021,
+      "criminal": 2,
+      "civil": 1
+    },
+    {
+      "year": "111",
+      "yearAD": 2022,
+      "criminal": 1,
+      "civil": 0
+    },
+    {
+      "year": "112",
+      "yearAD": 2023,
+      "criminal": 2,
+      "civil": 2
+    },
+    {
+      "year": "113",
+      "yearAD": 2024,
+      "criminal": 5,
+      "civil": 2
+    },
+    {
+      "year": "114",
+      "yearAD": 2025,
+      "criminal": 2,
+      "civil": 1
+    }
+  ],
+  "byIndustry": [
+    {
+      "name": "半導體",
+      "count": 13,
+      "percentage": 25
+    },
+    {
+      "name": "製造業",
+      "count": 7,
+      "percentage": 13.5
+    },
+    {
+      "name": "光電",
+      "count": 6,
+      "percentage": 11.5
+    },
+    {
+      "name": "機械",
+      "count": 4,
+      "percentage": 7.7
+    },
+    {
+      "name": "貿易",
+      "count": 4,
+      "percentage": 7.7
+    },
+    {
+      "name": "電子",
+      "count": 4,
+      "percentage": 7.7
+    },
+    {
+      "name": "IC設計",
+      "count": 3,
+      "percentage": 5.8
+    },
+    {
+      "name": "生技",
+      "count": 2,
+      "percentage": 3.8
+    },
+    {
+      "name": "食品",
+      "count": 2,
+      "percentage": 3.8
+    },
+    {
+      "name": "不動產",
+      "count": 2,
+      "percentage": 3.8
+    },
+    {
+      "name": "金融科技",
+      "count": 1,
+      "percentage": 1.9
+    },
+    {
+      "name": "化工",
+      "count": 1,
+      "percentage": 1.9
+    },
+    {
+      "name": "軟體",
+      "count": 1,
+      "percentage": 1.9
+    },
+    {
+      "name": "國防",
+      "count": 1,
+      "percentage": 1.9
+    },
+    {
+      "name": "服務業",
+      "count": 1,
+      "percentage": 1.9
+    }
+  ],
+  "byResult": [
+    {
+      "name": "有罪",
+      "count": 26,
+      "color": "#c23616"
+    },
+    {
+      "name": "原告勝訴",
+      "count": 8,
+      "color": "#c23616"
+    },
+    {
+      "name": "無罪",
+      "count": 6,
+      "color": "#9a8f7c"
+    },
+    {
+      "name": "部分勝訴",
+      "count": 4,
+      "color": "#c8a45a"
+    },
+    {
+      "name": "審理中",
+      "count": 3,
+      "color": "#2980b9"
+    },
+    {
+      "name": "駁回",
+      "count": 3,
+      "color": "#9a8f7c"
+    },
+    {
+      "name": "調解中",
+      "count": 1,
+      "color": "#27ae60"
+    },
+    {
+      "name": "偵查中",
+      "count": 1,
+      "color": "#2980b9"
+    }
+  ],
+  "byStatute": [
+    {
+      "statute": "§13-1（國內）",
+      "count": 26
+    },
+    {
+      "statute": "§2",
+      "count": 14
+    },
+    {
+      "statute": "§13-2（域外）",
+      "count": 11
+    },
+    {
+      "statute": "§12",
+      "count": 8
+    },
+    {
+      "statute": "§13",
+      "count": 6
+    },
+    {
+      "statute": "§10",
+      "count": 5
+    },
+    {
+      "statute": "§13之4",
+      "count": 4
+    },
+    {
+      "statute": "刑法第342",
+      "count": 3
+    }
+  ],
+  "topDamages": [
+    {
+      "case": "民營上字第1號",
+      "amount": 1522470639,
+      "tech": "光學鏡頭自動化生產設備"
+    },
+    {
+      "case": "民營訴字第6號",
+      "amount": 1522470639,
+      "tech": "光學鏡頭自動化生產設備"
+    },
+    {
+      "case": "民營訴字第5號",
+      "amount": 230000000,
+      "tech": "記憶體製程參數"
+    },
+    {
+      "case": "民營訴字第8號",
+      "amount": 156000000,
+      "tech": "面板顯示技術"
+    },
+    {
+      "case": "刑營訴字第1號",
+      "amount": 85000000,
+      "tech": "半導體製程技術"
+    }
+  ]
+}
