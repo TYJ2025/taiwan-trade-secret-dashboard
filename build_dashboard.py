@@ -23,6 +23,7 @@ from datetime import datetime
 
 SCRIPT_DIR = Path(__file__).parent
 INPUT_JSON = SCRIPT_DIR / "trade_secret_judgments_structured.json"
+NEWS_JSON = SCRIPT_DIR / "news.json"
 OUTPUT_HTML = SCRIPT_DIR / "index.html"
 
 def trim_case_for_dashboard(c: dict) -> dict:
@@ -100,8 +101,13 @@ def compute_stats(cases: list) -> dict:
     criminal_decided = criminal_guilty + criminal_not_guilty
     conviction_rate = round(criminal_guilty / criminal_decided * 100, 1) if criminal_decided > 0 else 0
 
-    # Damages stats (civil cases with damages > 0)
-    damages_cases = [c for c in cases if c.get('damagesNum', 0) > 0]
+    # Damages stats — restrict to 民事 + 原告勝訴 cases with damages > 0
+    # (Criminal cases and 原告敗訴 cases often contain text-extracted "claimed" amounts
+    #  that are not actual awards, which inflated the stats.)
+    damages_cases = [c for c in cases
+                     if c.get('caseType') == '民事'
+                     and c.get('outcome') == '原告勝訴'
+                     and c.get('damagesNum', 0) > 0]
     damages_amounts = [c['damagesNum'] for c in damages_cases]
     avg_damages = round(sum(damages_amounts) / len(damages_amounts)) if damages_amounts else 0
     median_damages = sorted(damages_amounts)[len(damages_amounts) // 2] if damages_amounts else 0
@@ -151,10 +157,30 @@ def format_money(amount: int) -> str:
         return f"{amount / 10_000:.0f}萬"
     return f"{amount:,}"
 
-def build_html(cases_json: str, stats: dict) -> str:
+def build_html(cases_json: str, stats: dict, news=None) -> str:
     """Generate the complete dashboard HTML with dark theme design."""
 
     today = datetime.now().strftime('%Y-%m-%d')
+
+    # News section meta text
+    news = news or {'items': [], 'generatedAt': ''}
+    news_items = news.get('items') or []
+    if news_items:
+        gen_at = news.get('generatedAt', '')
+        # Trim to Asia/Taipei date display if possible
+        try:
+            gen_dt = datetime.fromisoformat(gen_at.replace('Z', '+00:00'))
+            # display in UTC+8 yyyy-mm-dd HH:MM
+            from datetime import timedelta, timezone as _tz
+            gen_dt = gen_dt.astimezone(_tz(timedelta(hours=8)))
+            gen_display = gen_dt.strftime('%Y-%m-%d %H:%M')
+        except Exception:
+            gen_display = gen_at[:16].replace('T', ' ') if gen_at else ''
+        news_meta_text = f"{len(news_items)} 則・更新於 {gen_display}"
+    else:
+        news_meta_text = '尚未產生 news.json'
+
+    news_json = json.dumps(news, ensure_ascii=False, separators=(',', ':'))
 
     # Pre-compute values for KPI cards
     total = stats['totalCases']
@@ -342,6 +368,99 @@ a:hover {{ text-decoration:underline; }}
 .kpi-sub {{ font-size:0.7rem; color:var(--text-muted); margin-top:4px; display:flex; align-items:center; gap:4px; }}
 .kpi-trend-up {{ color:var(--accent-green); }}
 .kpi-trend-down {{ color:var(--accent-red); }}
+
+/* ═══════════════════════════════════════════════ */
+/* NEWS SECTION — 每日快訊                        */
+/* ═══════════════════════════════════════════════ */
+.news-section {{
+  padding:4px 24px 8px;
+  display:flex; flex-direction:column; align-items:center;
+}}
+.news-section-inner {{
+  width:100%; max-width:1180px;
+}}
+.news-header {{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:10px;
+}}
+.news-title {{
+  font-size:0.95rem; font-weight:700; color:var(--text-primary);
+  display:flex; align-items:center; gap:8px;
+}}
+.news-title .news-badge {{
+  background:var(--accent-orange); color:#fff;
+  font-size:0.65rem; padding:2px 8px; border-radius:10px;
+  letter-spacing:0.5px;
+}}
+.news-meta {{
+  font-size:0.72rem; color:var(--text-muted);
+}}
+.news-cards {{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  gap:10px;
+}}
+.news-card {{
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-left:3px solid var(--accent-orange);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  transition:transform 0.15s, border-color 0.15s;
+  text-decoration:none; color:inherit;
+  display:flex; flex-direction:column; gap:6px;
+}}
+.news-card:hover {{
+  transform:translateY(-1px);
+  border-color:var(--accent-orange);
+  background:var(--bg-card-hover);
+}}
+.news-card-title {{
+  font-size:0.85rem; font-weight:500; color:var(--text-primary);
+  line-height:1.35;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}}
+.news-card-meta {{
+  font-size:0.7rem; color:var(--text-muted);
+  display:flex; gap:8px; align-items:center;
+}}
+.news-card-source {{
+  color:var(--accent-orange); font-weight:500;
+}}
+.news-card-date {{
+  color:var(--text-muted);
+}}
+.news-card-snippet {{
+  font-size:0.75rem; color:var(--text-secondary);
+  line-height:1.45;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}}
+.news-empty {{
+  color:var(--text-muted); font-size:0.8rem;
+  padding:20px; text-align:center;
+  border:1px dashed var(--border-color);
+  border-radius:var(--radius);
+}}
+.news-toggle-btn {{
+  margin-top:10px; align-self:center;
+  background:transparent; border:1px solid var(--border-color);
+  color:var(--text-secondary); padding:5px 16px;
+  border-radius:14px; font-size:0.75rem; cursor:pointer;
+  transition:all 0.2s;
+}}
+.news-toggle-btn:hover {{
+  border-color:var(--accent-orange); color:var(--text-primary);
+}}
+@media (max-width: 768px) {{
+  .news-section {{ padding:4px 16px 8px; }}
+  .news-cards {{ grid-template-columns:1fr; }}
+}}
 
 /* ═══════════════════════════════════════════════ */
 /* QUICK FILTER CHIPS                             */
@@ -725,9 +844,24 @@ mark {{
     <div class="kpi-sub">刑事無罪 {not_guilty}/{stats['criminalDecided']} 件</div>
   </div>
   <div class="kpi-card yellow" onclick="filterDamages()">
-    <div class="kpi-label">賠償金額（中位數）</div>
+    <div class="kpi-label">民事勝訴賠償（中位數）</div>
     <div class="kpi-value">{format_money(stats['medianDamages'])}</div>
-    <div class="kpi-sub">{stats['damagesCases']} 件有賠償・最高 {format_money(stats['maxDamages'])}</div>
+    <div class="kpi-sub">{stats['damagesCases']} 件民事勝訴・最高 {format_money(stats['maxDamages'])}</div>
+  </div>
+</section>
+
+<!-- ═══════════════ DAILY NEWS ═══════════════ -->
+<section class="news-section">
+  <div class="news-section-inner">
+    <div class="news-header">
+      <div class="news-title">
+        <span class="news-badge">NEWS</span>
+        <span>每日營業秘密快訊</span>
+      </div>
+      <div class="news-meta" id="newsMeta">{news_meta_text}</div>
+    </div>
+    <div class="news-cards" id="newsCards"></div>
+    <button class="news-toggle-btn" id="newsToggleBtn" onclick="toggleNews()" style="display:none">顯示全部</button>
   </div>
 </section>
 
@@ -740,7 +874,7 @@ mark {{
   <span class="chip" data-quick="dismissed" onclick="quickFilter(this,'dismissed')">上訴駁回</span>
   <span class="chip" data-quick="plaintiff-lose" onclick="quickFilter(this,'plaintiff-lose')">原告敗訴</span>
   <span class="chip" data-quick="recent" onclick="quickFilter(this,'recent')">近6個月</span>
-  <span class="chip" data-quick="damages" onclick="quickFilter(this,'damages')">有賠償金額</span>
+  <span class="chip" data-quick="damages" onclick="quickFilter(this,'damages')">民事勝訴+有賠償</span>
 </div>
 
 <!-- ═══════════════ ADVANCED FILTERS ═══════════════ -->
@@ -811,8 +945,12 @@ mark {{
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebarPanel">
     <div class="sidebar-card">
-      <h3>判決結果分布</h3>
-      <div class="chart-wrap"><canvas id="outcomeChart" width="300" height="200"></canvas></div>
+      <h3>刑事判決結果分布</h3>
+      <div class="chart-wrap"><canvas id="outcomeChartCriminal" width="300" height="200"></canvas></div>
+    </div>
+    <div class="sidebar-card">
+      <h3>民事判決結果分布</h3>
+      <div class="chart-wrap"><canvas id="outcomeChartCivil" width="300" height="200"></canvas></div>
     </div>
     <div class="sidebar-card">
       <h3>歷年案件數（刑事 / 民事）</h3>
@@ -850,6 +988,7 @@ mark {{
 /* DATA                                           */
 /* ═══════════════════════════════════════════════ */
 const C = {cases_json};
+const NEWS = {news_json};
 
 /* ═══════════════════════════════════════════════ */
 /* STATE                                          */
@@ -861,12 +1000,15 @@ let sort = {{ key:'dt', asc:false }};
 let activeTypeFilter = '';
 let activeQuick = '';
 let searchTerm = '';
+let newsExpanded = false;
+const NEWS_COLLAPSED_COUNT = 6;
 
 /* ═══════════════════════════════════════════════ */
 /* INIT                                           */
 /* ═══════════════════════════════════════════════ */
 populateFilterOptions();
 applyFilters();
+renderNews();
 
 window.addEventListener('load', function() {{
   try {{
@@ -879,6 +1021,78 @@ window.addEventListener('load', function() {{
     buildCourtBars();
   }} catch(e) {{ console.error('Court bars error:', e); }}
 }});
+
+/* ═══════════════════════════════════════════════ */
+/* NEWS                                           */
+/* ═══════════════════════════════════════════════ */
+function formatNewsDate(iso) {{
+  if (!iso) return '';
+  try {{
+    const d = new Date(iso);
+    const now = new Date();
+    const diffMs = now - d;
+    const diffMin = Math.floor(diffMs / 60000);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHr / 24);
+    if (diffMin < 60 && diffMin >= 0) return diffMin + ' 分鐘前';
+    if (diffHr < 24) return diffHr + ' 小時前';
+    if (diffDay < 7) return diffDay + ' 天前';
+    const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), dd = String(d.getDate()).padStart(2,'0');
+    return y+'/'+m+'/'+dd;
+  }} catch(e) {{ return ''; }}
+}}
+
+function escapeHTML(s) {{
+  return String(s||'').replace(/[&<>"']/g, ch => ({{
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }}[ch]));
+}}
+
+function renderNews() {{
+  const host = document.getElementById('newsCards');
+  const btn = document.getElementById('newsToggleBtn');
+  if (!host) return;
+
+  const items = (NEWS && NEWS.items) ? NEWS.items : [];
+  if (!items.length) {{
+    host.innerHTML = '<div class="news-empty">暫無快訊資料（可執行 python3 fetch_news.py 產生 news.json）</div>';
+    if (btn) btn.style.display = 'none';
+    return;
+  }}
+
+  const toShow = newsExpanded ? items : items.slice(0, NEWS_COLLAPSED_COUNT);
+  host.innerHTML = toShow.map(it => {{
+    const titleRaw = it.title || '';
+    // 去除 Google News 尾綴 " - 來源"
+    const title = titleRaw.replace(/\\s+-\\s+[^-]+$/, '');
+    const source = it.source || (titleRaw.match(/\\s-\\s+([^-]+)$/) || [,''])[1] || '';
+    const when = formatNewsDate(it.published);
+    const snippet = it.snippet || '';
+    return `<a class="news-card" href="${{escapeHTML(it.url)}}" target="_blank" rel="noopener noreferrer">
+      <div class="news-card-title">${{escapeHTML(title)}}</div>
+      <div class="news-card-meta">
+        ${{source ? `<span class="news-card-source">${{escapeHTML(source)}}</span>` : ''}}
+        ${{when ? `<span class="news-card-date">${{when}}</span>` : ''}}
+      </div>
+      ${{snippet ? `<div class="news-card-snippet">${{escapeHTML(snippet)}}</div>` : ''}}
+    </a>`;
+  }}).join('');
+
+  if (btn) {{
+    if (items.length > NEWS_COLLAPSED_COUNT) {{
+      btn.style.display = 'inline-block';
+      btn.textContent = newsExpanded
+        ? '收合' : ('顯示全部（共 ' + items.length + ' 則）');
+    }} else {{
+      btn.style.display = 'none';
+    }}
+  }}
+}}
+
+function toggleNews() {{
+  newsExpanded = !newsExpanded;
+  renderNews();
+}}
 
 function populateFilterOptions() {{
   // Years
@@ -976,6 +1190,12 @@ function filterByOutcome(oc) {{
 }}
 
 function filterDamages() {{
+  // 民事勝訴賠償 KPI：自動鎖定民事 + 原告勝訴 + 有賠償金額
+  activeTypeFilter = '民事';
+  document.querySelectorAll('.topnav-actions .nav-btn[data-type]').forEach(b => {{
+    b.classList.toggle('active', b.getAttribute('data-type') === '民事');
+  }});
+  document.getElementById('filterOutcome').value = '原告勝訴';
   document.getElementById('filterDamagesMin').value = '1';
   applyFilters();
 }}
@@ -1021,6 +1241,11 @@ function quickFilter(chip, key) {{
       document.getElementById('filterYear').value = new Date(dates[0]).getFullYear();
     }}
   }} else if (key === 'damages') {{
+    activeTypeFilter = '民事';
+    document.querySelectorAll('.topnav-actions .nav-btn[data-type]').forEach(b => {{
+      b.classList.toggle('active', b.getAttribute('data-type') === '民事');
+    }});
+    document.getElementById('filterOutcome').value = '原告勝訴';
     document.getElementById('filterDamagesMin').value = '1';
   }}
 
@@ -1202,23 +1427,25 @@ document.addEventListener('keydown', e => {{ if (e.key==='Escape') closeModal();
 const chartTextColor = () => getComputedStyle(document.body).getPropertyValue('--text-secondary').trim();
 const chartBorderColor = () => getComputedStyle(document.body).getPropertyValue('--border-color').trim();
 
-function buildOutcomeChart() {{
+const OUTCOME_COLORS = {{
+  '有罪':'#E63939','無罪':'#2A9D8F','不受理':'#6B7280','上訴駁回':'#FF6B00',
+  '原告勝訴':'#2A9D8F','原告敗訴':'#FF6B00','撤銷發回':'#F59E0B','撤銷改判':'#8B5CF6',
+  '其他':'#6B7280','未知':'#374151'
+}};
+
+function buildOneOutcomeChart(canvasId, subset, order) {{
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
   const counts = {{}};
-  C.forEach(c => {{ counts[c.oc] = (counts[c.oc]||0)+1; }});
-  const order = ['有罪','無罪','上訴駁回','原告敗訴','不受理','其他','撤銷發回','原告勝訴','撤銷改判','未知'];
+  subset.forEach(c => {{ counts[c.oc] = (counts[c.oc]||0)+1; }});
   const labels = order.filter(k => counts[k]);
   const data = labels.map(l => counts[l]);
-  const colors = {{
-    '有罪':'#E63939','無罪':'#2A9D8F','不受理':'#6B7280','上訴駁回':'#FF6B00',
-    '原告勝訴':'#2A9D8F','原告敗訴':'#FF6B00','撤銷發回':'#F59E0B','撤銷改判':'#8B5CF6',
-    '其他':'#6B7280','未知':'#374151'
-  }};
 
-  new Chart(document.getElementById('outcomeChart'), {{
+  new Chart(canvas, {{
     type:'doughnut',
     data:{{
       labels: labels,
-      datasets:[{{ data, backgroundColor:labels.map(l=>colors[l]||'#6B7280'), borderWidth:2,
+      datasets:[{{ data, backgroundColor:labels.map(l=>OUTCOME_COLORS[l]||'#6B7280'), borderWidth:2,
         borderColor:getComputedStyle(document.body).getPropertyValue('--bg-card').trim(),
         hoverOffset:6
       }}]
@@ -1248,6 +1475,19 @@ function buildOutcomeChart() {{
       }}
     }}
   }});
+}}
+
+function buildOutcomeChart() {{
+  // 刑事：有罪 / 無罪 / 不受理 / 上訴駁回 / 撤銷發回 / 撤銷改判 / 其他 / 未知
+  const criminalOrder = ['有罪','無罪','上訴駁回','撤銷發回','撤銷改判','不受理','其他','未知'];
+  // 民事：原告勝訴 / 原告敗訴 / 上訴駁回 / 撤銷發回 / 撤銷改判 / 不受理 / 其他 / 未知
+  const civilOrder = ['原告勝訴','原告敗訴','上訴駁回','撤銷發回','撤銷改判','不受理','其他','未知'];
+
+  const criminalSubset = C.filter(c => c.tp === '刑事');
+  const civilSubset = C.filter(c => c.tp === '民事');
+
+  buildOneOutcomeChart('outcomeChartCriminal', criminalSubset, criminalOrder);
+  buildOneOutcomeChart('outcomeChartCivil', civilSubset, civilOrder);
 }}
 
 function buildYearChart() {{
@@ -1370,8 +1610,20 @@ def main():
     cases_json = json.dumps(trimmed, ensure_ascii=False, separators=(',', ':'))
     print(f"Trimmed data size: {len(cases_json) / 1024:.0f} KB")
 
+    # Load news (optional)
+    news = {'items': [], 'generatedAt': ''}
+    if NEWS_JSON.exists():
+        try:
+            with open(NEWS_JSON, 'r', encoding='utf-8') as f:
+                news = json.load(f)
+            print(f"Loaded news: {len(news.get('items', []))} items")
+        except Exception as e:
+            print(f"WARN: news.json parse failed: {e}")
+    else:
+        print(f"INFO: {NEWS_JSON} not found — dashboard will show 'no news' placeholder")
+
     # Generate HTML
-    html = build_html(cases_json, stats)
+    html = build_html(cases_json, stats, news)
     with open(OUTPUT_HTML, 'w', encoding='utf-8') as f:
         f.write(html)
 
