@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+build.log
+extract.log
+
+# Progress / cache files
+.download_progress.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+*.egg-info/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
