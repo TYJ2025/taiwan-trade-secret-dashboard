@@ -57,7 +57,9 @@ USER_AGENT = (
 
 MAX_ITEMS = 50
 REQUEST_TIMEOUT = 12
-MAX_AGE_DAYS = 90         # 真實發布日期超過這天數 → 丟棄
+MAX_AGE_DAYS = 90         # 真實發布日期超過這天數 → 嚴格模式下丟棄
+FALLBACK_MAX_AGE_DAYS = 365  # 嚴格模式全丟時，最多退到這天數
+FALLBACK_MIN_ITEMS = 1    # 嚴格模式留下少於這數量時，啟動 fallback
 MAX_WORKERS = 8           # 並行解析 URL 的 thread 數
 RECENT_WHEN = "7d"        # Google News 時間過濾器
 STRICT_MODE = True        # True：解不到真實日期就丟棄（避免 RSS pubDate 造假造成誤留）
@@ -299,20 +301,34 @@ def matches_blocklist(title):
 
 
 def filter_and_enrich(items):
-    """並行解析每個項目的真實發布時間，過濾掉超過 MAX_AGE_DAYS 的舊文"""
+    """
+    並行解析每個項目的真實發布時間，過濾掉超過 MAX_AGE_DAYS 的舊文。
+
+    行為：
+      - 嚴格模式先跑一輪（MAX_AGE_DAYS 內 + 有真實日期）
+      - 若嚴格模式留下的數量 < FALLBACK_MIN_ITEMS，從「有真實日期、且在
+        FALLBACK_MAX_AGE_DAYS 內」的 pool 裡補上最近的幾筆，保證不會
+        「暫無快訊」又不會誤放 10 年前的老文。
+    """
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=MAX_AGE_DAYS)
+    fallback_cutoff = now - timedelta(days=FALLBACK_MAX_AGE_DAYS)
 
+    # status 值：
+    #   "keep"     → 嚴格模式通過（MAX_AGE_DAYS 內 + 有真實日期）
+    #   "fallback" → 有真實日期，但在 (MAX_AGE_DAYS, FALLBACK_MAX_AGE_DAYS] 區間
+    #                ，嚴格沒過；嚴格全空時用來救火
+    #   "drop"     → 直接丟棄
     def worker(item):
         # 1. 標題黑名單（最便宜，先檢查）
         hit = matches_blocklist(item.get("title", ""))
         if hit:
-            return item, {"keep": False, "reason": f"blocklist ({hit})"}
+            return item, {"status": "drop", "reason": f"blocklist ({hit})"}
 
         # 2. 解析真實 URL + 真實日期
         try:
             real_date, real_url = determine_item_date(item)
-        except Exception as e:
+        except Exception:
             real_date, real_url = None, None
 
         if real_url:
@@ -321,37 +337,47 @@ def filter_and_enrich(items):
         if real_date is not None:
             item["realDate"] = real_date.isoformat()
             if real_date >= cutoff:
-                return item, {"keep": True, "reason": f"real-date-ok ({real_date.date()})"}
+                return item, {"status": "keep", "reason": f"real-date-ok ({real_date.date()})"}
+            elif real_date >= fallback_cutoff:
+                return item, {"status": "fallback", "reason": f"real-date-fallback ({real_date.date()})"}
             else:
-                return item, {"keep": False, "reason": f"real-date-old ({real_date.date()})"}
+                return item, {"status": "drop", "reason": f"real-date-too-old ({real_date.date()})"}
 
         # 3. 解不到真實日期
         if STRICT_MODE:
-            # 嚴格模式：直接丟，不信 RSS pubDate（因為 Google News 會造假）
-            reason = "no-real-date (strict)"
-            if not real_url:
-                reason = "no-real-url"
-            return item, {"keep": False, "reason": reason}
+            reason = "no-real-date (strict)" if real_url else "no-real-url"
+            return item, {"status": "drop", "reason": reason}
 
-        # Fallback（STRICT_MODE=False）：用 RSS pubDate
+        # STRICT_MODE=False 的備案：信 RSS pubDate
         pub = item.get("published", "")
         dt = parse_iso_date(pub) if pub else None
         if dt is not None:
             if dt >= cutoff:
-                return item, {"keep": True, "reason": f"rss-date-ok ({dt.date()})"}
-            else:
-                return item, {"keep": False, "reason": f"rss-date-old ({dt.date()})"}
-        return item, {"keep": False, "reason": "no-date-info"}
+                return item, {"status": "keep", "reason": f"rss-date-ok ({dt.date()})"}
+            return item, {"status": "drop", "reason": f"rss-date-old ({dt.date()})"}
+        return item, {"status": "drop", "reason": "no-date-info"}
 
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
         for item, decision in ex.map(worker, items):
             results.append((item, decision))
 
-    kept = [it for it, dec in results if dec["keep"]]
-    dropped = [(it, dec) for it, dec in results if not dec["keep"]]
+    kept = [it for it, dec in results if dec["status"] == "keep"]
+    fallback_pool = [it for it, dec in results if dec["status"] == "fallback"]
+    dropped = [(it, dec) for it, dec in results if dec["status"] == "drop"]
 
-    print(f"  kept {len(kept)}, dropped {len(dropped)}  (strict={STRICT_MODE})")
+    print(f"  kept {len(kept)}, fallback_pool {len(fallback_pool)}, dropped {len(dropped)}  (strict={STRICT_MODE})")
+
+    # 嚴格沒過但在 365 天內的 → fallback 救火
+    promoted = []
+    if len(kept) < FALLBACK_MIN_ITEMS and fallback_pool:
+        need = FALLBACK_MIN_ITEMS - len(kept)
+        fallback_pool.sort(key=lambda it: it.get("realDate") or "", reverse=True)
+        promoted = fallback_pool[:need]
+        for it in promoted:
+            it["fallback"] = True  # 標記，前端可顯示「較舊新聞」提示
+        kept = kept + promoted
+        print(f"  嚴格模式留下太少，從 fallback_pool 補 {len(promoted)} 筆")
 
     if dropped:
         print(f"  --- dropped items ---")
@@ -359,12 +385,20 @@ def filter_and_enrich(items):
             t = (it.get("title") or "")[:70]
             print(f"    [x {dec['reason']}] {t}")
 
+    if promoted:
+        print(f"  --- promoted from fallback ---")
+        for it in promoted:
+            t = (it.get("title") or "")[:70]
+            rd = (it.get("realDate") or "")[:10]
+            print(f"    [~ fallback {rd}] {t}")
+
     if kept:
-        print(f"  --- kept items ---")
+        print(f"  --- final kept ---")
         for it in kept[:15]:
             t = (it.get("title") or "")[:70]
-            rd = it.get("realDate", "")[:10] if it.get("realDate") else "(no-real-date)"
-            print(f"    [✓ {rd}] {t}")
+            rd = (it.get("realDate") or "")[:10] or "(no-real-date)"
+            mark = "~" if it.get("fallback") else "✓"
+            print(f"    [{mark} {rd}] {t}")
 
     return kept
 

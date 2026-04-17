@@ -433,6 +433,18 @@ a:hover {{ text-decoration:underline; }}
 .news-card-date {{
   color:var(--text-muted);
 }}
+.news-card-fallback {{
+  display:inline-block;
+  padding:1px 8px;
+  border-radius:10px;
+  background:rgba(212,114,48,0.12);
+  color:var(--accent-orange);
+  font-size:0.65rem;
+  font-weight:600;
+}}
+.news-card.is-fallback {{
+  border-style:dashed;
+}}
 .news-card-snippet {{
   font-size:0.75rem; color:var(--text-secondary);
   line-height:1.45;
@@ -1066,13 +1078,19 @@ function renderNews() {{
     // 去除 Google News 尾綴 " - 來源"
     const title = titleRaw.replace(/\\s+-\\s+[^-]+$/, '');
     const source = it.source || (titleRaw.match(/\\s-\\s+([^-]+)$/) || [,''])[1] || '';
-    const when = formatNewsDate(it.published);
+    // 優先用真實日期（realDate）、真實 URL（realUrl）
+    const when = formatNewsDate(it.realDate || it.published);
+    const linkUrl = it.realUrl || it.url;
     const snippet = it.snippet || '';
-    return `<a class="news-card" href="${{escapeHTML(it.url)}}" target="_blank" rel="noopener noreferrer">
+    const fallbackBadge = it.fallback
+      ? '<span class="news-card-fallback">較舊新聞</span>'
+      : '';
+    return `<a class="news-card${{it.fallback ? ' is-fallback' : ''}}" href="${{escapeHTML(linkUrl)}}" target="_blank" rel="noopener noreferrer">
       <div class="news-card-title">${{escapeHTML(title)}}</div>
       <div class="news-card-meta">
         ${{source ? `<span class="news-card-source">${{escapeHTML(source)}}</span>` : ''}}
         ${{when ? `<span class="news-card-date">${{when}}</span>` : ''}}
+        ${{fallbackBadge}}
       </div>
       ${{snippet ? `<div class="news-card-snippet">${{escapeHTML(snippet)}}</div>` : ''}}
     </a>`;
