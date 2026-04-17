@@ -12,6 +12,9 @@ extract.log
 # Progress / cache files
 .download_progress.json
 
+# 個人 PDF / 不公開資料夾
+temp/
+
 # Python
 __pycache__/
 *.py[cod]

@@ -35,7 +35,13 @@ echo "--- 敏感 / 大檔案檢查 ---"
 if [ -d "temp" ]; then
   temp_count=$(find temp -type f | wc -l | tr -d ' ')
   temp_size=$(du -sh temp 2>/dev/null | cut -f1)
-  echo "⚠️  temp/ 包含 ${temp_count} 個檔案（${temp_size}）；您已確認要一併 push。"
+  echo "ℹ️  temp/ 含 ${temp_count} 個檔案（${temp_size}）— 已在 .gitignore 排除，不會 push。"
+fi
+
+# 保險：若 temp/ 曾經被 track，先從 index 移除（不刪本機檔案）
+if git ls-files --error-unmatch temp >/dev/null 2>&1; then
+  git rm -r --cached temp >/dev/null
+  echo "✓ 將已 track 的 temp/ 從 index 移除"
 fi
 
 echo ""
