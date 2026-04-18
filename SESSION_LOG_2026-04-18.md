@@ -297,3 +297,57 @@ YJ 反映「打開儀表板首頁案件數很少」。診斷後確認：
 - 件數：24（同）
 - 新增 UI 面板：Dashboard 首頁「營業秘密判決總覽」5 張 KPI
 
+
+---
+
+## Session 23:00 — Batch 1：小修與揭露（N1〜N4）
+
+### 0. 目標
+YJ 一次給了 6 項需求（N1〜N6 + 已存在 Task #16）。按風險與依賴規劃 4 batch，
+本 session 先做 Batch 1：低風險的揭露與 UI 小修。
+
+### 成功條件
+1. Dashboard / DamagesAnalysis 顯示「資料更新至 2026-03-11」（max adDate of 492 筆）
+2. CaseList / RecentCases 裡「偵查中案件（調查局移送）」「調解中案件」「114 刑營訴 2」
+   「113 刑營訴 7」「113 刑營訴 12」五筆的「判決書」欄位改顯示「—」，不再誤連 LAWSNOTE
+3. Analytics 頁頂部副標：「已判決 47 件（52 件中扣除 2 件訴訟前 / 3 件審理中）」
+4. 通用 formatCaseName helper 把「民營上字第 1 號」→「107 年度民營上字第 1 號」；
+   套用至 TopDamages、RecentCases、DamagesAnalysis TOP 15、Dashboard KPI sub
+
+### 不做事項
+- 不碰 extract_damages.py（留 Batch 2）
+- 不建 DrillDown（留 Batch 3）
+- 不動 workflow（留 Batch 4）
+
+### 計畫步驟
+1. [ ] 新增 src/utils/caseName.js — formatCaseName(judgmentOrCase)
+2. [ ] 改 src/hooks/useData.js — getLawsnoteUrl 對無判決日期／偵查案件回 null
+3. [ ] 改 src/pages/Dashboard.jsx — 顯示資料更新日期 + 套用 formatCaseName
+4. [ ] 改 src/pages/DamagesAnalysis.jsx — 副標日期 + TOP 15 用完整案號
+5. [ ] 改 src/pages/Analytics.jsx — 揭露 47 筆範圍
+6. [ ] 改 src/components/TopDamages.jsx / RecentCases.jsx — 套用 helper + 隱藏無效判決書連結
+7. [ ] build + 抽樣（大立光 + 偵查中案件）
+8. [ ] commit + push
+
+
+### [23:35] Batch 1 實際修改摘要（補記）
+- 意圖：完成 Session 23:00 計畫步驟 1–6
+- 實際修改檔案：
+  1. `src/utils/caseName.js`（新增）— `formatJudgmentCaseName({ rocYear, caseWord, caseNum, court })`
+  2. `src/hooks/useData.js` — `getLawsnoteUrl` 新增 4 道守門：
+     - `!c.judgmentDate` → null（尚未判決）
+     - `caseNumber` 含「偵查／調解／審理中案件／調查局」→ null
+     - `caseNumber` 無「年度｜字第｜號」→ null（非正式案號）
+  3. `scripts/scrape-api.js` — topDamages 不再 `.replace(/\d+年度/, '')`，同步加上 `court` / `id`
+  4. `data/stats.json` — Python 原地補丁，把 5 筆 topDamages 的 case 從「民營上字第 1 號」等復原為含完整年份之字串；並補 `court` / `id`
+  5. `src/pages/Dashboard.jsx` — 加 `latestDate = max(judgments.adDate) = 2026-03-11`；topCase sub 套用 formatJudgmentCaseName
+  6. `src/pages/DamagesAnalysis.jsx` — 副標顯示資料更新日期；TOP 15 表格改用 formatJudgmentCaseName（title 保留 caseId 供複製）
+  7. `src/pages/Analytics.jsx` — 副標揭露 47 / 52 （扣除 2 件訴訟前 + 3 件審理中）
+  8. `src/components/RecentCases.jsx` — `getLawsnoteUrl(c)` 回 null 時改顯「—」(title 說明原因)
+  9. `src/pages/CaseList.jsx` — 同上
+  10. `src/pages/CaseDetail.jsx` — 外部連結區塊：無 Lawsnote 時顯「尚未判決」灰色 badge，司法院裁判書按鈕維持
+  11. `src/pages/Analytics.jsx` 比較表 — 同上
+- 預期結果：build 成功；偵查中／調解中／刑事審理中 5 筆在 RecentCases / CaseList / CaseDetail 外連處統一顯示「—」或「尚未判決」；Lawsnote 查到的仍保持原樣
+- 實際結果：待 build & 抽樣驗證
+- 異常／差異：待 build
+- 後續行動：vite build + 抽樣 + commit

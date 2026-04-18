@@ -29,7 +29,21 @@ export default function Analytics() {
     <div className="space-y-4 sm:space-y-6 animate-fade-in-up">
       <div>
         <h2 className="font-display text-lg sm:text-xl font-bold mb-1">進階分析</h2>
-        <p className="text-xs text-[var(--text-muted)]">深入探索營業秘密案件的多維度統計分析</p>
+        <p className="text-xs text-[var(--text-muted)]">
+          深入探索營業秘密案件的多維度統計分析
+          {(() => {
+            const total = cases.length;
+            const withJudg = cases.filter((c) => c.judgmentDate).length;
+            const pending = total - withJudg;
+            return (
+              <span className="ml-2 text-[var(--text-secondary)]">
+                ·&nbsp;樣本範圍：已判決 <span className="font-mono">{withJudg}</span> 件
+                （共 <span className="font-mono">{total}</span> 件中扣除 <span className="font-mono">{pending}</span> 件訴訟前／偵查中／審理中）；
+                本頁為「審理中／訴訟前」資料集，與總覽頁 492 筆判決為獨立來源。
+              </span>
+            );
+          })()}
+        </p>
       </div>
 
       {/* Tab navigation */}
@@ -446,13 +460,20 @@ function CaseComparison({ cases, compareIds, setCompareIds }) {
               </tr>
               <tr>
                 <th>判決書</th>
-                {selectedCases.map((c) => (
-                  <td key={c.id}>
-                    <a href={getLawsnoteUrl(c)} target="_blank" rel="noopener noreferrer" className="external-link-icon text-xs">
-                      <ExternalLink size={12} /> 查看
-                    </a>
-                  </td>
-                ))}
+                {selectedCases.map((c) => {
+                  const lawsnoteUrl = getLawsnoteUrl(c);
+                  return (
+                    <td key={c.id}>
+                      {lawsnoteUrl ? (
+                        <a href={lawsnoteUrl} target="_blank" rel="noopener noreferrer" className="external-link-icon text-xs">
+                          <ExternalLink size={12} /> 查看
+                        </a>
+                      ) : (
+                        <span className="text-[10px] text-[var(--text-muted)]" title="尚未判決或非正式案號">—</span>
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             </tbody>
           </table>

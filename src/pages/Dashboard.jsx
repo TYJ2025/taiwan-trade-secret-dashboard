@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Calculator, Search, FileSearch, Trophy, ScrollText, AlertCircle, ArrowUpRight, ExternalLink } from 'lucide-react';
 import { useCases, useJudgments } from '../hooks/useData';
+import { formatJudgmentCaseName } from '../utils/caseName';
 import StatsCards from '../components/StatsCards';
 import YearChart from '../components/YearChart';
 import IndustryChart from '../components/IndustryChart';
@@ -86,12 +87,20 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
     // 最高判准額（取代平均值）
     const top = [...awarded].sort((a, b) => b.damagesNum - a.damagesNum)[0] || null;
 
+    // 資料更新日期 = 492 筆中最近的判決日期
+    const latestDate = judgments
+      .map((j) => j.adDate)
+      .filter(Boolean)
+      .sort()
+      .slice(-1)[0] || null;
+
     return {
       totalJudgments: judgments.length,
       damagesCaseCount: damagesCases.length,
       awardedCount: awarded.length,
       totalAwarded,
       topCase: top, // { caseId, court, damagesNum, ... }
+      latestDate,
     };
   }, [judgments, analysis]);
 
@@ -124,7 +133,13 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
             營業秘密判決總覽
           </h3>
           <p className="text-[10px] sm:text-xs text-[var(--text-muted)] mt-0.5">
-            司法院裁判書系統 492 筆營業秘密相關判決之結構化抽取結果
+            司法院裁判書系統 {summary.totalJudgments} 筆營業秘密相關判決之結構化抽取結果
+            {summary.latestDate && (
+              <span className="ml-2 text-[var(--text-secondary)]">
+                · 資料更新至 <span className="font-mono">{summary.latestDate}</span>
+                <span className="text-[var(--text-muted)]">（最近一筆判決日期）</span>
+              </span>
+            )}
           </p>
         </div>
         <div className="flex gap-2 shrink-0">
@@ -190,7 +205,7 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
           value={summary.topCase ? formatMoney(summary.topCase.damagesNum) : '—'}
           sub={
             summary.topCase
-              ? `${summary.topCase.court}｜${summary.topCase.caseId}`
+              ? `${summary.topCase.court}｜${formatJudgmentCaseName(summary.topCase)}`
               : ''
           }
           color="text-[var(--accent-green)]"

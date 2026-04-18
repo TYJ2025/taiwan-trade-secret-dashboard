@@ -294,7 +294,10 @@ function computeStats(cases) {
     .sort((a, b) => b.damages - a.damages)
     .slice(0, 5)
     .map((c) => ({
-      case: c.caseNumber.replace(/\d+年度/, ''),
+      // YJ 2026-04-18：保留完整年份（原本去掉年度顯示「民營上字第1號」讓人分不清審級）
+      case: c.caseNumber,
+      court: c.court,
+      id: c.id,
       amount: c.damages,
       tech: c.technology,
     }));

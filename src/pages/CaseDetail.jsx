@@ -72,15 +72,24 @@ export default function CaseDetail() {
             )}
             {/* External links */}
             <div className="flex gap-2">
-              <a
-                href={getLawsnoteUrl(c)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[var(--bg-secondary)] text-[var(--accent-blue)] hover:text-[var(--vermillion)] border border-[var(--border)] transition-colors"
-              >
-                <ExternalLink size={12} />
-                Lawsnote 查看判決
-              </a>
+              {getLawsnoteUrl(c) ? (
+                <a
+                  href={getLawsnoteUrl(c)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[var(--bg-secondary)] text-[var(--accent-blue)] hover:text-[var(--vermillion)] border border-[var(--border)] transition-colors"
+                >
+                  <ExternalLink size={12} />
+                  Lawsnote 查看判決
+                </a>
+              ) : (
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[var(--bg-secondary)] text-[var(--text-muted)] border border-[var(--border)] cursor-not-allowed"
+                  title="尚未判決或非正式案號，無法外連 Lawsnote"
+                >
+                  尚未判決
+                </span>
+              )}
               <a
                 href={getJudgmentUrl(c)}
                 target="_blank"

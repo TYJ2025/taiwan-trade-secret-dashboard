@@ -31,46 +31,58 @@ export default function RecentCases({ cases }) {
             </tr>
           </thead>
           <tbody>
-            {cases.map((c) => (
-              <tr key={c.id}>
-                <td className="px-4 sm:px-5 py-3">
-                  <Link
-                    to={`/cases/${encodeURIComponent(c.id)}`}
-                    className="text-[var(--vermillion)] hover:underline font-medium text-xs"
-                  >
-                    {c.caseNumber}
-                  </Link>
-                </td>
-                <td className="px-3 py-3 text-xs text-[var(--text-secondary)]">
-                  {c.court}
-                </td>
-                <td className="px-3 py-3 text-center">
-                  <span className={`badge ${c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'}`}>
-                    {c.caseType}
-                  </span>
-                </td>
-                <td className="px-3 py-3 text-center">
-                  <ResultBadge result={c.result} />
-                </td>
-                <td className="px-3 py-3 text-xs text-[var(--text-secondary)]">
-                  {c.technology}
-                </td>
-                <td className="px-4 sm:px-5 py-3 text-right text-xs font-mono font-medium">
-                  {c.damagesFormatted}
-                </td>
-                <td className="px-3 py-3 text-center">
-                  <a
-                    href={getLawsnoteUrl(c)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="external-link-icon text-[10px]"
-                    title="在 Lawsnote 查看判決書"
-                  >
-                    <ExternalLink size={12} />
-                  </a>
-                </td>
-              </tr>
-            ))}
+            {cases.map((c) => {
+              const lawsnoteUrl = getLawsnoteUrl(c);
+              return (
+                <tr key={c.id}>
+                  <td className="px-4 sm:px-5 py-3">
+                    <Link
+                      to={`/cases/${encodeURIComponent(c.id)}`}
+                      className="text-[var(--vermillion)] hover:underline font-medium text-xs"
+                    >
+                      {c.caseNumber}
+                    </Link>
+                  </td>
+                  <td className="px-3 py-3 text-xs text-[var(--text-secondary)]">
+                    {c.court}
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <span className={`badge ${c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'}`}>
+                      {c.caseType}
+                    </span>
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <ResultBadge result={c.result} />
+                  </td>
+                  <td className="px-3 py-3 text-xs text-[var(--text-secondary)]">
+                    {c.technology}
+                  </td>
+                  <td className="px-4 sm:px-5 py-3 text-right text-xs font-mono font-medium">
+                    {c.damagesFormatted}
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    {lawsnoteUrl ? (
+                      <a
+                        href={lawsnoteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="external-link-icon text-[10px]"
+                        title="在 Lawsnote 查看判決書"
+                      >
+                        <ExternalLink size={12} />
+                      </a>
+                    ) : (
+                      <span
+                        className="text-[10px] text-[var(--text-muted)]"
+                        title="尚未判決或非正式案號，無法外連 Lawsnote"
+                      >
+                        —
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

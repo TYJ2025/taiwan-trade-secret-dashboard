@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { ExternalLink, Scale, Calculator, BookOpen, TrendingUp, AlertCircle, ArrowUpRight } from 'lucide-react';
 import { useJudgments } from '../hooks/useData';
+import { formatJudgmentCaseName } from '../utils/caseName';
 
 const COLORS = [
   '#C8A45A', '#C0392B', '#2980B9', '#27AE60', '#8E44AD',
@@ -127,7 +128,15 @@ export default function DamagesAnalysis() {
       <header>
         <h2 className="font-display text-lg sm:text-xl font-bold mb-1">損害賠償分析</h2>
         <p className="text-xs text-[var(--text-muted)]">
-          對 492 筆營業秘密判決中之損害賠償案件進行數量、金額分布、計算方式與法條引用之多維度分析。
+          對 {judgments.length} 筆營業秘密判決中之損害賠償案件進行數量、金額分布、計算方式與法條引用之多維度分析。
+          {(() => {
+            const latest = judgments.map((j) => j.adDate).filter(Boolean).sort().slice(-1)[0];
+            return latest ? (
+              <span className="ml-1 text-[var(--text-secondary)]">
+                資料更新至 <span className="font-mono">{latest}</span>（最近一筆判決日期）。
+              </span>
+            ) : null;
+          })()}
         </p>
       </header>
 
@@ -297,7 +306,9 @@ export default function DamagesAnalysis() {
                 <tr key={c.seq} className="border-b border-[var(--border)] hover:bg-[var(--bg-secondary)]">
                   <td className="py-2 px-2 text-[var(--text-muted)]">{i + 1}</td>
                   <td className="py-2 px-2 whitespace-nowrap">
-                    <span className="font-medium">{c.caseId}</span>
+                    <span className="font-medium" title={c.caseId}>
+                      {formatJudgmentCaseName(c)}
+                    </span>
                   </td>
                   <td className="py-2 px-2 whitespace-nowrap">{c.court}</td>
                   <td className="py-2 px-2 max-w-[18ch] truncate" title={c.reason}>{c.reason}</td>

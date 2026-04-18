@@ -40,3 +40,9 @@ node_modules/
 dist/
 dist2/
 public/data/
+
+# sandbox build workaround
+dist.stale_*/
+dist2/
+.git/index.lock*
+.git/objects/*/tmp_obj_*

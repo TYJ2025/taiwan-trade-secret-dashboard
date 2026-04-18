@@ -151,10 +151,17 @@ export function getJudgmentUrl(c) {
 }
 
 /**
- * Build a direct LAWSNOTE search URL for the case
+ * Build a direct LAWSNOTE search URL for the case.
+ * 偵查／調解／審理中案件（無判決日期、或案號為敘述字串）回傳 null，
+ * 避免把「偵查中案件（調查局移送）」之類字串送去 LAWSNOTE 查無結果。
  */
 export function getLawsnoteUrl(c) {
   if (!c || !c.caseNumber) return null;
+  if (!c.judgmentDate) return null; // 尚未判決
+  const invalidKeywords = ['偵查', '調解', '審理中案件', '調查局'];
+  if (invalidKeywords.some((k) => c.caseNumber.includes(k))) return null;
+  // 正式案號格式：含「年度」「字第」「號」
+  if (!/年度|字第|號/.test(c.caseNumber)) return null;
   const q = encodeURIComponent(c.caseNumber);
   return `https://www.lawsnote.com/search?q=${q}`;
 }

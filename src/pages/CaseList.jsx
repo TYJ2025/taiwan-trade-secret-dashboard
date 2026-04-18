@@ -311,70 +311,82 @@ export default function CaseList() {
                 </td>
               </tr>
             ) : (
-              paginated.map((c) => (
-                <tr key={c.id}>
-                  <td className="px-4 sm:px-5 py-3">
-                    <Link
-                      to={`/cases/${encodeURIComponent(c.id)}`}
-                      className="text-[var(--vermillion)] hover:underline font-medium text-xs leading-tight block"
-                    >
-                      {c.caseNumber}
-                    </Link>
-                  </td>
-                  <td className="px-3 py-3 text-xs text-[var(--text-secondary)] whitespace-nowrap">
-                    {c.court}
-                  </td>
-                  <td className="px-3 py-3 text-center">
-                    <span className={`badge ${c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'}`}>
-                      {c.caseType}
-                    </span>
-                  </td>
-                  <td className="px-3 py-3 text-center">
-                    <ResultBadge result={c.result} />
-                  </td>
-                  <td className="px-3 py-3">
-                    <div className="flex flex-wrap gap-1">
-                      {c.statutes.slice(0, 2).map((s) => (
-                        <span key={s} className="text-[10px] px-1.5 py-0.5 bg-[var(--bg-secondary)] text-[var(--text-secondary)] whitespace-nowrap">
-                          {s}
+              paginated.map((c) => {
+                const lawsnoteUrl = getLawsnoteUrl(c);
+                return (
+                  <tr key={c.id}>
+                    <td className="px-4 sm:px-5 py-3">
+                      <Link
+                        to={`/cases/${encodeURIComponent(c.id)}`}
+                        className="text-[var(--vermillion)] hover:underline font-medium text-xs leading-tight block"
+                      >
+                        {c.caseNumber}
+                      </Link>
+                    </td>
+                    <td className="px-3 py-3 text-xs text-[var(--text-secondary)] whitespace-nowrap">
+                      {c.court}
+                    </td>
+                    <td className="px-3 py-3 text-center">
+                      <span className={`badge ${c.caseType.includes('刑') ? 'badge-criminal' : 'badge-civil'}`}>
+                        {c.caseType}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 text-center">
+                      <ResultBadge result={c.result} />
+                    </td>
+                    <td className="px-3 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        {c.statutes.slice(0, 2).map((s) => (
+                          <span key={s} className="text-[10px] px-1.5 py-0.5 bg-[var(--bg-secondary)] text-[var(--text-secondary)] whitespace-nowrap">
+                            {s}
+                          </span>
+                        ))}
+                        {c.statutes.length > 2 && (
+                          <span className="text-[10px] text-[var(--text-muted)]">+{c.statutes.length - 2}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-3 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        {c.keyIssues.slice(0, 2).map((issue) => (
+                          <span key={issue} className="text-[10px] px-1.5 py-0.5 bg-[rgba(200,164,90,0.1)] text-[var(--gold)] whitespace-nowrap">
+                            {issue}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-3 py-3 text-xs text-[var(--text-secondary)] whitespace-nowrap">
+                      {c.technology}
+                    </td>
+                    <td className="px-3 py-3 text-right text-xs font-mono font-medium whitespace-nowrap">
+                      {c.damagesFormatted}
+                    </td>
+                    <td className="px-3 py-3 text-center text-[10px] text-[var(--text-muted)] whitespace-nowrap">
+                      {c.filingDate}
+                    </td>
+                    <td className="px-3 py-3 text-center">
+                      {lawsnoteUrl ? (
+                        <a
+                          href={lawsnoteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="external-link-icon"
+                          title="在 Lawsnote 查看判決書"
+                        >
+                          <ExternalLink size={13} />
+                        </a>
+                      ) : (
+                        <span
+                          className="text-[10px] text-[var(--text-muted)]"
+                          title="尚未判決或非正式案號，無法外連 Lawsnote"
+                        >
+                          —
                         </span>
-                      ))}
-                      {c.statutes.length > 2 && (
-                        <span className="text-[10px] text-[var(--text-muted)]">+{c.statutes.length - 2}</span>
                       )}
-                    </div>
-                  </td>
-                  <td className="px-3 py-3">
-                    <div className="flex flex-wrap gap-1">
-                      {c.keyIssues.slice(0, 2).map((issue) => (
-                        <span key={issue} className="text-[10px] px-1.5 py-0.5 bg-[rgba(200,164,90,0.1)] text-[var(--gold)] whitespace-nowrap">
-                          {issue}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-3 py-3 text-xs text-[var(--text-secondary)] whitespace-nowrap">
-                    {c.technology}
-                  </td>
-                  <td className="px-3 py-3 text-right text-xs font-mono font-medium whitespace-nowrap">
-                    {c.damagesFormatted}
-                  </td>
-                  <td className="px-3 py-3 text-center text-[10px] text-[var(--text-muted)] whitespace-nowrap">
-                    {c.filingDate}
-                  </td>
-                  <td className="px-3 py-3 text-center">
-                    <a
-                      href={getLawsnoteUrl(c)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="external-link-icon"
-                      title="在 Lawsnote 查看判決書"
-                    >
-                      <ExternalLink size={13} />
-                    </a>
-                  </td>
-                </tr>
-              ))
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
