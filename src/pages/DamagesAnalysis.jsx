@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo, useState, useCallback } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, LineChart, Line,
 } from 'recharts';
-import { ExternalLink, Scale, Calculator, BookOpen, TrendingUp, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { ExternalLink, Scale, Calculator, BookOpen, TrendingUp, AlertCircle, ArrowUpRight, Sparkles, X } from 'lucide-react';
 import { useJudgments } from '../hooks/useData';
 import { formatJudgmentCaseName } from '../utils/caseName';
 
@@ -15,6 +15,21 @@ const COLORS = [
 
 export default function DamagesAnalysis() {
   const { judgments, analysis, loading, error } = useJudgments();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // URL-based drill-down (用於從 chart / chip 點擊後帶入)
+  const urlMethod = searchParams.get('method') || '';
+  const urlStatute = searchParams.get('statute') || '';
+  const hasUrlDrill = !!(urlMethod || urlStatute);
+
+  const clearUrlDrill = useCallback(() => {
+    // 只清 drill 參數，保留其他 state
+    const next = new URLSearchParams(searchParams);
+    next.delete('method');
+    next.delete('statute');
+    setSearchParams(next);
+  }, [searchParams, setSearchParams]);
+
   const [courtFilter, setCourtFilter] = useState('all');
   const [yearFrom, setYearFrom] = useState('');
   const [yearTo, setYearTo] = useState('');
@@ -30,8 +45,11 @@ export default function DamagesAnalysis() {
       .filter((j) => j.isDamagesCase)
       .filter((j) => courtFilter === 'all' || j.court === courtFilter)
       .filter((j) => !yearFrom || j.adYear >= Number(yearFrom))
-      .filter((j) => !yearTo || j.adYear <= Number(yearTo));
-  }, [judgments, courtFilter, yearFrom, yearTo]);
+      .filter((j) => !yearTo || j.adYear <= Number(yearTo))
+      // URL drill: 以結構化欄位過濾，而非 fulltext regex
+      .filter((j) => !urlMethod || (j.calcMethods || []).includes(urlMethod))
+      .filter((j) => !urlStatute || (j.damagesStatutes || []).includes(urlStatute));
+  }, [judgments, courtFilter, yearFrom, yearTo, urlMethod, urlStatute]);
 
   const filteredStats = useMemo(() => {
     const awarded = damagesCases.filter((c) => c.damagesNum > 0);
@@ -141,6 +159,37 @@ export default function DamagesAnalysis() {
         </p>
       </header>
 
+      {/* Drill-down banner — 由計算方式/條文 chip 點擊後帶入 */}
+      {hasUrlDrill && (
+        <div className="card p-3 sm:p-4 bg-[rgba(200,164,90,0.06)] border-l-4 border-[var(--gold)]">
+          <div className="flex items-start sm:items-center justify-between gap-3 flex-col sm:flex-row">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Sparkles size={14} className="text-[var(--gold)] shrink-0" />
+              <span className="text-xs text-[var(--text-secondary)]">已套用鑽取篩選：</span>
+              {urlMethod && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
+                  計算方式：{urlMethod}
+                </span>
+              )}
+              {urlStatute && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--vermillion)] text-[var(--vermillion)]">
+                  條文：{urlStatute}
+                </span>
+              )}
+              <span className="text-[10px] text-[var(--text-muted)]">
+                · 符合 <span className="font-mono text-[var(--text-primary)]">{damagesCases.length}</span> 件損害賠償案
+              </span>
+            </div>
+            <button
+              onClick={clearUrlDrill}
+              className="text-[11px] px-2.5 py-1 border border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--vermillion)] hover:text-[var(--vermillion)] whitespace-nowrap flex items-center gap-1"
+            >
+              <X size={11} /> 清除鑽取
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Filters */}
       <div className="card p-3 flex flex-wrap gap-3 items-center">
         <span className="text-[10px] text-[var(--text-muted)]">法院:</span>
@@ -204,14 +253,14 @@ export default function DamagesAnalysis() {
               <div className="mt-3 text-[10px] text-[var(--text-muted)] space-y-0.5">
                 <div className="flex items-center justify-between">
                   <p className="font-medium">計算方式對應法條（台灣營業秘密法 §13 體系）：</p>
-                  <span className="text-[9px] text-[var(--text-muted)]">點計算方式至全文檢索</span>
+                  <span className="text-[9px] text-[var(--text-muted)]">點計算方式查明細</span>
                 </div>
                 {calcBreakdown.slice(0, 9).map((m) => (
                   <Link
                     key={m.key}
-                    to={`/search?q=${encodeURIComponent(m.label)}&mode=OR`}
-                    className="block -mx-1 px-1 py-0.5 hover:bg-[var(--bg-secondary)] hover:text-[var(--gold)] transition-colors group"
-                    title={`以「${m.label}」關鍵字搜尋 492 筆判決全文`}
+                    to={`/damages?method=${encodeURIComponent(m.key)}`}
+                    className={`block -mx-1 px-1 py-0.5 transition-colors group ${urlMethod === m.key ? 'bg-[rgba(200,164,90,0.15)] text-[var(--gold)]' : 'hover:bg-[var(--bg-secondary)] hover:text-[var(--gold)]'}`}
+                    title={`篩選出計算方式含「${m.key}」之損害賠償案件 (${m.count} 件)`}
                   >
                     <span className="text-[var(--text-secondary)] group-hover:text-[var(--gold)]">{m.label}</span>
                     <span className="text-[var(--text-muted)]"> — {m.statute} — {m.count} 件</span>
@@ -263,20 +312,27 @@ export default function DamagesAnalysis() {
               <Bar dataKey="count" fill="#C0392B" />
             </BarChart>
           </ResponsiveContainer>
-          {/* Drill-down chip list: clickable rows to FullTextSearch */}
+          {/* Drill-down chip list: 依 damagesStatutes 結構化欄位過濾（非 fulltext） */}
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {(analysis.byStatute || []).slice(0, 10).map((s) => (
-              <Link
-                key={s.statute}
-                to={`/search?q=${encodeURIComponent(s.statute)}&mode=OR`}
-                className="text-[10px] px-2 py-0.5 border border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--vermillion)] hover:text-[var(--vermillion)] transition-colors flex items-center gap-1 group"
-                title={`以「${s.statute}」全文檢索`}
-              >
-                {s.statute}
-                <span className="text-[var(--text-muted)] group-hover:text-[var(--vermillion)]">· {s.count}</span>
-                <ArrowUpRight size={9} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Link>
-            ))}
+            {(analysis.byStatute || []).slice(0, 10).map((s) => {
+              const isActive = urlStatute === s.statute;
+              return (
+                <Link
+                  key={s.statute}
+                  to={`/damages?statute=${encodeURIComponent(s.statute)}`}
+                  className={`text-[10px] px-2 py-0.5 border transition-colors flex items-center gap-1 group ${
+                    isActive
+                      ? 'border-[var(--vermillion)] bg-[rgba(192,57,43,0.1)] text-[var(--vermillion)]'
+                      : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--vermillion)] hover:text-[var(--vermillion)]'
+                  }`}
+                  title={`篩選出援引「${s.statute}」之損害賠償案件 (${s.count} 件)`}
+                >
+                  {s.statute}
+                  <span className="text-[var(--text-muted)] group-hover:text-[var(--vermillion)]">· {s.count}</span>
+                  <ArrowUpRight size={9} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              );
+            })}
           </div>
           <p className="text-[10px] text-[var(--text-muted)] mt-2">
             註：以全文正則比對條文字串，未細分援引於主文或理由。
