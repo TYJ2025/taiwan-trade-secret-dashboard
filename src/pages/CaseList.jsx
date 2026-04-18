@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, Filter, X, ExternalLink, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Search, Filter, X, ExternalLink, Calendar, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import Fuse from 'fuse.js';
 import { useCases, getLawsnoteUrl } from '../hooks/useData';
 import Pagination from '../components/Pagination';
@@ -9,10 +9,19 @@ const PAGE_SIZES = [10, 20, 50];
 
 export default function CaseList() {
   const { cases, loading, error } = useCases();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // URL drill-down parameters (source of truth for external links)
+  const urlIssue = searchParams.get('issue') || '';
+  const urlIndustry = searchParams.get('industry') || '';
+  const urlResult = searchParams.get('result') || '';
+  const urlStatute = searchParams.get('statute') || '';
+  const urlType = searchParams.get('type') || '';
+
   const [query, setQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [resultFilter, setResultFilter] = useState('all');
-  const [industryFilter, setIndustryFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState(urlType || 'all');
+  const [resultFilter, setResultFilter] = useState(urlResult || 'all');
+  const [industryFilter, setIndustryFilter] = useState(urlIndustry || 'all');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [sortField, setSortField] = useState('filingDate');
@@ -20,6 +29,23 @@ export default function CaseList() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [showAdvanced, setShowAdvanced] = useState(false);
+
+  // Sync URL params when they change (e.g., user navigates with browser back)
+  useEffect(() => {
+    if (urlType) setTypeFilter(urlType);
+    if (urlResult) setResultFilter(urlResult);
+    if (urlIndustry) setIndustryFilter(urlIndustry);
+  }, [urlType, urlResult, urlIndustry]);
+
+  const hasUrlFilter = !!(urlIssue || urlIndustry || urlResult || urlStatute || urlType);
+
+  const clearUrlFilters = useCallback(() => {
+    setSearchParams({});
+    setTypeFilter('all');
+    setResultFilter('all');
+    setIndustryFilter('all');
+    setQuery('');
+  }, [setSearchParams]);
 
   const fuse = useMemo(
     () =>
@@ -77,6 +103,15 @@ export default function CaseList() {
     if (industryFilter !== 'all') {
       result = result.filter((c) => c.industryCategory === industryFilter);
     }
+    // URL-driven drill-down filters: 爭點 (keyIssues) / 條文 (statutes)
+    if (urlIssue) {
+      result = result.filter((c) => (c.keyIssues || []).includes(urlIssue));
+    }
+    if (urlStatute) {
+      result = result.filter((c) =>
+        (c.statutes || []).some((s) => s.includes(urlStatute))
+      );
+    }
     if (dateFrom) {
       result = result.filter((c) => c.filingDate >= dateFrom);
     }
@@ -97,7 +132,7 @@ export default function CaseList() {
     });
 
     return result;
-  }, [cases, query, typeFilter, resultFilter, industryFilter, dateFrom, dateTo, sortField, sortDir, fuse]);
+  }, [cases, query, typeFilter, resultFilter, industryFilter, urlIssue, urlStatute, dateFrom, dateTo, sortField, sortDir, fuse]);
 
   // Pagination
   const totalPages = Math.ceil(filtered.length / pageSize);
@@ -140,6 +175,52 @@ export default function CaseList() {
 
   return (
     <div className="space-y-4 animate-fade-in-up">
+      {/* Drill-down banner */}
+      {hasUrlFilter && (
+        <div className="card p-3 sm:p-4 bg-[rgba(200,164,90,0.06)] border-l-4 border-[var(--gold)]">
+          <div className="flex items-start sm:items-center justify-between gap-3 flex-col sm:flex-row">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Sparkles size={14} className="text-[var(--gold)] shrink-0" />
+              <span className="text-xs text-[var(--text-secondary)]">已套用自儀表板帶入之篩選：</span>
+              {urlIssue && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
+                  爭點：{urlIssue}
+                </span>
+              )}
+              {urlIndustry && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
+                  產業：{urlIndustry}
+                </span>
+              )}
+              {urlResult && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
+                  結果：{urlResult}
+                </span>
+              )}
+              {urlStatute && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
+                  條文：{urlStatute}
+                </span>
+              )}
+              {urlType && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
+                  類型：{urlType === '刑' ? '刑事' : urlType === '民' ? '民事' : urlType}
+                </span>
+              )}
+              <span className="text-[10px] text-[var(--text-muted)]">
+                · 符合 <span className="font-mono text-[var(--text-primary)]">{filtered.length}</span> 筆
+              </span>
+            </div>
+            <button
+              onClick={clearUrlFilters}
+              className="text-[11px] px-2.5 py-1 border border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--vermillion)] hover:text-[var(--vermillion)] whitespace-nowrap flex items-center gap-1"
+            >
+              <X size={11} /> 清除鑽取篩選
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Search & Filters */}
       <div className="card p-3 sm:p-4">
         <div className="flex flex-col gap-3">

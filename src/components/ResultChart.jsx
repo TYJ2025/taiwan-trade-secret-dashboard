@@ -1,12 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function ResultChart({ data }) {
   return (
     <div className="card p-4 sm:p-5">
-      <h3 className="font-display text-sm font-bold mb-4 tracking-wide">
-        判決結果分布
-      </h3>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-display text-sm font-bold tracking-wide">判決結果分布</h3>
+        <span className="text-[10px] text-[var(--text-muted)]">點結果查明細</span>
+      </div>
       <ResponsiveContainer width="100%" height={200}>
         <PieChart>
           <Pie
@@ -27,10 +30,16 @@ export default function ResultChart({ data }) {
       </ResponsiveContainer>
       <div className="flex flex-wrap gap-2 mt-2 justify-center">
         {data.map((d) => (
-          <span key={d.name} className="flex items-center gap-1.5 text-[10px] text-[var(--text-muted)]">
+          <Link
+            key={d.name}
+            to={`/cases?result=${encodeURIComponent(d.name)}`}
+            className="flex items-center gap-1.5 text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)] group transition-colors"
+            title={`查看 ${d.count} 件「${d.name}」案件`}
+          >
             <span className="w-2 h-2" style={{ background: d.color }} />
             {d.name} ({d.count})
-          </span>
+            <ArrowUpRight size={9} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
         ))}
       </div>
     </div>

@@ -1,12 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function StatuteChart({ data }) {
   return (
     <div className="card p-4 sm:p-5">
-      <h3 className="font-display text-sm font-bold mb-4 tracking-wide">
-        常見引用條文
-      </h3>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-display text-sm font-bold tracking-wide">常見引用條文</h3>
+        <span className="text-[10px] text-[var(--text-muted)]">點條文查明細</span>
+      </div>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} layout="vertical" barSize={14}>
           <XAxis type="number" tick={{ fontSize: 10, fill: 'var(--text-muted)' }} axisLine={{ stroke: 'var(--border)' }} allowDecimals={false} />
@@ -18,6 +21,21 @@ export default function StatuteChart({ data }) {
           <Bar dataKey="count" fill="var(--gold)" radius={[0, 2, 2, 0]} />
         </BarChart>
       </ResponsiveContainer>
+      {/* Drill-down list (complements the chart with clickable rows) */}
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {data.slice(0, 8).map((d) => (
+          <Link
+            key={d.statute}
+            to={`/cases?statute=${encodeURIComponent(d.statute)}`}
+            className="text-[10px] px-2 py-0.5 border border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors flex items-center gap-1 group"
+            title={`查看 ${d.count} 件引用「${d.statute}」的案件`}
+          >
+            {d.statute}
+            <span className="text-[var(--text-muted)] group-hover:text-[var(--gold)]">· {d.count}</span>
+            <ArrowUpRight size={9} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

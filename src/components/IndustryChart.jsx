@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from 'recharts';
+import { ArrowUpRight } from 'lucide-react';
 
 const COLORS = ['#c23616', '#2980b9', '#c8a45a', '#27ae60', '#8e44ad', '#e67e22', '#1abc9c', '#95a5a6'];
 
@@ -30,9 +32,12 @@ export default function IndustryChart({ data }) {
 
   return (
     <div className="card p-4 sm:p-5">
-      <h3 className="font-display text-sm font-bold mb-4 tracking-wide">
-        涉案產業分布
-      </h3>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-display text-sm font-bold tracking-wide">
+          涉案產業分布
+        </h3>
+        <span className="text-[10px] text-[var(--text-muted)]">點產業查明細</span>
+      </div>
       <ResponsiveContainer width="100%" height={280}>
         <PieChart>
           <Pie
@@ -52,18 +57,21 @@ export default function IndustryChart({ data }) {
           />
         </PieChart>
       </ResponsiveContainer>
-      {/* Legend below chart for better mobile layout */}
-      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 justify-center">
+      {/* Legend below chart: clickable drill-down rows */}
+      <div className="flex flex-wrap gap-x-3 gap-y-1.5 mt-2 justify-center">
         {data.map((d, i) => (
-          <span
+          <Link
             key={d.name}
-            className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[var(--text-muted)] cursor-pointer hover:text-[var(--text-primary)] transition-colors"
+            to={`/cases?industry=${encodeURIComponent(d.name)}`}
+            className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[var(--text-muted)] hover:text-[var(--gold)] transition-colors group"
             onMouseEnter={() => setActiveIndex(i)}
             onMouseLeave={() => setActiveIndex(-1)}
+            title={`查看 ${d.count} 件「${d.name}」案件`}
           >
             <span className="w-2.5 h-2.5 flex-shrink-0" style={{ background: COLORS[i % COLORS.length] }} />
             {d.name} ({d.percentage}%)
-          </span>
+            <ArrowUpRight size={10} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
         ))}
       </div>
     </div>

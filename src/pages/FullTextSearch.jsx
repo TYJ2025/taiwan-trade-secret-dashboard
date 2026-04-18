@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, X, ExternalLink, Download, AlertCircle, FileText, Loader2 } from 'lucide-react';
 import { useJudgments, useJudgmentsFullText } from '../hooks/useData';
 
@@ -9,14 +10,28 @@ const MAX_SNIPPETS_PER_CASE = 3;
 export default function FullTextSearch() {
   const { judgments, loading: metaLoading, error: metaError } = useJudgments();
   const { fulltext, loading: ftLoading, error: ftError, progress } = useJudgmentsFullText();
+  const [searchParams] = useSearchParams();
 
-  const [rawQuery, setRawQuery] = useState('');
-  const [submittedQuery, setSubmittedQuery] = useState('');
-  const [mode, setMode] = useState('AND');       // AND | OR | PHRASE
+  const urlQuery = searchParams.get('q') || '';
+  const urlMode = searchParams.get('mode') || '';
+
+  const [rawQuery, setRawQuery] = useState(urlQuery);
+  const [submittedQuery, setSubmittedQuery] = useState(urlQuery);
+  const [mode, setMode] = useState(['AND', 'OR', 'PHRASE'].includes(urlMode) ? urlMode : 'AND');
   const [typeFilter, setTypeFilter] = useState('all');
   const [yearFrom, setYearFrom] = useState('');
   const [yearTo, setYearTo] = useState('');
   const [page, setPage] = useState(1);
+
+  // Sync URL → state when the query param changes (external link navigation)
+  useEffect(() => {
+    if (urlQuery && urlQuery !== submittedQuery) {
+      setRawQuery(urlQuery);
+      setSubmittedQuery(urlQuery);
+      setPage(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlQuery]);
 
   const tokens = useMemo(() => {
     const q = (submittedQuery || '').trim();

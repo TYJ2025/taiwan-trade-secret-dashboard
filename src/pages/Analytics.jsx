@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   LineChart, Line, AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
 } from 'recharts';
-import { TrendingUp, Building2, Scale, Clock, GitCompare, ExternalLink } from 'lucide-react';
+import { TrendingUp, Building2, Scale, Clock, GitCompare, ExternalLink, ArrowUpRight } from 'lucide-react';
 import { useCases, useAnalytics, getLawsnoteUrl } from '../hooks/useData';
 
 export default function Analytics() {
@@ -267,15 +267,26 @@ function IssuesAnalysis({ data }) {
       </div>
 
       <div className="card p-4 sm:p-5">
-        <h3 className="font-display text-sm font-bold mb-4 tracking-wide">爭點分析摘要</h3>
-        <div className="space-y-4">
-          {data.slice(0, 6).map((item, i) => {
+        <h3 className="font-display text-sm font-bold mb-1 tracking-wide">爭點分析摘要</h3>
+        <p className="text-[10px] text-[var(--text-muted)] mb-3">點擊爭點列 → 開啟對應案件清單</p>
+        <div className="space-y-3">
+          {data.slice(0, 10).map((item, i) => {
             const maxCount = data[0]?.count || 1;
             return (
-              <div key={item.name}>
+              <Link
+                key={item.name}
+                to={`/cases?issue=${encodeURIComponent(item.name)}`}
+                className="block group hover:bg-[var(--bg-secondary)] -mx-2 px-2 py-1 transition-colors"
+                title={`查看 ${item.count} 件爭點「${item.name}」的案件清單`}
+              >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-medium text-[var(--text-primary)]">{item.name}</span>
-                  <span className="text-xs font-mono text-[var(--text-muted)]">{item.count} 件</span>
+                  <span className="text-xs font-medium text-[var(--text-primary)] group-hover:text-[var(--gold)] transition-colors">
+                    {item.name}
+                  </span>
+                  <span className="flex items-center gap-1 text-xs font-mono text-[var(--text-muted)] group-hover:text-[var(--text-primary)]">
+                    {item.count} 件
+                    <ArrowUpRight size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </span>
                 </div>
                 <div className="w-full h-1.5 bg-[var(--bg-secondary)] overflow-hidden">
                   <div
@@ -283,7 +294,7 @@ function IssuesAnalysis({ data }) {
                     style={{ width: `${(item.count / maxCount) * 100}%`, background: i < 3 ? 'var(--vermillion)' : 'var(--gold)' }}
                   />
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

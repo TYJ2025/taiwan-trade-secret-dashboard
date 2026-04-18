@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, LineChart, Line,
@@ -201,12 +202,21 @@ export default function DamagesAnalysis() {
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-3 text-[10px] text-[var(--text-muted)] space-y-0.5">
-                <p className="font-medium">計算方式對應法條（台灣營業秘密法 §13 體系）：</p>
+                <div className="flex items-center justify-between">
+                  <p className="font-medium">計算方式對應法條（台灣營業秘密法 §13 體系）：</p>
+                  <span className="text-[9px] text-[var(--text-muted)]">點計算方式至全文檢索</span>
+                </div>
                 {calcBreakdown.slice(0, 9).map((m) => (
-                  <p key={m.key}>
-                    <span className="text-[var(--text-secondary)]">{m.label}</span>
+                  <Link
+                    key={m.key}
+                    to={`/search?q=${encodeURIComponent(m.label)}&mode=OR`}
+                    className="block -mx-1 px-1 py-0.5 hover:bg-[var(--bg-secondary)] hover:text-[var(--gold)] transition-colors group"
+                    title={`以「${m.label}」關鍵字搜尋 492 筆判決全文`}
+                  >
+                    <span className="text-[var(--text-secondary)] group-hover:text-[var(--gold)]">{m.label}</span>
                     <span className="text-[var(--text-muted)]"> — {m.statute} — {m.count} 件</span>
-                  </p>
+                    <ArrowUpRight size={9} className="inline ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Link>
                 ))}
               </div>
             </>
@@ -237,10 +247,13 @@ export default function DamagesAnalysis() {
       {/* Statute citation & Yearly trend */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card p-4">
-          <h3 className="text-sm font-medium mb-3 flex items-center gap-1.5">
-            <BookOpen size={14} className="text-[var(--gold)]" />
-            損害賠償相關條文引用 TOP 10
-          </h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-medium flex items-center gap-1.5">
+              <BookOpen size={14} className="text-[var(--gold)]" />
+              損害賠償相關條文引用 TOP 10
+            </h3>
+            <span className="text-[10px] text-[var(--text-muted)]">點條文查明細</span>
+          </div>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={(analysis.byStatute || []).slice(0, 10)} layout="vertical" margin={{ left: 10 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -250,6 +263,21 @@ export default function DamagesAnalysis() {
               <Bar dataKey="count" fill="#C0392B" />
             </BarChart>
           </ResponsiveContainer>
+          {/* Drill-down chip list: clickable rows to FullTextSearch */}
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {(analysis.byStatute || []).slice(0, 10).map((s) => (
+              <Link
+                key={s.statute}
+                to={`/search?q=${encodeURIComponent(s.statute)}&mode=OR`}
+                className="text-[10px] px-2 py-0.5 border border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--vermillion)] hover:text-[var(--vermillion)] transition-colors flex items-center gap-1 group"
+                title={`以「${s.statute}」全文檢索`}
+              >
+                {s.statute}
+                <span className="text-[var(--text-muted)] group-hover:text-[var(--vermillion)]">· {s.count}</span>
+                <ArrowUpRight size={9} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
+            ))}
+          </div>
           <p className="text-[10px] text-[var(--text-muted)] mt-2">
             註：以全文正則比對條文字串，未細分援引於主文或理由。
           </p>
