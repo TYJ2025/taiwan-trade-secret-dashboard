@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, LineChart, Line,
 } from 'recharts';
-import { ExternalLink, Scale, Calculator, BookOpen, TrendingUp, AlertCircle } from 'lucide-react';
+import { ExternalLink, Scale, Calculator, BookOpen, TrendingUp, AlertCircle, ArrowUpRight } from 'lucide-react';
 import { useJudgments } from '../hooks/useData';
 
 const COLORS = [
@@ -165,6 +165,7 @@ export default function DamagesAnalysis() {
           sub={filteredStats.maxCase
             ? `${filteredStats.maxCase.court}｜${filteredStats.maxCase.caseId}`
             : '—'}
+          href={filteredStats.maxCase?.judgmentUrl}
         />
         <KpiCard label="中位數判准額" value={formatMoney(filteredStats.medAwarded)} color="purple" />
       </div>
@@ -355,7 +356,7 @@ export default function DamagesAnalysis() {
   );
 }
 
-function KpiCard({ label, value, suffix, color, sub }) {
+function KpiCard({ label, value, suffix, color, sub, href }) {
   const colorMap = {
     gold: 'text-[var(--gold)]',
     red: 'text-[var(--vermillion)]',
@@ -363,18 +364,31 @@ function KpiCard({ label, value, suffix, color, sub }) {
     green: 'text-[var(--accent-green)]',
     purple: 'text-[#8E44AD]',
   };
-  return (
-    <div className="card p-3">
-      <p className="text-[10px] text-[var(--text-muted)]">{label}</p>
+  const inner = (
+    <>
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] text-[var(--text-muted)]">{label}</p>
+        {href && <ExternalLink size={11} className="text-[var(--text-muted)] group-hover:text-[var(--accent-green)] transition" />}
+      </div>
       <div className="flex items-baseline gap-1 mt-1">
         <span className={`text-lg sm:text-xl font-bold font-mono ${colorMap[color]}`}>
           {value}
         </span>
         {suffix && <span className="text-[10px] text-[var(--text-muted)]">{suffix}</span>}
       </div>
-      {sub && <p className="text-[9px] text-[var(--text-muted)] mt-0.5">{sub}</p>}
-    </div>
+      {sub && <p className="text-[9px] text-[var(--text-muted)] mt-0.5 truncate" title={sub}>{sub}</p>}
+    </>
   );
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer"
+         className="card p-3 group block cursor-pointer transition hover:border-[var(--text-secondary)] hover:shadow-sm"
+         title="開啟判決原文">
+        {inner}
+      </a>
+    );
+  }
+  return <div className="card p-3">{inner}</div>;
 }
 
 function LoadingSkeleton() {

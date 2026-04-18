@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, Search, FileSearch, Trophy, ScrollText, AlertCircle } from 'lucide-react';
+import { Calculator, Search, FileSearch, Trophy, ScrollText, AlertCircle, ArrowUpRight, ExternalLink } from 'lucide-react';
 import { useCases, useJudgments } from '../hooks/useData';
 import StatsCards from '../components/StatsCards';
 import YearChart from '../components/YearChart';
@@ -143,14 +143,16 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
         </div>
       </div>
 
-      {/* KPI 5 張 */}
+      {/* KPI 5 張（皆可點） */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         <OverviewKpi
           icon={FileSearch}
           label="判決總數"
           value={summary.totalJudgments.toLocaleString()}
           suffix="件"
+          sub="點擊進入全文檢索"
           color="text-[var(--text-primary)]"
+          to="/search"
         />
         <OverviewKpi
           icon={ScrollText}
@@ -159,6 +161,7 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
           suffix="件"
           sub="民事含排除侵害"
           color="text-[var(--gold)]"
+          to="/damages"
         />
         <OverviewKpi
           icon={Calculator}
@@ -171,6 +174,7 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
               : ''
           }
           color="text-[var(--vermillion)]"
+          to="/damages"
         />
         <OverviewKpi
           icon={Calculator}
@@ -178,6 +182,7 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
           value={formatMoney(summary.totalAwarded)}
           sub="全部判准案件合計"
           color="text-[var(--accent-blue)]"
+          to="/damages"
         />
         <OverviewKpi
           icon={Trophy}
@@ -190,6 +195,8 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
           }
           color="text-[var(--accent-green)]"
           highlight
+          href={summary.topCase?.judgmentUrl}
+          external
         />
       </div>
 
@@ -201,12 +208,19 @@ function JudgmentsOverview({ judgments, analysis, loading, error }) {
   );
 }
 
-function OverviewKpi({ icon: Icon, label, value, suffix, sub, color, highlight }) {
-  return (
-    <div className={`card p-3 ${highlight ? 'ring-1 ring-[var(--accent-green)]' : ''}`}>
+function OverviewKpi({ icon: Icon, label, value, suffix, sub, color, highlight, to, href, external }) {
+  const body = (
+    <>
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-[var(--text-muted)] tracking-wider">{label}</span>
-        {Icon && <Icon size={12} className="text-[var(--text-muted)]" />}
+        <div className="flex items-center gap-1">
+          {Icon && <Icon size={12} className="text-[var(--text-muted)]" />}
+          {(to || href) && (
+            external
+              ? <ExternalLink size={11} className="text-[var(--text-muted)] group-hover:text-[var(--accent-green)] transition" />
+              : <ArrowUpRight size={12} className="text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition" />
+          )}
+        </div>
       </div>
       <div className="flex items-baseline gap-1">
         <span className={`font-display text-lg sm:text-xl md:text-2xl font-bold font-mono leading-none ${color}`}>
@@ -215,8 +229,22 @@ function OverviewKpi({ icon: Icon, label, value, suffix, sub, color, highlight }
         {suffix && <span className="text-[10px] text-[var(--text-muted)]">{suffix}</span>}
       </div>
       {sub && <p className="text-[9px] sm:text-[10px] text-[var(--text-muted)] mt-1 truncate" title={sub}>{sub}</p>}
-    </div>
+    </>
   );
+
+  const cls = `card p-3 group transition hover:border-[var(--text-secondary)] hover:shadow-sm ${highlight ? 'ring-1 ring-[var(--accent-green)]' : ''} ${(to || href) ? 'cursor-pointer' : ''} block`;
+
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls} title="開啟判決原文">
+        {body}
+      </a>
+    );
+  }
+  if (to) {
+    return <Link to={to} className={cls}>{body}</Link>;
+  }
+  return <div className={cls}>{body}</div>;
 }
 
 function formatMoney(n) {
