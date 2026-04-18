@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-04-18T13:16:58.482694Z",
+  "generatedAt": "2026-04-18T15:04:23.295422Z",
   "totalCases": 492,
   "damagesCaseCount": 144,
   "damagesAwardedCount": 24,
   "totalAwarded": 3299960280,
-  "totalRequested": 80424095970,
+  "totalRequested": 80419095970,
   "byCalcMethod": [
     {
       "key": "所受損害",
@@ -133,79 +133,79 @@
     {
       "year": 2013,
       "count": 8,
-      "totalAwarded": 1524350639,
+      "totalAwarded": 1522470639,
       "totalRequested": 48936144000
     },
     {
       "year": 2014,
       "count": 15,
-      "totalAwarded": 76442700,
+      "totalAwarded": 11562700,
       "totalRequested": 81488273
     },
     {
       "year": 2015,
       "count": 19,
-      "totalAwarded": 11760000,
-      "totalRequested": 209400000
+      "totalAwarded": 0,
+      "totalRequested": 204400000
     },
     {
       "year": 2016,
       "count": 36,
-      "totalAwarded": 2134866382,
+      "totalAwarded": 3000000,
       "totalRequested": 2621098001
     },
     {
       "year": 2017,
       "count": 47,
-      "totalAwarded": 278777200,
+      "totalAwarded": 4531250,
       "totalRequested": 21912250
     },
     {
       "year": 2018,
       "count": 64,
-      "totalAwarded": 1768399476,
+      "totalAwarded": 1525444476,
       "totalRequested": 270791039
     },
     {
       "year": 2019,
       "count": 45,
-      "totalAwarded": 21725970706,
+      "totalAwarded": 5862118,
       "totalRequested": 171770497
     },
     {
       "year": 2020,
       "count": 55,
-      "totalAwarded": 947829880,
+      "totalAwarded": 800000,
       "totalRequested": 22200692205
     },
     {
       "year": 2021,
       "count": 54,
-      "totalAwarded": 994002522,
+      "totalAwarded": 0,
       "totalRequested": 62946148
     },
     {
       "year": 2022,
       "count": 49,
-      "totalAwarded": 3655082486,
+      "totalAwarded": 224080486,
       "totalRequested": 663412404
     },
     {
       "year": 2023,
       "count": 45,
-      "totalAwarded": 223495111,
+      "totalAwarded": 2010611,
       "totalRequested": 4889294896
     },
     {
       "year": 2024,
       "count": 35,
-      "totalAwarded": 114898000,
+      "totalAwarded": 198000,
       "totalRequested": 60347897
     },
     {
       "year": 2025,
       "count": 16,
-      "totalAwarded": 389078468,
+      "totalAwarded": 0,
       "totalRequested": 233148360
     },
     {

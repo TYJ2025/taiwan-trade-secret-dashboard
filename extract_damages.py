@@ -298,6 +298,17 @@ def main():
 
         is_dmg = is_damages_case(reason, case_type)
 
+        # ── 清污：若非「損害賠償性質案件」（例：純刑事違反營業秘密法），
+        #   主文中抽到的大金額通常是「侵害額」「不法所得」「起訴金額」，
+        #   而非民事判准金額，不應累計進判准總額。
+        #   保留 raw 數字於 rawAmountInText 供審計，但 damagesNum / damages 歸零。
+        #   刑事附帶民事之判准金額應由獨立案由（案由含「損害賠償」）的民事判決承接。
+        raw_amount_in_text = 0
+        if not is_dmg and damages_num > 0:
+            raw_amount_in_text = damages_num
+            damages_num = 0
+            damages_text = ""
+
         # 抽取計算方式 / 請求金額: 即使不是「典型損害賠償案」也要掃（刑事附民事）
         if ft:
             calc_methods = detect_calc_methods(ft)
@@ -337,6 +348,7 @@ def main():
             "isDamagesCase": is_dmg,
             "damages": damages_text,
             "damagesNum": damages_num,
+            "rawAmountInText": raw_amount_in_text,  # 僅非損害賠償案件時 > 0，供審計
             "damagesRequested": req_amt,
             "calcMethods": calc_methods,
             "damagesStatutes": damages_statutes,
