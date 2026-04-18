@@ -26,8 +26,21 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Install dependencies
         run: npm install
+
+      - name: Re-generate damages analysis
+        run: |
+          if [ -f trade_secret_judgments_fulltext.json ] && [ -f trade_secret_judgments_structured.json ]; then
+            python3 extract_damages.py
+          else
+            echo "Skipping damages extraction — fulltext/structured JSON not present in repo."
+          fi
 
       - name: Copy data to public
         run: mkdir -p public/data && cp -r data/* public/data/

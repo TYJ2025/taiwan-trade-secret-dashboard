@@ -2,6 +2,107 @@ import { useState, useEffect, useMemo } from 'react';
 
 const BASE = import.meta.env.BASE_URL || '/';
 
+// ─────────────────────────────────────────────────────────────────
+// 492 筆完整判決（含結構化欄位 + 損害賠償抽取）
+// ─────────────────────────────────────────────────────────────────
+
+let _judgmentsCache = null;
+let _analysisCache = null;
+let _fulltextCache = null;
+
+export function useJudgments() {
+  const [judgments, setJudgments] = useState(_judgmentsCache || []);
+  const [analysis, setAnalysis] = useState(_analysisCache || null);
+  const [loading, setLoading] = useState(!_judgmentsCache);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (_judgmentsCache && _analysisCache) {
+      return;
+    }
+    async function load() {
+      try {
+        const [jRes, aRes] = await Promise.all([
+          fetch(`${BASE}data/judgments.json`),
+          fetch(`${BASE}data/damages_analysis.json`),
+        ]);
+        if (!jRes.ok || !aRes.ok) throw new Error('判決資料載入失敗');
+        const jData = await jRes.json();
+        const aData = await aRes.json();
+        _judgmentsCache = jData.judgments || [];
+        _analysisCache = aData;
+        setJudgments(_judgmentsCache);
+        setAnalysis(_analysisCache);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  return { judgments, analysis, loading, error };
+}
+
+/**
+ * Lazy-load the 18 MB fulltext bundle (only on FullTextSearch page).
+ */
+export function useJudgmentsFullText() {
+  const [fulltext, setFulltext] = useState(_fulltextCache || null);
+  const [loading, setLoading] = useState(!_fulltextCache);
+  const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(_fulltextCache ? 100 : 0);
+
+  useEffect(() => {
+    if (_fulltextCache) return;
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/judgments_fulltext.json`);
+        if (!res.ok) throw new Error('全文資料載入失敗');
+        // Stream progress if possible
+        const total = Number(res.headers.get('content-length')) || 0;
+        if (total && res.body && typeof res.body.getReader === 'function') {
+          const reader = res.body.getReader();
+          const chunks = [];
+          let received = 0;
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            received += value.length;
+            if (!cancelled) setProgress(Math.min(99, Math.round((received / total) * 100)));
+          }
+          const blob = new Blob(chunks);
+          const text = await blob.text();
+          const data = JSON.parse(text);
+          _fulltextCache = data;
+          if (!cancelled) {
+            setFulltext(data);
+            setProgress(100);
+          }
+        } else {
+          const data = await res.json();
+          _fulltextCache = data;
+          if (!cancelled) {
+            setFulltext(data);
+            setProgress(100);
+          }
+        }
+      } catch (err) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
+
+  return { fulltext, loading, error, progress };
+}
+
 export function useCases() {
   const [cases, setCases] = useState([]);
   const [stats, setStats] = useState(null);

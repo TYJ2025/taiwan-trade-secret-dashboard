@@ -34,3 +34,9 @@ Thumbs.db
 
 # Vite build 暫存檔
 vite.config.js.timestamp-*.mjs
+
+# Node / Vite build output — 交給 GitHub Actions 重建，不 commit
+node_modules/
+dist/
+dist2/
+public/data/

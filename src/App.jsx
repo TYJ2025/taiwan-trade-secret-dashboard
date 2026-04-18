@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import CaseList from './pages/CaseList';
 import CaseDetail from './pages/CaseDetail';
 import Analytics from './pages/Analytics';
+import FullTextSearch from './pages/FullTextSearch';
+import DamagesAnalysis from './pages/DamagesAnalysis';
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
             <Route path="cases" element={<CaseList />} />
             <Route path="cases/:id" element={<CaseDetail />} />
             <Route path="analytics" element={<Analytics />} />
+            <Route path="search" element={<FullTextSearch />} />
+            <Route path="damages" element={<DamagesAnalysis />} />
           </Route>
         </Routes>
       </HashRouter>

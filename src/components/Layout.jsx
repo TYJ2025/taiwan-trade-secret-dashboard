@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Shield, BarChart3, List, Scale, TrendingUp, Moon, Sun, Menu, X } from 'lucide-react';
+import { Shield, BarChart3, List, Scale, TrendingUp, Moon, Sun, Menu, X, Search, Calculator } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Layout() {
@@ -80,6 +80,14 @@ export default function Layout() {
             <List size={15} />
             <span>案件列表</span>
           </NavLink>
+          <NavLink to="/search" className={linkClass}>
+            <Search size={15} />
+            <span>全文檢索</span>
+          </NavLink>
+          <NavLink to="/damages" className={linkClass}>
+            <Calculator size={15} />
+            <span>損害賠償分析</span>
+          </NavLink>
           <NavLink to="/analytics" className={linkClass}>
             <TrendingUp size={15} />
             <span>進階分析</span>
@@ -97,6 +105,14 @@ export default function Layout() {
           <NavLink to="/cases" className={mobileLinkClass} onClick={() => setMobileMenuOpen(false)}>
             <List size={15} />
             <span>案件列表</span>
+          </NavLink>
+          <NavLink to="/search" className={mobileLinkClass} onClick={() => setMobileMenuOpen(false)}>
+            <Search size={15} />
+            <span>全文檢索</span>
+          </NavLink>
+          <NavLink to="/damages" className={mobileLinkClass} onClick={() => setMobileMenuOpen(false)}>
+            <Calculator size={15} />
+            <span>損害賠償分析</span>
           </NavLink>
           <NavLink to="/analytics" className={mobileLinkClass} onClick={() => setMobileMenuOpen(false)}>
             <TrendingUp size={15} />

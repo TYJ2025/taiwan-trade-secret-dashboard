@@ -1,0 +1,815 @@
+{
+  "generatedAt": "2026-04-18T13:16:58.482694Z",
+  "totalCases": 492,
+  "damagesCaseCount": 144,
+  "damagesAwardedCount": 24,
+  "totalAwarded": 3299960280,
+  "totalRequested": 80424095970,
+  "byCalcMethod": [
+    {
+      "key": "所受損害",
+      "label": "所受損害（民§216 I）",
+      "statute": "民法§216 I",
+      "count": 112
+    },
+    {
+      "key": "連帶賠償",
+      "label": "連帶責任（民§185 / 公§23）",
+      "statute": "民§185 / 公司法§23",
+      "count": 103
+    },
+    {
+      "key": "所失利益",
+      "label": "所失利益（民§216 II）",
+      "statute": "民法§216 II",
+      "count": 33
+    },
+    {
+      "key": "利益說",
+      "label": "利益說／獲利說（§13 I②）",
+      "statute": "營業秘密法§13 I (2)",
+      "count": 31
+    },
+    {
+      "key": "酌定",
+      "label": "法院酌定（民訴§222 II）",
+      "statute": "民事訴訟法§222 II",
+      "count": 29
+    },
+    {
+      "key": "具體損害",
+      "label": "具體損害計算（§13 I①）",
+      "statute": "營業秘密法§13 I (1)",
+      "count": 26
+    },
+    {
+      "key": "三倍懲罰",
+      "label": "三倍酌定／懲罰性賠償（§13 III）",
+      "statute": "營業秘密法§13 III",
+      "count": 17
+    },
+    {
+      "key": "授權金說",
+      "label": "授權金說／合理權利金（§13 II）",
+      "statute": "營業秘密法§13 II",
+      "count": 10
+    },
+    {
+      "key": "差額說",
+      "label": "差額說（§13 I①但書）",
+      "statute": "營業秘密法§13 I (1)但書",
+      "count": 1
+    }
+  ],
+  "byStatute": [
+    {
+      "statute": "營業秘密法§12",
+      "count": 97
+    },
+    {
+      "statute": "民§184",
+      "count": 63
+    },
+    {
+      "statute": "競業禁止",
+      "count": 55
+    },
+    {
+      "statute": "公司法§23",
+      "count": 46
+    },
+    {
+      "statute": "民§216",
+      "count": 14
+    },
+    {
+      "statute": "民訴§222 II (酌定)",
+      "count": 13
+    },
+    {
+      "statute": "營業秘密法§13 I (2)",
+      "count": 10
+    },
+    {
+      "statute": "營業秘密法§13 II",
+      "count": 10
+    },
+    {
+      "statute": "民§185",
+      "count": 10
+    },
+    {
+      "statute": "營業秘密法§13 I (1)",
+      "count": 7
+    },
+    {
+      "statute": "勞基法§12",
+      "count": 2
+    },
+    {
+      "statute": "民§216-1",
+      "count": 1
+    }
+  ],
+  "byYear": [
+    {
+      "year": 2001,
+      "count": 1,
+      "totalAwarded": 0,
+      "totalRequested": 0
+    },
+    {
+      "year": 2002,
+      "count": 1,
+      "totalAwarded": 0,
+      "totalRequested": 0
+    },
+    {
+      "year": 2012,
+      "count": 1,
+      "totalAwarded": 0,
+      "totalRequested": 1650000
+    },
+    {
+      "year": 2013,
+      "count": 8,
+      "totalAwarded": 1524350639,
+      "totalRequested": 48936144000
+    },
+    {
+      "year": 2014,
+      "count": 15,
+      "totalAwarded": 76442700,
+      "totalRequested": 81488273
+    },
+    {
+      "year": 2015,
+      "count": 19,
+      "totalAwarded": 11760000,
+      "totalRequested": 209400000
+    },
+    {
+      "year": 2016,
+      "count": 36,
+      "totalAwarded": 2134866382,
+      "totalRequested": 2621098001
+    },
+    {
+      "year": 2017,
+      "count": 47,
+      "totalAwarded": 278777200,
+      "totalRequested": 21912250
+    },
+    {
+      "year": 2018,
+      "count": 64,
+      "totalAwarded": 1768399476,
+      "totalRequested": 270791039
+    },
+    {
+      "year": 2019,
+      "count": 45,
+      "totalAwarded": 21725970706,
+      "totalRequested": 171770497
+    },
+    {
+      "year": 2020,
+      "count": 55,
+      "totalAwarded": 947829880,
+      "totalRequested": 22200692205
+    },
+    {
+      "year": 2021,
+      "count": 54,
+      "totalAwarded": 994002522,
+      "totalRequested": 62946148
+    },
+    {
+      "year": 2022,
+      "count": 49,
+      "totalAwarded": 3655082486,
+      "totalRequested": 663412404
+    },
+    {
+      "year": 2023,
+      "count": 45,
+      "totalAwarded": 223495111,
+      "totalRequested": 4889294896
+    },
+    {
+      "year": 2024,
+      "count": 35,
+      "totalAwarded": 114898000,
+      "totalRequested": 60347897
+    },
+    {
+      "year": 2025,
+      "count": 16,
+      "totalAwarded": 389078468,
+      "totalRequested": 233148360
+    },
+    {
+      "year": 2026,
+      "count": 1,
+      "totalAwarded": 0,
+      "totalRequested": 0
+    }
+  ],
+  "byCourt": [
+    {
+      "court": "智慧財產法院",
+      "count": 12,
+      "totalAwarded": 3059469096
+    },
+    {
+      "court": "最高法院",
+      "count": 6,
+      "totalAwarded": 208051250
+    },
+    {
+      "court": "智慧財產及商業法院",
+      "count": 5,
+      "totalAwarded": 29466097
+    },
+    {
+      "court": "臺灣新竹地方法院",
+      "count": 1,
+      "totalAwarded": 2973837
+    }
+  ],
+  "topCases": [
+    {
+      "seq": 411,
+      "caseId": "智慧財產法院 107 年度 民營上 字第 1 號",
+      "court": "智慧財產法院",
+      "rocYear": 107,
+      "adYear": 2018,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等（勞動）",
+      "outcome": "其他",
+      "damagesNum": 1522470639,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,107,民營上,1,20200409,2"
+    },
+    {
+      "seq": 458,
+      "caseId": "智慧財產法院 102 年度 民營訴 字第 6 號",
+      "court": "智慧財產法院",
+      "rocYear": 102,
+      "adYear": 2013,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等",
+      "outcome": "原告勝訴",
+      "damagesNum": 1522470639,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "具體損害",
+        "利益說",
+        "酌定",
+        "三倍懲罰",
+        "所失利益",
+        "所受損害",
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,102,民營訴,6,20171206,7"
+    },
+    {
+      "seq": 6,
+      "caseId": "最高法院 111 年度 台上 字第 2922 號",
+      "court": "最高法院",
+      "rocYear": 111,
+      "adYear": 2022,
+      "caseType": "民事",
+      "reason": "請求營業秘密損害賠償等（勞動）",
+      "outcome": "其他",
+      "damagesNum": 200000000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "所受損害",
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSV,111,台上,2922,20240314,1"
+    },
+    {
+      "seq": 327,
+      "caseId": "智慧財產及商業法院 111 年度 民營上 字第 6 號",
+      "court": "智慧財產及商業法院",
+      "rocYear": 111,
+      "adYear": 2022,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等（勞動）",
+      "outcome": "原告勝訴",
+      "damagesNum": 24080486,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "利益說",
+        "所受損害",
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,111,民營上,6,20231026,2"
+    },
+    {
+      "seq": 488,
+      "caseId": "智慧財產法院 103 年度 民營訴 字第 2 號",
+      "court": "智慧財產法院",
+      "rocYear": 103,
+      "adYear": 2014,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等",
+      "outcome": "原告勝訴",
+      "damagesNum": 5262700,
+      "damagesRequested": 3988273,
+      "calcMethods": [
+        "具體損害",
+        "所失利益",
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,103,民營訴,2,20141031,1"
+    },
+    {
+      "seq": 36,
+      "caseId": "最高法院 106 年度 台上 字第 55 號",
+      "court": "最高法院",
+      "rocYear": 106,
+      "adYear": 2017,
+      "caseType": "民事",
+      "reason": "請求營業秘密損害賠償等",
+      "outcome": "其他",
+      "damagesNum": 4511250,
+      "damagesRequested": 0,
+      "calcMethods": [],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSV,106,台上,55,20170104"
+    },
+    {
+      "seq": 335,
+      "caseId": "智慧財產及商業法院 108 年度 民營訴 字第 5 號",
+      "court": "智慧財產及商業法院",
+      "rocYear": 108,
+      "adYear": 2019,
+      "caseType": "民事",
+      "reason": "營業秘密排除侵害等",
+      "outcome": "原告勝訴",
+      "damagesNum": 3177000,
+      "damagesRequested": 15000000,
+      "calcMethods": [
+        "利益說",
+        "酌定",
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,108,民營訴,5,20230419,3"
+    },
+    {
+      "seq": 38,
+      "caseId": "最高法院 105 年度 台上 字第 1501 號",
+      "court": "最高法院",
+      "rocYear": 105,
+      "adYear": 2016,
+      "caseType": "民事",
+      "reason": "請求營業秘密損害賠償",
+      "outcome": "其他",
+      "damagesNum": 3000000,
+      "damagesRequested": 1000000,
+      "calcMethods": [
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSV,105,台上,1501,20160831,1"
+    },
+    {
+      "seq": 162,
+      "caseId": "臺灣新竹地方法院 107 年度 智 字第 1 號",
+      "court": "臺灣新竹地方法院",
+      "rocYear": 107,
+      "adYear": 2018,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償",
+      "outcome": "原告勝訴",
+      "damagesNum": 2973837,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "具體損害",
+        "所失利益",
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDV,107,智,1,20180921,1"
+    },
+    {
+      "seq": 479,
+      "caseId": "智慧財產法院 103 年度 民營上 字第 6 號",
+      "court": "智慧財產法院",
+      "rocYear": 103,
+      "adYear": 2014,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等",
+      "outcome": "原告勝訴",
+      "damagesNum": 2200000,
+      "damagesRequested": 0,
+      "calcMethods": [],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,103,民營上,6,20150730,1"
+    },
+    {
+      "seq": 486,
+      "caseId": "智慧財產法院 103 年度 民營上 字第 4 號",
+      "court": "智慧財產法院",
+      "rocYear": 103,
+      "adYear": 2014,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等",
+      "outcome": "原告勝訴",
+      "damagesNum": 2000000,
+      "damagesRequested": 2000000,
+      "calcMethods": [
+        "所失利益",
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,103,民營上,4,20150226,1"
+    },
+    {
+      "seq": 416,
+      "caseId": "智慧財產法院 108 年度 民營訴 字第 11 號",
+      "court": "智慧財產法院",
+      "rocYear": 108,
+      "adYear": 2019,
+      "caseType": "民事",
+      "reason": "營業秘密排除侵害",
+      "outcome": "其他",
+      "damagesNum": 1650000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,108,民營訴,11,20200121,3"
+    },
+    {
+      "seq": 473,
+      "caseId": "智慧財產法院 103 年度 民營訴 字第 3 號",
+      "court": "智慧財產法院",
+      "rocYear": 103,
+      "adYear": 2014,
+      "caseType": "民事",
+      "reason": "營業秘密排除侵害等",
+      "outcome": "其他",
+      "damagesNum": 1650000,
+      "damagesRequested": 0,
+      "calcMethods": [],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,103,民營訴,3,20160415,1"
+    },
+    {
+      "seq": 305,
+      "caseId": "智慧財產及商業法院 112 年度 民營上 字第 2 號",
+      "court": "智慧財產及商業法院",
+      "rocYear": 112,
+      "adYear": 2023,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等",
+      "outcome": "原告勝訴",
+      "damagesNum": 1010611,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "三倍懲罰",
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,112,民營上,2,20240926,2"
+    },
+    {
+      "seq": 291,
+      "caseId": "智慧財產及商業法院 112 年度 民營訴 字第 2 號",
+      "court": "智慧財產及商業法院",
+      "rocYear": 112,
+      "adYear": 2023,
+      "caseType": "民事",
+      "reason": "營業秘密排除侵害等（勞動）",
+      "outcome": "原告勝訴",
+      "damagesNum": 1000000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,112,民營訴,2,20241217,2"
+    },
+    {
+      "seq": 23,
+      "caseId": "最高法院 109 年度 台上 字第 1616 號",
+      "court": "最高法院",
+      "rocYear": 109,
+      "adYear": 2020,
+      "caseType": "民事",
+      "reason": "請求營業秘密損害賠償等",
+      "outcome": "其他",
+      "damagesNum": 500000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "所受損害",
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSV,109,台上,1616,20210531,1"
+    },
+    {
+      "seq": 412,
+      "caseId": "智慧財產法院 108 年度 民營訴 字第 3 號",
+      "court": "智慧財產法院",
+      "rocYear": 108,
+      "adYear": 2019,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等（勞動）",
+      "outcome": "其他",
+      "damagesNum": 459118,
+      "damagesRequested": 0,
+      "calcMethods": [],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,108,民營訴,3,20200330,2"
+    },
+    {
+      "seq": 482,
+      "caseId": "智慧財產法院 103 年度 民營訴 字第 6 號",
+      "court": "智慧財產法院",
+      "rocYear": 103,
+      "adYear": 2014,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償",
+      "outcome": "原告勝訴",
+      "damagesNum": 450000,
+      "damagesRequested": 1000000,
+      "calcMethods": [
+        "利益說",
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,103,民營訴,6,20150518,2"
+    },
+    {
+      "seq": 400,
+      "caseId": "智慧財產法院 108 年度 民營訴 字第 3 號",
+      "court": "智慧財產法院",
+      "rocYear": 108,
+      "adYear": 2019,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等（勞動）",
+      "outcome": "原告勝訴",
+      "damagesNum": 406000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "利益說",
+        "授權金說",
+        "酌定",
+        "三倍懲罰",
+        "所失利益",
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,108,民營訴,3,20200814,3"
+    },
+    {
+      "seq": 401,
+      "caseId": "智慧財產法院 109 年度 民營上易 字第 1 號",
+      "court": "智慧財產法院",
+      "rocYear": 109,
+      "adYear": 2020,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償（勞動）",
+      "outcome": "原告勝訴",
+      "damagesNum": 300000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,109,民營上易,1,20200806,1"
+    },
+    {
+      "seq": 285,
+      "caseId": "智慧財產及商業法院 113 年度 民營訴 字第 6 號",
+      "court": "智慧財產及商業法院",
+      "rocYear": 113,
+      "adYear": 2024,
+      "caseType": "民事",
+      "reason": "營業秘密損害賠償等",
+      "outcome": "原告勝訴",
+      "damagesNum": 198000,
+      "damagesRequested": 198000,
+      "calcMethods": [
+        "具體損害",
+        "所失利益",
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,113,民營訴,6,20250307,4"
+    },
+    {
+      "seq": 415,
+      "caseId": "智慧財產法院 108 年度 民營訴 字第 1 號",
+      "court": "智慧財產法院",
+      "rocYear": 108,
+      "adYear": 2019,
+      "caseType": "民事",
+      "reason": "營業秘密排除侵害等（勞動）",
+      "outcome": "原告勝訴",
+      "damagesNum": 150000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "所受損害"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCV,108,民營訴,1,20200225,5"
+    },
+    {
+      "seq": 33,
+      "caseId": "最高法院 108 年度 台上 字第 36 號",
+      "court": "最高法院",
+      "rocYear": 108,
+      "adYear": 2019,
+      "caseType": "民事",
+      "reason": "請求營業秘密損害賠償等",
+      "outcome": "其他",
+      "damagesNum": 20000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSV,108,台上,36,20190523,1"
+    },
+    {
+      "seq": 35,
+      "caseId": "最高法院 106 年度 台上 字第 350 號",
+      "court": "最高法院",
+      "rocYear": 106,
+      "adYear": 2017,
+      "caseType": "民事",
+      "reason": "請求營業秘密損害賠償等",
+      "outcome": "其他",
+      "damagesNum": 20000,
+      "damagesRequested": 0,
+      "calcMethods": [
+        "連帶賠償"
+      ],
+      "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSV,106,台上,350,20170603"
+    }
+  ],
+  "reasonBuckets": [
+    {
+      "reason": "違反營業秘密法等",
+      "count": 165
+    },
+    {
+      "reason": "違反營業秘密法",
+      "count": 74
+    },
+    {
+      "reason": "營業秘密損害賠償等",
+      "count": 45
+    },
+    {
+      "reason": "營業秘密法等",
+      "count": 42
+    },
+    {
+      "reason": "營業秘密損害賠償",
+      "count": 26
+    },
+    {
+      "reason": "營業秘密損害賠償等（勞動）",
+      "count": 26
+    },
+    {
+      "reason": "營業秘密法",
+      "count": 18
+    },
+    {
+      "reason": "營業秘密損害賠償（勞動）",
+      "count": 16
+    },
+    {
+      "reason": "違反營業秘密等",
+      "count": 13
+    },
+    {
+      "reason": "違反營業秘密法等罪",
+      "count": 11
+    },
+    {
+      "reason": "違反營業秘密",
+      "count": 7
+    },
+    {
+      "reason": "營業秘密排除侵害",
+      "count": 6
+    },
+    {
+      "reason": "請求營業秘密損害賠償等",
+      "count": 6
+    },
+    {
+      "reason": "違反營業秘密法附帶民訴",
+      "count": 6
+    },
+    {
+      "reason": "營業秘密排除侵害等（勞動）",
+      "count": 5
+    },
+    {
+      "reason": "營業秘密排除侵害等",
+      "count": 5
+    },
+    {
+      "reason": "違反營業秘密法附帶民訴損害賠償",
+      "count": 2
+    },
+    {
+      "reason": "確認營業秘密不存在等",
+      "count": 2
+    },
+    {
+      "reason": "違反營業秘密法附帶民訴等",
+      "count": 2
+    },
+    {
+      "reason": "損害賠償（違反營業秘密法）",
+      "count": 2
+    }
+  ],
+  "outcomeBuckets": [
+    {
+      "outcome": "有罪",
+      "count": 120
+    },
+    {
+      "outcome": "原告敗訴",
+      "count": 90
+    },
+    {
+      "outcome": "無罪",
+      "count": 66
+    },
+    {
+      "outcome": "其他",
+      "count": 56
+    },
+    {
+      "outcome": "上訴駁回",
+      "count": 55
+    },
+    {
+      "outcome": "不受理",
+      "count": 50
+    },
+    {
+      "outcome": "未知",
+      "count": 30
+    },
+    {
+      "outcome": "原告勝訴",
+      "count": 16
+    },
+    {
+      "outcome": "撤銷發回",
+      "count": 8
+    },
+    {
+      "outcome": "撤銷改判",
+      "count": 1
+    }
+  ],
+  "calcMethodDictionary": [
+    {
+      "key": "具體損害",
+      "label": "具體損害計算（§13 I①）",
+      "statute": "營業秘密法§13 I (1)"
+    },
+    {
+      "key": "差額說",
+      "label": "差額說（§13 I①但書）",
+      "statute": "營業秘密法§13 I (1)但書"
+    },
+    {
+      "key": "利益說",
+      "label": "利益說／獲利說（§13 I②）",
+      "statute": "營業秘密法§13 I (2)"
+    },
+    {
+      "key": "授權金說",
+      "label": "授權金說／合理權利金（§13 II）",
+      "statute": "營業秘密法§13 II"
+    },
+    {
+      "key": "酌定",
+      "label": "法院酌定（民訴§222 II）",
+      "statute": "民事訴訟法§222 II"
+    },
+    {
+      "key": "三倍懲罰",
+      "label": "三倍酌定／懲罰性賠償（§13 III）",
+      "statute": "營業秘密法§13 III"
+    },
+    {
+      "key": "所失利益",
+      "label": "所失利益（民§216 II）",
+      "statute": "民法§216 II"
+    },
+    {
+      "key": "所受損害",
+      "label": "所受損害（民§216 I）",
+      "statute": "民法§216 I"
+    },
+    {
+      "key": "連帶賠償",
+      "label": "連帶責任（民§185 / 公§23）",
+      "statute": "民§185 / 公司法§23"
+    }
+  ]
+}
