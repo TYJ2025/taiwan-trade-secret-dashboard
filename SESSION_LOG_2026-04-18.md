@@ -206,3 +206,94 @@ for c in j['judgments']:
   1. YJ 本機 push → 等 Actions run 完成
   2. Claude 自行透過 git ls-remote 或 GitHub Pages URL 驗證上線結果
   3. 若 Actions fail，讀 workflow log 定位問題並修正
+
+### [21:50〜] push 過程中的踩雷紀錄（應寫進 CLAUDE.md §5 或 §8）
+
+1. **Push 被拒（non-fast-forward）**：origin/main 每日有自動 workflow（78907a0 data 更新、05b947f news ticker 注入），本地 commit 推之前必須 `git fetch + merge`。
+2. **衝突位置可預期**：news ticker 是把 HTML 片段注入**舊 Chart.js 版 index.html**；切換到 Vite 入口後必衝突。解法固定：`git checkout --ours index.html`（保留 Vite 版）。此問題後續應修 `fetch_news.py` 改寫到 React 頁面的 news.json 或 src/pages/News.jsx，避免永遠在 merge 時衝突。
+3. **Mac `rm` 被 alias 劫持**：YJ Mac 上 `rm` 被 alias 成某個 safe-rm／trash 類工具，會對 `-f` 報 `Un-recognized argument -f`。要用 `\rm -f` 或 `/bin/rm -f` 繞過，否則任何「刪 `.git/index.lock`」指令看似跑完但實際沒刪，造成後續 git 操作全部卡死。
+4. **Sandbox 權限異常**：Claude cowork sandbox 可 `mv` 不可 `unlink`。git 每次 commit/merge 結束時想清的 `.git/*.lock` 檔因此殘留；workaround 為每次 git 操作前後 `mv .git/*.lock .git/*.lock.stale_<ns>`。但某些目錄操作（如 rebase-merge）連 mv 都慢，最終採用「本地 push，sandbox 只讀驗證」混合流程。
+
+### [22:00] 遠端 origin/main push 結果
+
+- 意圖：驗證 push 是否成功、Actions 是否啟動
+- 指令：`git ls-remote https://github.com/TYJ2025/taiwan-trade-secret-dashboard.git refs/heads/main` + GitHub Actions API
+- 實際結果：
+  - origin/main = `8b4cbe1fff94a562e4c2c524be92c576fdef9618`（merge commit）
+  - 包含：`05b947f`（遠端 news）<- `5eb14f1`（我方 feat）<- `f40c27f`（我方 docs）<- `8b4cbe1`（merge）
+  - Actions run ID `24606138020`（Deploy to GitHub Pages）status=`in_progress`，started 2026-04-18T13:53:10Z
+- 異常／差異：無
+- 後續行動：等 Actions 完成後查 conclusion；若 success 則打開線上頁面人工抽查；若 failed 則讀 job log 定位
+
+---
+
+## Session 22:30 — 方案 A：首頁 492 筆總覽 + KPI 平均→最高
+
+### 0. 本 session 目標
+
+YJ 反映「打開儀表板首頁案件數很少」。診斷後確認：
+- 線上 build 與資料皆正確（index.html=Vite、judgments.json=492 筆）
+- 但 Dashboard / CaseList / Analytics 仍讀 `cases.json` 的 52 筆（舊「審理中」資料集）
+- 492 筆只在 `/search` 與 `/damages` 看得到 → 嚴重 UX 漏洞
+
+採方案 A（不違反 CLAUDE.md §4 兩集分離原則）：
+1. Dashboard 頂部插入「492 筆判決總覽」區塊（讀 useJudgments + analysis）
+2. 原 52 筆 StatsCards 區塊保留，加分隔線與小標「審理中／訴訟前追蹤（52 件）」
+3. DamagesAnalysis 第 4 張 KPI「平均判准額」→「**最高判准額**」（YJ 指示：法律讀者更關心 TOP 值；目前 avg = 33億÷24 = 1.37 億，YJ 看到的 3.6 億疑為篩選後值）
+
+### 成功條件
+
+1. 首頁第一屏即可看到「判決總數 492 / 判准件數 24 / 判准總額 33 億 / 最高判准額 15.22 億（大立光）」
+2. DamagesAnalysis 第 4 張卡顯示最高判准額 15.22 億，sub 顯示案號與法院
+3. `npx vite build` 成功
+4. 大立光 102 民營訴 6 / 107 民營上 1 仍為 TOP 1
+5. 任一原告敗訴案件 damagesNum 仍為 0（不可被「最高」邏輯誤改）
+
+### 不做事項
+
+- 不改 cases.json / stats.json
+- 不改 extract_damages.py
+- 不動 deploy.yml（只改前端 jsx）
+- 不改導覽列項目（保持 5 條：總覽／案件列表／全文檢索／損害賠償分析／進階分析）
+
+### 計畫步驟
+
+1. [x] 改 `src/pages/Dashboard.jsx`：頂部加 `JudgmentsOverview` 區塊
+2. [x] 改 `src/pages/DamagesAnalysis.jsx`：filteredStats 加 `maxAwarded` + `maxCase`，KPI 卡換掉
+3. [x] `npx vite build` 驗證
+4. [x] 抽樣
+5. [ ] commit + push
+
+### [22:45] 本機 build 與抽樣
+
+- 意圖：驗證改動不破壞既有資料流，且最高判准額顯示正確
+- 指令：
+  ```bash
+  mv dist dist.stale_1776522012  # sandbox unlink 限制 workaround
+  npx vite build
+  # 抽樣腳本（內嵌 python3）
+  ```
+- 預期結果：build 成功，大立光 15.22 億 TOP 1，敗訴 damagesNum = 0
+- 實際結果：
+  - `2319 modules transformed`，`dist/assets/index-Dqnb_6Tr.js 706 KB`，`built in 3.05s`
+  - 492 / 144 / 24 ✅
+  - TOP 1：智慧財產法院 107 民營上 1 = 1,522,470,639 ✅（符合 CLAUDE.md §2.3 (a)）
+  - TOP 2：智慧財產法院 102 民營訴 6 = 1,522,470,639（同案一二審，合理）
+  - 三筆「上訴駁回」damagesNum 均為 0 ✅（符合 CLAUDE.md §2.3 (b)）
+- 異常：無
+- 後續行動：commit + push
+
+### 4. 資料抽樣驗證（本 session）
+
+| # | 案號 | 案由 | 欄位 | Before | After | 驗證結果 |
+|---|---|---|---|---:|---:|---|
+| 1 | 107 民營上 1（大立光二審） | 損害賠償 | 首頁「最高判准額」 | —（無此 KPI） | 1,522,470,639 | ✅ |
+| 2 | 102 民營訴 6（大立光一審） | 損害賠償 | DamagesAnalysis「最高判准額」 | —（原為平均 ≈ 1.37 億） | 1,522,470,639 | ✅ |
+| 3 | 114 台上 1492（上訴駁回） | 損害賠償 | damagesNum | 0 | 0（未被「最高」邏輯污染） | ✅ |
+
+總量 sanity-check：
+
+- 判准金額總額：3,299,960,280（與上版無差異，本次未動抽取邏輯）
+- 件數：24（同）
+- 新增 UI 面板：Dashboard 首頁「營業秘密判決總覽」5 張 KPI
+

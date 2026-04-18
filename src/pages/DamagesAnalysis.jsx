@@ -34,7 +34,10 @@ export default function DamagesAnalysis() {
   const filteredStats = useMemo(() => {
     const awarded = damagesCases.filter((c) => c.damagesNum > 0);
     const totalAwarded = awarded.reduce((s, c) => s + c.damagesNum, 0);
-    const avgAwarded = awarded.length > 0 ? totalAwarded / awarded.length : 0;
+    // 最高判准額：法律讀者較關心 TOP 值（標竿案件）而非算術平均
+    const sortedDesc = [...awarded].sort((a, b) => b.damagesNum - a.damagesNum);
+    const topCase = sortedDesc[0] || null;
+    const maxAwarded = topCase ? topCase.damagesNum : 0;
     const medAwarded = awarded.length > 0
       ? [...awarded.map((c) => c.damagesNum)].sort((a, b) => a - b)[Math.floor(awarded.length / 2)]
       : 0;
@@ -42,7 +45,8 @@ export default function DamagesAnalysis() {
       total: damagesCases.length,
       awarded: awarded.length,
       totalAwarded,
-      avgAwarded,
+      maxAwarded,
+      maxCase: topCase,
       medAwarded,
       awardRate: damagesCases.length > 0
         ? Math.round((awarded.length / damagesCases.length) * 100)
@@ -154,7 +158,14 @@ export default function DamagesAnalysis() {
         <KpiCard label="實際判准件數" value={filteredStats.awarded} suffix="件" color="red"
           sub={`勝訴率 ${filteredStats.awardRate}%`} />
         <KpiCard label="判准總額" value={formatMoney(filteredStats.totalAwarded)} color="blue" />
-        <KpiCard label="平均判准額" value={formatMoney(filteredStats.avgAwarded)} color="green" />
+        <KpiCard
+          label="最高判准額"
+          value={formatMoney(filteredStats.maxAwarded)}
+          color="green"
+          sub={filteredStats.maxCase
+            ? `${filteredStats.maxCase.court}｜${filteredStats.maxCase.caseId}`
+            : '—'}
+        />
         <KpiCard label="中位數判准額" value={formatMoney(filteredStats.medAwarded)} color="purple" />
       </div>
 
