@@ -17,6 +17,7 @@ export default function CaseList() {
   const urlResult = searchParams.get('result') || '';
   const urlStatute = searchParams.get('statute') || '';
   const urlType = searchParams.get('type') || '';
+  const urlYear = searchParams.get('year') || '';
 
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState(urlType || 'all');
@@ -30,14 +31,20 @@ export default function CaseList() {
   const [pageSize, setPageSize] = useState(10);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
-  // Sync URL params when they change (e.g., user navigates with browser back)
-  useEffect(() => {
-    if (urlType) setTypeFilter(urlType);
-    if (urlResult) setResultFilter(urlResult);
-    if (urlIndustry) setIndustryFilter(urlIndustry);
-  }, [urlType, urlResult, urlIndustry]);
+  // 支援多值 result（以逗號分隔），例：?result=審理中,偵查中,調解中
+  const urlResultList = useMemo(
+    () => (urlResult ? urlResult.split(',').map((s) => s.trim()).filter(Boolean) : []),
+    [urlResult]
+  );
 
-  const hasUrlFilter = !!(urlIssue || urlIndustry || urlResult || urlStatute || urlType);
+  // Sync 下拉式篩選狀態與 URL params；URL 清除時也要 reset，避免上一次 drill 的殘留條件
+  useEffect(() => {
+    setTypeFilter(urlType || 'all');
+    setResultFilter(urlResultList.length === 1 ? urlResultList[0] : 'all');
+    setIndustryFilter(urlIndustry || 'all');
+  }, [urlType, urlResult, urlResultList, urlIndustry]);
+
+  const hasUrlFilter = !!(urlIssue || urlIndustry || urlResult || urlStatute || urlType || urlYear);
 
   const clearUrlFilters = useCallback(() => {
     setSearchParams({});
@@ -45,6 +52,8 @@ export default function CaseList() {
     setResultFilter('all');
     setIndustryFilter('all');
     setQuery('');
+    setDateFrom('');
+    setDateTo('');
   }, [setSearchParams]);
 
   const fuse = useMemo(
@@ -97,7 +106,11 @@ export default function CaseList() {
     if (typeFilter !== 'all') {
       result = result.filter((c) => c.caseType.includes(typeFilter));
     }
-    if (resultFilter !== 'all') {
+    // 多值 result（URL 驅動，OR 邏輯）優先；否則用下拉單值
+    if (urlResultList.length > 1) {
+      const set = new Set(urlResultList);
+      result = result.filter((c) => set.has(c.result));
+    } else if (resultFilter !== 'all') {
       result = result.filter((c) => c.result === resultFilter);
     }
     if (industryFilter !== 'all') {
@@ -111,6 +124,9 @@ export default function CaseList() {
       result = result.filter((c) =>
         (c.statutes || []).some((s) => s.includes(urlStatute))
       );
+    }
+    if (urlYear) {
+      result = result.filter((c) => (c.filingDate || '').startsWith(`${urlYear}-`));
     }
     if (dateFrom) {
       result = result.filter((c) => c.filingDate >= dateFrom);
@@ -132,7 +148,7 @@ export default function CaseList() {
     });
 
     return result;
-  }, [cases, query, typeFilter, resultFilter, industryFilter, urlIssue, urlStatute, dateFrom, dateTo, sortField, sortDir, fuse]);
+  }, [cases, query, typeFilter, resultFilter, industryFilter, urlIssue, urlStatute, urlResultList, urlYear, dateFrom, dateTo, sortField, sortDir, fuse]);
 
   // Pagination
   const totalPages = Math.ceil(filtered.length / pageSize);
@@ -194,7 +210,7 @@ export default function CaseList() {
               )}
               {urlResult && (
                 <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
-                  結果：{urlResult}
+                  結果：{urlResultList.length > 1 ? urlResultList.join('、') : urlResult}
                 </span>
               )}
               {urlStatute && (
@@ -205,6 +221,11 @@ export default function CaseList() {
               {urlType && (
                 <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
                   類型：{urlType === '刑' ? '刑事' : urlType === '民' ? '民事' : urlType}
+                </span>
+              )}
+              {urlYear && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--gold)] text-[var(--gold)]">
+                  年度：{urlYear}
                 </span>
               )}
               <span className="text-[10px] text-[var(--text-muted)]">

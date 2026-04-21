@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -17,18 +17,53 @@ export default function DamagesAnalysis() {
   const { judgments, analysis, loading, error } = useJudgments();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // URL-based drill-down (用於從 chart / chip 點擊後帶入)
+  // URL-based drill-down (用於從 chart / chip / KPI 點擊後帶入)
   const urlMethod = searchParams.get('method') || '';
   const urlStatute = searchParams.get('statute') || '';
-  const hasUrlDrill = !!(urlMethod || urlStatute);
+  const urlAwarded = searchParams.get('awarded') === '1';
+  const urlBucket = searchParams.get('bucket') || '';
+  const hasUrlDrill = !!(urlMethod || urlStatute || urlAwarded || urlBucket);
 
   const clearUrlDrill = useCallback(() => {
-    // 只清 drill 參數，保留其他 state
     const next = new URLSearchParams(searchParams);
     next.delete('method');
     next.delete('statute');
+    next.delete('awarded');
+    next.delete('bucket');
     setSearchParams(next);
   }, [searchParams, setSearchParams]);
+
+  const setUrlParam = useCallback((key, value) => {
+    const next = new URLSearchParams(searchParams);
+    if (value == null || value === '') next.delete(key);
+    else next.set(key, String(value));
+    setSearchParams(next);
+  }, [searchParams, setSearchParams]);
+
+  // Bucket ranges for 判准金額分布 (same as amountBuckets below)
+  const BUCKET_RANGES = useMemo(() => ({
+    '0': { min: 0, max: 0 },
+    '~10萬': { min: 1, max: 100_000 },
+    '10萬~100萬': { min: 100_000, max: 1_000_000 },
+    '100萬~1千萬': { min: 1_000_000, max: 10_000_000 },
+    '1千萬~1億': { min: 10_000_000, max: 100_000_000 },
+    '>1億': { min: 100_000_000, max: Infinity },
+  }), []);
+
+  // Ref for scroll-to-table behavior when a KPI is clicked
+  const tableRef = useRef(null);
+  const applyAwardedAndScroll = useCallback(
+    (awarded) => {
+      const next = new URLSearchParams(searchParams);
+      if (awarded) next.set('awarded', '1');
+      else next.delete('awarded');
+      setSearchParams(next);
+      requestAnimationFrame(() => {
+        tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    },
+    [searchParams, setSearchParams]
+  );
 
   const [courtFilter, setCourtFilter] = useState('all');
   const [yearFrom, setYearFrom] = useState('');
@@ -41,6 +76,7 @@ export default function DamagesAnalysis() {
 
   // Damages cases after filters
   const damagesCases = useMemo(() => {
+    const bucketRange = urlBucket && BUCKET_RANGES[urlBucket];
     return judgments
       .filter((j) => j.isDamagesCase)
       .filter((j) => courtFilter === 'all' || j.court === courtFilter)
@@ -48,8 +84,15 @@ export default function DamagesAnalysis() {
       .filter((j) => !yearTo || j.adYear <= Number(yearTo))
       // URL drill: 以結構化欄位過濾，而非 fulltext regex
       .filter((j) => !urlMethod || (j.calcMethods || []).includes(urlMethod))
-      .filter((j) => !urlStatute || (j.damagesStatutes || []).includes(urlStatute));
-  }, [judgments, courtFilter, yearFrom, yearTo, urlMethod, urlStatute]);
+      .filter((j) => !urlStatute || (j.damagesStatutes || []).includes(urlStatute))
+      .filter((j) => !urlAwarded || j.damagesNum > 0)
+      .filter((j) => {
+        if (!bucketRange) return true;
+        const v = j.damagesNum || 0;
+        if (bucketRange.min === 0 && bucketRange.max === 0) return v === 0;
+        return v > bucketRange.min && v <= bucketRange.max;
+      });
+  }, [judgments, courtFilter, yearFrom, yearTo, urlMethod, urlStatute, urlAwarded, urlBucket, BUCKET_RANGES]);
 
   const filteredStats = useMemo(() => {
     const awarded = damagesCases.filter((c) => c.damagesNum > 0);
@@ -58,9 +101,10 @@ export default function DamagesAnalysis() {
     const sortedDesc = [...awarded].sort((a, b) => b.damagesNum - a.damagesNum);
     const topCase = sortedDesc[0] || null;
     const maxAwarded = topCase ? topCase.damagesNum : 0;
-    const medAwarded = awarded.length > 0
-      ? [...awarded.map((c) => c.damagesNum)].sort((a, b) => a - b)[Math.floor(awarded.length / 2)]
-      : 0;
+    // 中位數案件：取得金額排序後中位位置之實際案件物件
+    const sortedAsc = [...awarded].sort((a, b) => a.damagesNum - b.damagesNum);
+    const medCase = sortedAsc.length > 0 ? sortedAsc[Math.floor(sortedAsc.length / 2)] : null;
+    const medAwarded = medCase ? medCase.damagesNum : 0;
     return {
       total: damagesCases.length,
       awarded: awarded.length,
@@ -68,6 +112,7 @@ export default function DamagesAnalysis() {
       maxAwarded,
       maxCase: topCase,
       medAwarded,
+      medCase,
       awardRate: damagesCases.length > 0
         ? Math.round((awarded.length / damagesCases.length) * 100)
         : 0,
@@ -176,6 +221,16 @@ export default function DamagesAnalysis() {
                   條文：{urlStatute}
                 </span>
               )}
+              {urlAwarded && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--accent-green)] text-[var(--accent-green)]">
+                  僅列有判准金額
+                </span>
+              )}
+              {urlBucket && (
+                <span className="text-[11px] px-2 py-0.5 bg-[var(--bg-secondary)] border border-[var(--accent-blue)] text-[var(--accent-blue)]">
+                  金額區間：{urlBucket}
+                </span>
+              )}
               <span className="text-[10px] text-[var(--text-muted)]">
                 · 符合 <span className="font-mono text-[var(--text-primary)]">{damagesCases.length}</span> 件損害賠償案
               </span>
@@ -211,12 +266,32 @@ export default function DamagesAnalysis() {
         </button>
       </div>
 
-      {/* KPI cards */}
+      {/* KPI cards — 全部可點；外連者連判決原文，內連者 drill + 捲動至列表 */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        <KpiCard label="損害賠償案件" value={filteredStats.total} suffix="件" color="gold" />
-        <KpiCard label="實際判准件數" value={filteredStats.awarded} suffix="件" color="red"
-          sub={`勝訴率 ${filteredStats.awardRate}%`} />
-        <KpiCard label="判准總額" value={formatMoney(filteredStats.totalAwarded)} color="blue" />
+        <KpiCard
+          label="損害賠償案件"
+          value={filteredStats.total}
+          suffix="件"
+          color="gold"
+          onClick={() => applyAwardedAndScroll(false)}
+          hint="點擊：展開下方列表"
+        />
+        <KpiCard
+          label="實際判准件數"
+          value={filteredStats.awarded}
+          suffix="件"
+          color="red"
+          sub={`勝訴率 ${filteredStats.awardRate}%`}
+          onClick={() => applyAwardedAndScroll(true)}
+          hint="點擊：僅列有判准金額之案件"
+        />
+        <KpiCard
+          label="判准總額"
+          value={formatMoney(filteredStats.totalAwarded)}
+          color="blue"
+          onClick={() => applyAwardedAndScroll(true)}
+          hint="點擊：僅列有判准金額之案件"
+        />
         <KpiCard
           label="最高判准額"
           value={formatMoney(filteredStats.maxAwarded)}
@@ -226,7 +301,15 @@ export default function DamagesAnalysis() {
             : '—'}
           href={filteredStats.maxCase?.judgmentUrl}
         />
-        <KpiCard label="中位數判准額" value={formatMoney(filteredStats.medAwarded)} color="purple" />
+        <KpiCard
+          label="中位數判准額"
+          value={formatMoney(filteredStats.medAwarded)}
+          color="purple"
+          sub={filteredStats.medCase
+            ? `${filteredStats.medCase.court}｜${filteredStats.medCase.caseId}`
+            : '—'}
+          href={filteredStats.medCase?.judgmentUrl}
+        />
       </div>
 
       {/* Calc method & Amount distribution side by side */}
@@ -247,7 +330,12 @@ export default function DamagesAnalysis() {
                   <XAxis type="number" tick={{ fontSize: 10 }} />
                   <YAxis dataKey="label" type="category" tick={{ fontSize: 9 }} width={180} />
                   <Tooltip formatter={(v) => [`${v} 件`, '案件數']} />
-                  <Bar dataKey="count" fill="#C8A45A" />
+                  <Bar
+                    dataKey="count"
+                    fill="#C8A45A"
+                    cursor="pointer"
+                    onClick={(d) => d && setUrlParam('method', d.key)}
+                  />
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-3 text-[10px] text-[var(--text-muted)] space-y-0.5">
@@ -284,11 +372,16 @@ export default function DamagesAnalysis() {
               <XAxis dataKey="label" tick={{ fontSize: 9 }} angle={-20} textAnchor="end" height={60} />
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip formatter={(v) => [`${v} 件`, '案件數']} />
-              <Bar dataKey="count" fill="#2980B9" />
+              <Bar
+                dataKey="count"
+                fill="#2980B9"
+                cursor="pointer"
+                onClick={(d) => d && setUrlParam('bucket', d.label.replace('（駁回/未判准）', ''))}
+              />
             </BarChart>
           </ResponsiveContainer>
           <p className="text-[10px] text-[var(--text-muted)] mt-2">
-            註：「0 元」係指該案件經判決駁回、部分駁回或損害賠償部分未獲准。
+            註：「0 元」係指該案件經判決駁回、部分駁回或損害賠償部分未獲准。點區間 bar 可鑽取。
           </p>
         </div>
       </div>
@@ -309,7 +402,12 @@ export default function DamagesAnalysis() {
               <XAxis type="number" tick={{ fontSize: 10 }} />
               <YAxis dataKey="statute" type="category" tick={{ fontSize: 10 }} width={150} />
               <Tooltip formatter={(v) => [`${v} 件`, '引用次數']} />
-              <Bar dataKey="count" fill="#C0392B" />
+              <Bar
+                dataKey="count"
+                fill="#C0392B"
+                cursor="pointer"
+                onClick={(d) => d && setUrlParam('statute', d.statute)}
+              />
             </BarChart>
           </ResponsiveContainer>
           {/* Drill-down chip list: 依 damagesStatutes 結構化欄位過濾（非 fulltext） */}
@@ -345,7 +443,17 @@ export default function DamagesAnalysis() {
             年度損害賠償趨勢
           </h3>
           <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={yearly} margin={{ top: 10, right: 10, bottom: 10 }}>
+            <LineChart
+              data={yearly}
+              margin={{ top: 10, right: 10, bottom: 10 }}
+              onClick={(e) => {
+                const p = e?.activePayload?.[0]?.payload;
+                if (p?.year) {
+                  setYearFrom(String(p.year));
+                  setYearTo(String(p.year));
+                }
+              }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="year" tick={{ fontSize: 10 }} />
               <YAxis yAxisId="left" tick={{ fontSize: 10 }} label={{ value: '案件數', angle: -90, position: 'insideLeft', fontSize: 10 }} />
@@ -359,17 +467,20 @@ export default function DamagesAnalysis() {
                 }
               />
               <Legend wrapperStyle={{ fontSize: 10 }} />
-              <Line yAxisId="left" dataKey="count" name="案件數" stroke="#C8A45A" strokeWidth={2} />
-              <Line yAxisId="right" dataKey="awarded" name="判准金額" stroke="#C0392B" strokeWidth={2} />
+              <Line yAxisId="left" dataKey="count" name="案件數" stroke="#C8A45A" strokeWidth={2} activeDot={{ r: 5, cursor: 'pointer' }} />
+              <Line yAxisId="right" dataKey="awarded" name="判准金額" stroke="#C0392B" strokeWidth={2} activeDot={{ r: 5, cursor: 'pointer' }} />
             </LineChart>
           </ResponsiveContainer>
+          <p className="text-[10px] text-[var(--text-muted)] mt-2">
+            註：點圖上任一年度將自動把「判決年度」篩選器設為該年。
+          </p>
         </div>
       </div>
 
       {/* Top 15 damages table */}
-      <div className="card p-4">
+      <div className="card p-4" ref={tableRef}>
         <h3 className="text-sm font-medium mb-3">
-          判准金額最高 TOP {topCases.length}
+          {urlAwarded ? '判准金額最高（限有判准金額）' : '判准金額最高'} TOP {topCases.length}
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
@@ -386,26 +497,47 @@ export default function DamagesAnalysis() {
               </tr>
             </thead>
             <tbody>
-              {topCases.map((c, i) => (
-                <tr key={c.seq} className="border-b border-[var(--border)] hover:bg-[var(--bg-secondary)]">
+              {topCases.map((c, i) => {
+                const isMed = filteredStats.medCase && c.seq === filteredStats.medCase.seq;
+                const isMax = filteredStats.maxCase && c.seq === filteredStats.maxCase.seq;
+                return (
+                <tr key={c.seq} className={`border-b border-[var(--border)] hover:bg-[var(--bg-secondary)] ${isMed || isMax ? 'bg-[rgba(200,164,90,0.04)]' : ''}`}>
                   <td className="py-2 px-2 text-[var(--text-muted)]">{i + 1}</td>
                   <td className="py-2 px-2 whitespace-nowrap">
-                    <span className="font-medium" title={c.caseId}>
-                      {formatJudgmentCaseName(c)}
-                    </span>
+                    {c.judgmentUrl ? (
+                      <a href={c.judgmentUrl} target="_blank" rel="noopener noreferrer"
+                         className="font-medium text-[var(--vermillion)] hover:underline"
+                         title={`開啟判決原文 · ${c.caseId}`}>
+                        {formatJudgmentCaseName(c)}
+                      </a>
+                    ) : (
+                      <span className="font-medium" title={c.caseId}>{formatJudgmentCaseName(c)}</span>
+                    )}
+                    {isMax && <span className="ml-1 text-[9px] text-[var(--accent-green)]">(最高)</span>}
+                    {isMed && <span className="ml-1 text-[9px] text-[#8E44AD]">(中位數)</span>}
                   </td>
                   <td className="py-2 px-2 whitespace-nowrap">{c.court}</td>
                   <td className="py-2 px-2 max-w-[18ch] truncate" title={c.reason}>{c.reason}</td>
                   <td className="py-2 px-2">{c.outcome}</td>
                   <td className="py-2 px-2 text-right font-mono font-medium text-[var(--gold)]">
-                    {formatMoney(c.damagesNum)}
+                    {c.judgmentUrl ? (
+                      <a href={c.judgmentUrl} target="_blank" rel="noopener noreferrer"
+                         className="hover:underline" title="開啟判決原文">
+                        {formatMoney(c.damagesNum)}
+                      </a>
+                    ) : formatMoney(c.damagesNum)}
                   </td>
                   <td className="py-2 px-2">
                     <div className="flex flex-wrap gap-1">
                       {(c.calcMethods || []).slice(0, 3).map((m) => (
-                        <span key={m} className="text-[9px] px-1 py-0.5 bg-[rgba(200,164,90,0.1)] text-[var(--gold)]">
+                        <Link
+                          key={m}
+                          to={`/damages?method=${encodeURIComponent(m)}`}
+                          className="text-[9px] px-1 py-0.5 bg-[rgba(200,164,90,0.1)] text-[var(--gold)] hover:bg-[rgba(200,164,90,0.2)] transition"
+                          title={`鑽取：計算方式含「${m}」`}
+                        >
                           {m}
-                        </span>
+                        </Link>
                       ))}
                     </div>
                   </td>
@@ -418,7 +550,7 @@ export default function DamagesAnalysis() {
                     )}
                   </td>
                 </tr>
-              ))}
+              );})}
             </tbody>
           </table>
         </div>
@@ -451,7 +583,7 @@ export default function DamagesAnalysis() {
   );
 }
 
-function KpiCard({ label, value, suffix, color, sub, href }) {
+function KpiCard({ label, value, suffix, color, sub, href, onClick, hint }) {
   const colorMap = {
     gold: 'text-[var(--gold)]',
     red: 'text-[var(--vermillion)]',
@@ -459,11 +591,13 @@ function KpiCard({ label, value, suffix, color, sub, href }) {
     green: 'text-[var(--accent-green)]',
     purple: 'text-[#8E44AD]',
   };
+  const interactive = !!(href || onClick);
   const inner = (
     <>
       <div className="flex items-center justify-between">
         <p className="text-[10px] text-[var(--text-muted)]">{label}</p>
         {href && <ExternalLink size={11} className="text-[var(--text-muted)] group-hover:text-[var(--accent-green)] transition" />}
+        {!href && onClick && <ArrowUpRight size={11} className="text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition" />}
       </div>
       <div className="flex items-baseline gap-1 mt-1">
         <span className={`text-lg sm:text-xl font-bold font-mono ${colorMap[color]}`}>
@@ -474,16 +608,27 @@ function KpiCard({ label, value, suffix, color, sub, href }) {
       {sub && <p className="text-[9px] text-[var(--text-muted)] mt-0.5 truncate" title={sub}>{sub}</p>}
     </>
   );
+  const baseCls = 'card p-3';
+  const hoverCls = 'group block cursor-pointer transition hover:border-[var(--text-secondary)] hover:shadow-sm';
   if (href) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer"
-         className="card p-3 group block cursor-pointer transition hover:border-[var(--text-secondary)] hover:shadow-sm"
+         className={`${baseCls} ${hoverCls}`}
          title="開啟判決原文">
         {inner}
       </a>
     );
   }
-  return <div className="card p-3">{inner}</div>;
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick}
+        className={`${baseCls} ${hoverCls} text-left w-full`}
+        title={hint || '點擊展開'}>
+        {inner}
+      </button>
+    );
+  }
+  return <div className={baseCls}>{inner}</div>;
 }
 
 function LoadingSkeleton() {

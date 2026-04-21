@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from 'recharts';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -29,6 +29,7 @@ const renderActiveShape = (props) => {
 
 export default function IndustryChart({ data }) {
   const [activeIndex, setActiveIndex] = useState(-1);
+  const navigate = useNavigate();
 
   return (
     <div className="card p-4 sm:p-5">
@@ -46,6 +47,7 @@ export default function IndustryChart({ data }) {
             activeIndex={activeIndex} activeShape={renderActiveShape}
             onMouseEnter={(_, i) => setActiveIndex(i)}
             onMouseLeave={() => setActiveIndex(-1)}
+            onClick={(d) => d?.name && navigate(`/cases?industry=${encodeURIComponent(d.name)}`)}
           >
             {data.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} style={{ cursor: 'pointer' }} />

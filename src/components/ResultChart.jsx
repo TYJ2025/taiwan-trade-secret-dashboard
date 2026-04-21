@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpRight } from 'lucide-react';
 
 export default function ResultChart({ data }) {
+  const navigate = useNavigate();
   return (
     <div className="card p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
@@ -17,6 +18,7 @@ export default function ResultChart({ data }) {
             stroke="var(--bg-card)" strokeWidth={2}
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             labelLine={false}
+            onClick={(d) => d?.name && navigate(`/cases?result=${encodeURIComponent(d.name)}`)}
           >
             {data.map((entry, i) => (
               <Cell key={i} fill={entry.color} style={{ cursor: 'pointer' }} />

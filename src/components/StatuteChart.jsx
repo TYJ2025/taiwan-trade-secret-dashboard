@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpRight } from 'lucide-react';
 
 export default function StatuteChart({ data }) {
+  const navigate = useNavigate();
   return (
     <div className="card p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
@@ -18,7 +19,13 @@ export default function StatuteChart({ data }) {
             contentStyle={{ background: 'var(--tooltip-bg)', border: '1px solid var(--border)', color: 'var(--tooltip-text)', fontSize: 12 }}
             formatter={(v) => [`${v} 件`, '引用次數']}
           />
-          <Bar dataKey="count" fill="var(--gold)" radius={[0, 2, 2, 0]} />
+          <Bar
+            dataKey="count"
+            fill="var(--gold)"
+            radius={[0, 2, 2, 0]}
+            cursor="pointer"
+            onClick={(d) => d?.statute && navigate(`/cases?statute=${encodeURIComponent(d.statute)}`)}
+          />
         </BarChart>
       </ResponsiveContainer>
       {/* Drill-down list (complements the chart with clickable rows) */}
