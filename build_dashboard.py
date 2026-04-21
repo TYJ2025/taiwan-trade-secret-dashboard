@@ -24,7 +24,8 @@ from datetime import datetime
 SCRIPT_DIR = Path(__file__).parent
 INPUT_JSON = SCRIPT_DIR / "trade_secret_judgments_structured.json"
 NEWS_JSON = SCRIPT_DIR / "news.json"
-OUTPUT_HTML = SCRIPT_DIR / "index.html"
+# 輸出到 dashboard.html（單檔 standalone 版），避免覆蓋到 Vite / React 應用使用之 index.html
+OUTPUT_HTML = SCRIPT_DIR / "dashboard.html"
 
 def trim_case_for_dashboard(c: dict) -> dict:
     """Trim case data to only what's needed for dashboard display."""
