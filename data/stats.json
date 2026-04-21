@@ -5,9 +5,7 @@
     "criminalCases": 36,
     "civilCases": 16,
     "pendingCases": 5,
-    "convictionRate": 0.81,
-    "criminalDecidedCount": 32,
-    "criminalGuiltyCount": 26,
+    "convictionRate": 0.8,
     "totalDamagesAwarded": 3634711278,
     "averageDamages": 363471128,
     "medianCaseDuration": 485

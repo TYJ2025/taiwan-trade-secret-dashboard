@@ -29,12 +29,9 @@ export default function YearChart({ data }) {
   };
   return (
     <div className="card p-4 sm:p-5">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-sm font-bold tracking-wide">
-          歷年案件趨勢
-        </h3>
-        <span className="text-[10px] text-[var(--text-muted)]">點 bar 依年度／類型鑽取</span>
-      </div>
+      <h3 className="font-display text-sm font-bold mb-4 tracking-wide">
+        歷年案件趨勢
+      </h3>
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={data} barGap={2}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />

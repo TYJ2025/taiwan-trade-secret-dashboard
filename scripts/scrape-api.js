@@ -198,16 +198,17 @@ function extractSummary(text) {
  * 計算統計資料
  */
 function computeStats(cases) {
-  const PENDING_RESULTS = new Set(['審理中', '偵查中', '調解中']);
+  const decidedCases = cases.filter(
+    (c) => c.status === '已判決' || c.result === '有罪' || c.result === '無罪'
+  );
   const criminalCases = cases.filter((c) => c.caseType.includes('刑'));
   const civilCases = cases.filter((c) => !c.caseType.includes('刑'));
-  const pendingCases = cases.filter((c) => PENDING_RESULTS.has(c.result));
-
-  // 定罪率 = 刑事有罪 / 刑事已判決（排除偵查中／審理中）
-  // 對應 CaseList URL: /cases?type=刑&result=有罪
-  const criminalDecided = criminalCases.filter((c) => !PENDING_RESULTS.has(c.result));
-  const criminalGuilty = criminalDecided.filter((c) => c.result === '有罪').length;
-  const guiltyCount = criminalGuilty; // 保留變數名以利後段使用
+  const pendingCases = cases.filter(
+    (c) => c.status === '審理中' || c.status === '偵查中' || c.status === '調解中'
+  );
+  const guiltyCount = decidedCases.filter(
+    (c) => c.result === '有罪' || c.result === '原告勝訴' || c.result === '部分勝訴'
+  ).length;
 
   const totalDamages = cases.reduce((sum, c) => sum + (c.damages || 0), 0);
   const damagesCases = cases.filter((c) => c.damages > 0);
@@ -309,11 +310,9 @@ function computeStats(cases) {
       civilCases: civilCases.length,
       pendingCases: pendingCases.length,
       convictionRate:
-        criminalDecided.length > 0
-          ? parseFloat((criminalGuilty / criminalDecided.length).toFixed(2))
+        decidedCases.length > 0
+          ? parseFloat((guiltyCount / decidedCases.length).toFixed(2))
           : 0,
-      criminalDecidedCount: criminalDecided.length,
-      criminalGuiltyCount: criminalGuilty,
       totalDamagesAwarded: totalDamages,
       averageDamages: avgDamages,
       medianCaseDuration: 485, // TODO: calculate from actual dates

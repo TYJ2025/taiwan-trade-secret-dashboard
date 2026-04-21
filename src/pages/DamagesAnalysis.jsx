@@ -381,7 +381,7 @@ export default function DamagesAnalysis() {
             </BarChart>
           </ResponsiveContainer>
           <p className="text-[10px] text-[var(--text-muted)] mt-2">
-            註：「0 元」係指該案件經判決駁回、部分駁回或損害賠償部分未獲准。點區間 bar 可鑽取。
+            註：「0 元」係指該案件經判決駁回、部分駁回或損害賠償部分未獲准。
           </p>
         </div>
       </div>
@@ -471,16 +471,13 @@ export default function DamagesAnalysis() {
               <Line yAxisId="right" dataKey="awarded" name="判准金額" stroke="#C0392B" strokeWidth={2} activeDot={{ r: 5, cursor: 'pointer' }} />
             </LineChart>
           </ResponsiveContainer>
-          <p className="text-[10px] text-[var(--text-muted)] mt-2">
-            註：點圖上任一年度將自動把「判決年度」篩選器設為該年。
-          </p>
         </div>
       </div>
 
       {/* Top 15 damages table */}
       <div className="card p-4" ref={tableRef}>
         <h3 className="text-sm font-medium mb-3">
-          {urlAwarded ? '判准金額最高（限有判准金額）' : '判准金額最高'} TOP {topCases.length}
+          判准金額最高 TOP {topCases.length}
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
@@ -497,11 +494,8 @@ export default function DamagesAnalysis() {
               </tr>
             </thead>
             <tbody>
-              {topCases.map((c, i) => {
-                const isMed = filteredStats.medCase && c.seq === filteredStats.medCase.seq;
-                const isMax = filteredStats.maxCase && c.seq === filteredStats.maxCase.seq;
-                return (
-                <tr key={c.seq} className={`border-b border-[var(--border)] hover:bg-[var(--bg-secondary)] ${isMed || isMax ? 'bg-[rgba(200,164,90,0.04)]' : ''}`}>
+              {topCases.map((c, i) => (
+                <tr key={c.seq} className="border-b border-[var(--border)] hover:bg-[var(--bg-secondary)]">
                   <td className="py-2 px-2 text-[var(--text-muted)]">{i + 1}</td>
                   <td className="py-2 px-2 whitespace-nowrap">
                     {c.judgmentUrl ? (
@@ -513,8 +507,6 @@ export default function DamagesAnalysis() {
                     ) : (
                       <span className="font-medium" title={c.caseId}>{formatJudgmentCaseName(c)}</span>
                     )}
-                    {isMax && <span className="ml-1 text-[9px] text-[var(--accent-green)]">(最高)</span>}
-                    {isMed && <span className="ml-1 text-[9px] text-[#8E44AD]">(中位數)</span>}
                   </td>
                   <td className="py-2 px-2 whitespace-nowrap">{c.court}</td>
                   <td className="py-2 px-2 max-w-[18ch] truncate" title={c.reason}>{c.reason}</td>
@@ -550,7 +542,7 @@ export default function DamagesAnalysis() {
                     )}
                   </td>
                 </tr>
-              );})}
+              ))}
             </tbody>
           </table>
         </div>

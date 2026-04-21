@@ -43,7 +43,7 @@ export default function StatsCards({ stats }) {
       ],
     },
     {
-      label: '定罪率（刑事）',
+      label: '定罪率',
       value: stats.convictionRate,
       displayValue: `${(stats.convictionRate * 100).toFixed(0)}%`,
       animated: false,
@@ -51,12 +51,9 @@ export default function StatsCards({ stats }) {
       accent: 'gold',
       to: '/cases?type=刑&result=有罪',
       subParts: [
-        stats.criminalGuiltyCount && stats.criminalDecidedCount
-          ? { text: `${stats.criminalGuiltyCount}/${stats.criminalDecidedCount} 已判決`, to: '/cases?type=刑&result=有罪,無罪' }
-          : null,
-        { text: ' · ', to: null },
-        { text: `${stats.pendingCases} 未終結`, to: '/cases?result=審理中,偵查中,調解中' },
-      ].filter(Boolean),
+        { text: `${stats.pendingCases} `, to: '/cases?result=審理中,偵查中,調解中' },
+        { text: '件審理中', to: '/cases?result=審理中,偵查中,調解中' },
+      ],
     },
     {
       label: '損害賠償總額',
