@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, X, ExternalLink, Download, AlertCircle, FileText, Loader2 } from 'lucide-react';
-import { useJudgments, useJudgmentsFullText } from '../hooks/useData';
+import { Search, X, ExternalLink, Download, AlertCircle, FileText, Loader2, Scale, Gavel } from 'lucide-react';
+import { useJudgments, useJudgmentsFullText, useSupremeCourt, getJudicialUrl } from '../hooks/useData';
 
 const PAGE_SIZE = 15;
 const SNIPPET_RADIUS = 90;
@@ -10,10 +10,12 @@ const MAX_SNIPPETS_PER_CASE = 3;
 export default function FullTextSearch() {
   const { judgments, loading: metaLoading, error: metaError } = useJudgments();
   const { fulltext, loading: ftLoading, error: ftError, progress } = useJudgmentsFullText();
-  const [searchParams] = useSearchParams();
+  const { data: scData, loading: scLoading } = useSupremeCourt();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const urlQuery = searchParams.get('q') || '';
   const urlMode = searchParams.get('mode') || '';
+  const urlCourts = searchParams.get('courts') || '';
 
   const [rawQuery, setRawQuery] = useState(urlQuery);
   const [submittedQuery, setSubmittedQuery] = useState(urlQuery);
@@ -21,6 +23,9 @@ export default function FullTextSearch() {
   const [typeFilter, setTypeFilter] = useState('all');
   const [yearFrom, setYearFrom] = useState('');
   const [yearTo, setYearTo] = useState('');
+  const [selectedCourts, setSelectedCourts] = useState(() =>
+    urlCourts ? new Set(urlCourts.split(',').filter(Boolean)) : new Set()
+  );
   const [page, setPage] = useState(1);
 
   // Sync URL → state when the query param changes (external link navigation)
@@ -46,22 +51,89 @@ export default function FullTextSearch() {
     setPage(1);
   }, [rawQuery]);
 
+  // 合成最高法院 35 筆裁定為 judgment-like records，併入搜尋語料庫
+  // seq 用 `sc_<jid>` 避免與既有 492 筆的數字 seq 衝突。
+  const scRulings = useMemo(() => {
+    if (!scData) return [];
+    return scData
+      .filter((x) => x.title.endsWith('裁定'))
+      .map((x) => ({
+        seq: `sc_${x.jid}`,
+        caseId: x.title.replace(' 號刑事裁定', ' 號').replace(' 號民事裁定', ' 號'),
+        title: x.title,
+        court: '最高法院',
+        caseType: x.title.includes('刑事') ? '刑事' : '民事',
+        adYear: parseInt((x.adDate || '').slice(0, 4)) || null,
+        adDate: x.adDate,
+        outcome: '—',
+        reason: x.reason,
+        judgmentUrl: getJudicialUrl(x.jid),
+        docType: '裁定',
+        damagesNum: 0,
+        calcMethods: [],
+        _scFullText: x.fullText,
+      }));
+  }, [scData]);
+
+  // 將判決與裁定合併為單一 corpus
+  const allJudgments = useMemo(() => {
+    return [...judgments, ...scRulings];
+  }, [judgments, scRulings]);
+
   const ftIndex = useMemo(() => {
     if (!fulltext) return null;
     const map = new Map();
     fulltext.forEach((c) => map.set(c.seq, c.fullText || ''));
+    // 將合成的 SC 裁定 fullText 也加入索引
+    scRulings.forEach((r) => map.set(r.seq, r._scFullText || ''));
     return map;
-  }, [fulltext]);
+  }, [fulltext, scRulings]);
+
+  // 從 corpus 動態抽出全部法院列表（依筆數降序）
+  const courtList = useMemo(() => {
+    const counts = new Map();
+    allJudgments.forEach((j) => {
+      counts.set(j.court, (counts.get(j.court) || 0) + 1);
+    });
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, n]) => ({ name, n }));
+  }, [allJudgments]);
+
+  // 切換法院勾選並同步 URL
+  const toggleCourt = useCallback((name) => {
+    setSelectedCourts((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      // sync URL
+      const params = new URLSearchParams(searchParams);
+      if (next.size === 0) params.delete('courts');
+      else params.set('courts', Array.from(next).join(','));
+      setSearchParams(params, { replace: true });
+      setPage(1);
+      return next;
+    });
+  }, [searchParams, setSearchParams]);
+
+  const clearCourts = useCallback(() => {
+    setSelectedCourts(new Set());
+    const params = new URLSearchParams(searchParams);
+    params.delete('courts');
+    setSearchParams(params, { replace: true });
+    setPage(1);
+  }, [searchParams, setSearchParams]);
 
   // Core search pipeline
   const results = useMemo(() => {
-    if (!ftIndex || !judgments.length || tokens.length === 0) return [];
+    if (!ftIndex || !allJudgments.length || tokens.length === 0) return [];
     const out = [];
-    for (const j of judgments) {
+    for (const j of allJudgments) {
       // metadata filters
       if (typeFilter !== 'all' && j.caseType !== typeFilter) continue;
       if (yearFrom && j.adYear < Number(yearFrom)) continue;
       if (yearTo && j.adYear > Number(yearTo)) continue;
+      if (selectedCourts.size > 0 && !selectedCourts.has(j.court)) continue;
 
       const text = ftIndex.get(j.seq) || '';
       if (!text) continue;
@@ -106,18 +178,19 @@ export default function FullTextSearch() {
     }
     out.sort((a, b) => b.hitCount - a.hitCount || b.adYear - a.adYear);
     return out;
-  }, [ftIndex, judgments, tokens, mode, typeFilter, yearFrom, yearTo]);
+  }, [ftIndex, allJudgments, tokens, mode, typeFilter, yearFrom, yearTo, selectedCourts]);
 
   const totalPages = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
   const paged = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const downloadCSV = () => {
     const rows = [
-      ['案號', '法院', '類型', '案由', '命中次數', '結果', '判決書網址'],
+      ['案號', '法院', '類型', '文書類型', '案由', '命中次數', '結果', '判決書網址'],
       ...results.map((r) => [
         r.caseId,
         r.court,
         r.caseType,
+        r.docType || '判決',
         r.reason,
         r.hitCount,
         r.outcome,
@@ -142,8 +215,9 @@ export default function FullTextSearch() {
           判決全文檢索
         </h2>
         <p className="text-xs text-[var(--text-muted)]">
-          在 492 筆台灣營業秘密判決全文中進行關鍵字檢索。支援 AND / OR / 片語 三種模式，
-          結果依命中次數排序並顯示上下文摘要。
+          在 <strong>{allJudgments.length}</strong> 筆台灣營業秘密裁判全文中進行關鍵字檢索（{judgments.length} 筆判決 + {scRulings.length} 筆最高法院裁定）。
+          支援 AND / OR / 片語 三種模式，結果依命中次數排序並顯示上下文摘要。
+          可勾選下方「法院」chip 限定來源（例如：只看最高法院之見解）。
         </p>
       </header>
 
@@ -240,6 +314,49 @@ export default function FullTextSearch() {
             placeholder="迄" className="filter-select w-20" min="2001" max="2030"
           />
         </div>
+
+        {/* 法院多選 chip filter */}
+        <div className="pt-2 border-t border-[var(--border)]">
+          <div className="flex items-center gap-2 mb-1.5">
+            <Scale size={11} className="text-[var(--text-muted)]" />
+            <span className="text-[10px] text-[var(--text-muted)]">法院（複選；不勾選＝全部）：</span>
+            {selectedCourts.size > 0 && (
+              <button
+                type="button"
+                onClick={clearCourts}
+                className="text-[10px] text-[var(--vermillion)] hover:underline"
+              >
+                清除（已選 {selectedCourts.size}）
+              </button>
+            )}
+            <span className="text-[10px] text-[var(--text-muted)] ml-auto">
+              共 {courtList.length} 個法院
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {courtList.map(({ name, n }) => {
+              const active = selectedCourts.has(name);
+              const isSupreme = name === '最高法院';
+              return (
+                <button
+                  type="button"
+                  key={name}
+                  onClick={() => toggleCourt(name)}
+                  className={`px-2 py-1 text-[10px] border transition-colors flex items-center gap-1 ${
+                    active
+                      ? 'border-[var(--vermillion)] bg-[rgba(192,57,43,0.10)] text-[var(--vermillion)] font-medium'
+                      : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--gold)] hover:text-[var(--gold)]'
+                  } ${isSupreme && !active ? 'border-[var(--gold)] text-[var(--gold)]' : ''}`}
+                  title={`${name}：語料庫含 ${n} 筆`}
+                >
+                  {isSupreme && <Gavel size={9} />}
+                  <span>{name.replace('臺灣', '').replace('地方法院', '地院')}</span>
+                  <span className="opacity-60">{n}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </form>
 
       {/* Quick-pick presets */}
@@ -271,8 +388,18 @@ export default function FullTextSearch() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-xs text-[var(--text-secondary)]">
             「<span className="text-[var(--gold)] font-medium">{submittedQuery}</span>」
-            命中 <span className="text-[var(--text-primary)] font-medium">{results.length}</span> 筆判決
+            命中 <span className="text-[var(--text-primary)] font-medium">{results.length}</span> 筆
+            （
+            <span className="text-[var(--text-primary)] font-mono">{results.filter((r) => r.docType !== '裁定').length}</span> 判決
+            {' + '}
+            <span className="text-[var(--accent-green)] font-mono">{results.filter((r) => r.docType === '裁定').length}</span> 裁定
+            ）
             / 共 <span className="font-mono">{results.reduce((s, r) => s + r.hitCount, 0)}</span> 次
+            {selectedCourts.size > 0 && (
+              <span className="ml-2 text-[var(--vermillion)]">
+                · 限定法院：{Array.from(selectedCourts).join('、')}
+              </span>
+            )}
           </div>
           {results.length > 0 && (
             <button
@@ -339,8 +466,13 @@ function ResultCard({ item, tokens }) {
               item.caseType === '刑事' ? 'bg-[rgba(192,57,43,0.08)] text-[var(--vermillion)]' :
               'bg-[rgba(41,128,185,0.08)] text-[var(--accent-blue)]'
             }`}>{item.caseType}</span>
+            {item.docType === '裁定' && (
+              <span className="px-1.5 py-0.5 bg-[rgba(46,125,50,0.10)] text-[var(--accent-green)] font-medium" title="此為最高法院裁定（程序事項），無實體判准金額">
+                裁定
+              </span>
+            )}
             <span>{item.adDate || item.adYear}</span>
-            <span>{item.outcome}</span>
+            {item.outcome && item.outcome !== '—' && <span>{item.outcome}</span>}
             {item.reason && (
               <span className="text-[var(--text-muted)] truncate max-w-[24ch]">
                 {item.reason}

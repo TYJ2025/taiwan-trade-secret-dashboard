@@ -8,6 +8,7 @@ import CaseDetail from './pages/CaseDetail';
 import Analytics from './pages/Analytics';
 import FullTextSearch from './pages/FullTextSearch';
 import DamagesAnalysis from './pages/DamagesAnalysis';
+import SupremeCourt from './pages/SupremeCourt';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="analytics" element={<Analytics />} />
             <Route path="search" element={<FullTextSearch />} />
             <Route path="damages" element={<DamagesAnalysis />} />
+            <Route path="supreme" element={<SupremeCourt />} />
           </Route>
         </Routes>
       </HashRouter>

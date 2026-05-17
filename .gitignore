@@ -46,3 +46,6 @@ dist.stale_*/
 dist2/
 .git/index.lock*
 .git/objects/*/tmp_obj_*
+
+# Session 暫存（baseline JIDs、下載 log 等本機 scratch）
+outputs/

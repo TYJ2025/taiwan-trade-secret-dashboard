@@ -103,6 +103,47 @@ export function useJudgmentsFullText() {
   return { fulltext, loading, error, progress };
 }
 
+// ─────────────────────────────────────────────────────────────────
+// 最高法院營業秘密相關裁判（74 筆＝39 判決 + 35 裁定）
+// 獨立資料源；不混入 492 筆 KPI／DamagesAnalysis 統計
+// ─────────────────────────────────────────────────────────────────
+
+let _supremeCache = null;
+
+export function useSupremeCourt() {
+  const [data, setData] = useState(_supremeCache || null);
+  const [loading, setLoading] = useState(!_supremeCache);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (_supremeCache) return;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/supreme_court_judgments_fulltext.json`);
+        if (!res.ok) throw new Error('最高法院資料載入失敗');
+        const json = await res.json();
+        _supremeCache = json;
+        setData(json);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  return { data, loading, error };
+}
+
+/**
+ * 將 jid（如 TPSV,104,台上,1589,20150821,1）轉為司法院原文 URL
+ */
+export function getJudicialUrl(jid) {
+  if (!jid) return null;
+  return `https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=${encodeURIComponent(jid)}`;
+}
+
 export function useCases() {
   const [cases, setCases] = useState([]);
   const [stats, setStats] = useState(null);
