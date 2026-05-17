@@ -394,4 +394,87 @@ charCount 分布：min=266, max=9,789, avg=3,174, total=234,912
 3. `useSupremeCourt` 在進入 `/search` 時會額外載入 711KB（裁定全文）；首次載入時間延長約 5-10%（已快取）。
 4. 法院命名差異未做正規化：例如「智慧財產法院」（舊名）與「智慧財產及商業法院」（2021/7/1 改制後）為兩個 chip。YJ 若想看「智財類」全部見解需勾選兩者。
 
+---
+
+## Session 21:00 — Phase D：最高法院見解比對頁籤（聚焦§2 三要件）
+
+### YJ 需求
+"我希望能夠有將選定的法院判決進行比對分析的功能，例如分析選定的10個判決關於合理保密措施的認定要點"
+→ "由於這是針對營業秘密的儀表板，我想可以針對保密措施、秘密性做成最高法院見解比對頁籤"
+→ 確認議題範圍 = A. 只做三要件。
+
+### 目標
+1. 新增 `/holdings` 分頁，鎖最高法院 74 筆裁判，依§2 三要件預索引：
+   - 🔒 秘密性 (§2(1))
+   - 🛡️ 合理保密措施 (§2(3))
+   - 💰 經濟價值性 (§2(2))
+2. 議題 chip 切換 → 列出含相關論述之 SC 裁判 → 多選 → 匯出 .md 比對資料包（含 LLM prompt template）。
+3. **既有 KPI 仍不動**；本頁完全 read-only 使用既有 `data/supreme_court_judgments_fulltext.json` + 新增 `data/supreme_court_holdings_index.json`。
+
+### 設計決策
+
+- **預索引在 build 階段跑**（Python），不在前端 runtime 算 keyword pattern。優點：UI 載入快；缺點：新案件入庫後要重跑腳本。
+- **snippet 上下文 ±250 字**（含命中關鍵字）；overlap 段落合併。
+- **每個議題保留 6-10 個 keyword pattern**：包含正式法律用語 + 實務常見變體。
+- **匯出 .md**：律師可直接複製進 Claude 對話框或 Word；內含 prompt template「請就以下 N 個最高法院判決，比對其就『X』之認定要點，列出共識、分歧、演進」。
+- **不做後端 LLM call**：避免 API key / 費用管理；走「匯出 → 你貼進 Cowork 讓 Claude 分析」之外部 loop。
+
+### 計畫步驟
+1. [x] `scripts/build_holdings_index.py`：定義三要件 pattern、抽 snippet、產出 JSON
+2. [x] 抽樣驗證（大立光 104 台上 1589 應命中保密措施；114 台聲 134 律師酬金核定不應命中三要件）
+3. [x] `src/pages/SupremeCourtHoldings.jsx`：UI + checkbox + .md 匯出 + clipboard prompt
+4. [x] `useHoldingsIndex` hook + `/holdings` route + Layout 導覽
+5. [x] vite build + commit + 提示 YJ push
+
+### 索引產出結果
+
+```
+Topic case counts (out of 74):
+       秘密性 (    營業秘密法 §2(1)):  31 cases, 159 hits
+    合理保密措施 (    營業秘密法 §2(3)):  30 cases, 164 hits
+     經濟價值性 (    營業秘密法 §2(2)):  32 cases, 141 hits
+Cases with ≥1 topic hit: 37 / 74
+```
+
+37/74（50%）SC 裁判命中至少一個要件；其他 37 筆為律師酬金核定、移送民庭、聲請再審程序不合 等程序裁定，不含實體要件論述。
+
+### 抽樣驗證結果
+
+| 驗證項 | 結果 |
+|---|---|
+| 大立光 104 台上 1589 應命中三要件 | ✅ 全中（秘密性 3+合理 3+經濟 5 hits）。Snippet 為 §2 核心論述（附表 BB 資訊、保密措施分級、晶圓代工經濟價值） |
+| 律師酬金核定裁定 (114 台聲 134, 111 台聲 2384) 不應命中 | ✅ 正確排除 |
+| 最新刑事 114 台上 5831 | ✅ 命中合理保密措施 + 經濟價值性 |
+| Top 5 命中案件 | ✅ 都是大型刑事判決（112 台上 229、107 台上 2950、112 台上 13、108 台上 36、106 台上 350） |
+| 秘密保持命令裁定誤入「合理保密措施」 | ⚠️ 5 筆（98 台抗 170、110 台抗 595/600/161/1939）。這些裁定確實會審查§2 要件以決定保護標的，律師研究實際上有價值；UI 揭露此 false positive 與「文書類型 filter 切判決」之解法 |
+
+### 檔案異動（本 Session D）
+
+新增：
+- `scripts/build_holdings_index.py`（預索引腳本，198 行）
+- `data/supreme_court_holdings_index.json`（346 KB，37 筆命中案件 × 3 議題 snippet）
+- `public/data/supreme_court_holdings_index.json`（mirror）
+- `src/pages/SupremeCourtHoldings.jsx`（363 行；含議題 chip、案件列表、snippet 展開、checkbox 多選、.md 匯出、clipboard 複製）
+
+修改：
+- `src/hooks/useData.js`：新增 `useHoldingsIndex`
+- `src/App.jsx`：新增 `/holdings` route
+- `src/components/Layout.jsx`：新增「見解比對」桌面與手機版導覽（BookOpen icon）
+
+### 建議 YJ 抽查
+
+1. `/holdings` 開頁後預設聚焦「🛡️ 合理保密措施」議題（最常用），列出 30 筆 SC 裁判。
+2. 切到「🔒 秘密性」chip → 應變為 31 筆；「💰 經濟價值性」→ 32 筆。
+3. 預設「文書類型」filter = 全部；切到「判決」濾掉裁定（聚焦實體論述）。
+4. 點任一筆展開 → 看到 ±250 字 snippet，關鍵字 highlight。
+5. 試勾選大立光 104 台上 1589 + 任 9 筆討論「合理保密措施」之判決 → 點「下載比對資料包 .md」→ 應產出含摘要表、各案 snippet、結尾 LLM prompt template 之 markdown 檔。
+6. 點「複製給 Claude」→ 同樣內容進 clipboard；你可以直接到下次 Cowork 對話貼上讓我做比對分析。
+
+### 已知限制
+
+1. **false positive**：5 筆秘密保持命令裁定誤入「合理保密措施」議題。這些裁定的「保密措施」用詞脈絡是程序事項，非實體§2(3) 之認定。UI 已揭露；建議律師複核或用「文書類型 filter = 判決」聚焦實體論述。
+2. **不含事實審**：本頁鎖最高法院 74 筆；要看智財商業法院（134 筆）與智財法院（109 筆）之見解，目前需走 `/search` 全文檢索 + 法院 chip。
+3. **索引非即時**：新案件入 `data/supreme_court_judgments_fulltext.json` 後須重跑 `scripts/build_holdings_index.py` 才會更新。
+4. **三要件以外議題未做**：YJ 選 A（只做三要件）。未來如要加「客戶名單保護」「員工保密義務／競業禁止」「§13-1 刑事構成要件」「損害賠償計算」等議題，在 `build_holdings_index.py` 的 `TOPICS` 陣列新增即可，前端會自動列出 chip。
+
 

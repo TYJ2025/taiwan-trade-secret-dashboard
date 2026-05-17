@@ -9,6 +9,7 @@ import Analytics from './pages/Analytics';
 import FullTextSearch from './pages/FullTextSearch';
 import DamagesAnalysis from './pages/DamagesAnalysis';
 import SupremeCourt from './pages/SupremeCourt';
+import SupremeCourtHoldings from './pages/SupremeCourtHoldings';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="search" element={<FullTextSearch />} />
             <Route path="damages" element={<DamagesAnalysis />} />
             <Route path="supreme" element={<SupremeCourt />} />
+            <Route path="holdings" element={<SupremeCourtHoldings />} />
           </Route>
         </Routes>
       </HashRouter>

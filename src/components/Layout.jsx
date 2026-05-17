@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Shield, BarChart3, List, Scale, TrendingUp, Moon, Sun, Menu, X, Search, Calculator, Landmark } from 'lucide-react';
+import { Shield, BarChart3, List, Scale, TrendingUp, Moon, Sun, Menu, X, Search, Calculator, Landmark, BookOpen } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Layout() {
@@ -92,6 +92,10 @@ export default function Layout() {
             <Landmark size={15} />
             <span>最高法院</span>
           </NavLink>
+          <NavLink to="/holdings" className={linkClass}>
+            <BookOpen size={15} />
+            <span>見解比對</span>
+          </NavLink>
           <NavLink to="/analytics" className={linkClass}>
             <TrendingUp size={15} />
             <span>進階分析</span>
@@ -121,6 +125,10 @@ export default function Layout() {
           <NavLink to="/supreme" className={mobileLinkClass} onClick={() => setMobileMenuOpen(false)}>
             <Landmark size={15} />
             <span>最高法院</span>
+          </NavLink>
+          <NavLink to="/holdings" className={mobileLinkClass} onClick={() => setMobileMenuOpen(false)}>
+            <BookOpen size={15} />
+            <span>見解比對</span>
           </NavLink>
           <NavLink to="/analytics" className={mobileLinkClass} onClick={() => setMobileMenuOpen(false)}>
             <TrendingUp size={15} />

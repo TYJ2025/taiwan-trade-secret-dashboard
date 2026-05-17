@@ -144,6 +144,38 @@ export function getJudicialUrl(jid) {
   return `https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=${encodeURIComponent(jid)}`;
 }
 
+// ─────────────────────────────────────────────────────────────────
+// 最高法院見解預索引（§2 三要件）
+// ─────────────────────────────────────────────────────────────────
+
+let _holdingsCache = null;
+
+export function useHoldingsIndex() {
+  const [data, setData] = useState(_holdingsCache || null);
+  const [loading, setLoading] = useState(!_holdingsCache);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (_holdingsCache) return;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/supreme_court_holdings_index.json`);
+        if (!res.ok) throw new Error('見解索引載入失敗');
+        const json = await res.json();
+        _holdingsCache = json;
+        setData(json);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  return { data, loading, error };
+}
+
 export function useCases() {
   const [cases, setCases] = useState([]);
   const [stats, setStats] = useState(null);
