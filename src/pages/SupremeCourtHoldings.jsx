@@ -64,6 +64,28 @@ export default function SupremeCourtHoldings() {
   const curatedTopic = curated?.topics?.[activeTopic] || null;
   const curatedCases = curatedTopic?.cases || {};
   const [showComparison, setShowComparison] = useState(true);
+  const [highlightJid, setHighlightJid] = useState(null);
+
+  // 比對分析案號 → jid（供點選跳轉）
+  const caseNoToJid = useMemo(() => {
+    const m = {};
+    for (const [jid, cc] of Object.entries(curatedCases)) m[cc.caseNo] = jid;
+    return m;
+  }, [curatedCases]);
+
+  // 點案號 → 重設 filter、展開該案、捲動至卡片並短暫高亮
+  const jumpToCase = (caseNo) => {
+    const jid = caseNoToJid[caseNo];
+    if (!jid) return;
+    setDocTypeFilter('all');
+    setExcludeProcedural(false);
+    setExpandedJids((prev) => new Set([...prev, jid]));
+    setHighlightJid(jid);
+    setTimeout(() => {
+      document.getElementById(`case-${jid}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 150);
+    setTimeout(() => setHighlightJid(null), 2500);
+  };
 
   // 篩選命中當前議題且符合 docType filter 的案件
   const filteredCases = useMemo(() => {
@@ -323,7 +345,7 @@ export default function SupremeCourtHoldings() {
                 {curatedTopic.comparison.common.map((p, i) => (
                   <div key={i} className="mb-2 pl-3 border-l-2 border-[var(--accent-green)]">
                     <span className="text-[var(--text-primary)]">{p.point}</span>
-                    <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{p.cases.join('、')}</span>
+                    <CaseRefs cases={p.cases} onJump={jumpToCase} />
                   </div>
                 ))}
               </div>
@@ -335,7 +357,7 @@ export default function SupremeCourtHoldings() {
                     {d.positions.map((pos, j) => (
                       <div key={j} className="mt-1">
                         <span className="text-[var(--text-secondary)]">‣ {pos.view}</span>
-                        <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{pos.cases.join('、')}</span>
+                        <CaseRefs cases={pos.cases} onJump={jumpToCase} />
                       </div>
                     ))}
                   </div>
@@ -347,7 +369,7 @@ export default function SupremeCourtHoldings() {
                   <div key={i} className="mb-2 pl-3 border-l-2 border-[var(--accent-blue)]">
                     <div className="font-medium text-[var(--text-primary)]">{e.period}</div>
                     <span className="text-[var(--text-secondary)]">{e.trend}</span>
-                    <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{e.keyCases.join('、')}</span>
+                    <CaseRefs cases={e.keyCases} onJump={jumpToCase} />
                   </div>
                 ))}
               </div>
@@ -425,7 +447,10 @@ export default function SupremeCourtHoldings() {
             return (
               <div
                 key={c.jid}
-                className={`bg-[var(--bg-card)] border ${isSelected ? 'border-[var(--vermillion)]' : 'border-[var(--border)]'} transition-colors`}
+                id={`case-${c.jid}`}
+                className={`bg-[var(--bg-card)] border ${isSelected ? 'border-[var(--vermillion)]' : 'border-[var(--border)]'} ${
+                  highlightJid === c.jid ? 'ring-2 ring-[var(--gold)]' : ''
+                } transition-all`}
               >
                 <div className="flex items-start gap-3 p-3">
                   <input
@@ -548,6 +573,24 @@ export default function SupremeCourtHoldings() {
         <p>· 索引預先在 build 階段產出（`scripts/build_holdings_index.py`）；新案件入庫後須重跑腳本才會更新。</p>
       </div>
     </div>
+  );
+}
+
+/** 比對分析中的可點選案號：點擊跳轉至下方案件卡並展開 */
+function CaseRefs({ cases, onJump }) {
+  return (
+    <span className="block text-[11px] mt-0.5">
+      {cases.map((cn) => (
+        <button
+          key={cn}
+          onClick={() => onJump(cn)}
+          title="跳至下方案件卡（含摘要與命中段落）"
+          className="text-[var(--accent-blue)] hover:underline mr-2"
+        >
+          {cn}
+        </button>
+      ))}
+    </span>
   );
 }
 
