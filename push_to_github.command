@@ -77,6 +77,15 @@ else
   echo "✓ commit 完成"
 fi
 
+# GitHub 上的機器人每天自動 commit（data/news 更新），push 前先 rebase
+echo "--- 同步遠端（每日機器人 commit）---"
+if ! git pull --rebase origin main; then
+  echo ""
+  echo "✗ Rebase 發生衝突。請執行 git status 查看衝突檔案，"
+  echo "  解決後 git rebase --continue，再重跑本腳本；"
+  echo "  或將衝突內容貼給 Claude 處理。"
+  exit 1
+fi
 git push origin main
 echo ""
 echo "=================================================="

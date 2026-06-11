@@ -343,4 +343,23 @@ User: YJ
 
 ---
 
+## Session 5（02:40 UTC）— push 失敗排查＋腳本補 pull --rebase
+
+### 執行紀錄
+
+#### [02:38] 排查 YJ push 失敗
+- 意圖：YJ 執行 rebuild_and_push.command 後回報完成，但需驗證遠端。
+- 指令：git ls-remote ＋ 唯讀 fetch ＋ merge-base --is-ancestor
+- 實際結果：遠端 main＝73be634（今日機器人 news commit），**本機兩個 commit（eac9cba、70fe37c）不在遠端**——本機自 5/17 未同步，遠端已累積每日機器人 commit，push 遭 non-fast-forward 拒絕。已指示 YJ 執行 `git pull --rebase && git push`。
+- 異常／差異：rebuild_and_push.command 改寫時未預見機器人 commit 造成的常態性落後，係設計疏漏，本 session 修正
+- 後續行動：兩支 .command push 前加 `git pull --rebase origin main`
+
+#### [02:42] 兩支 .command 補自動同步
+- 意圖：push 前先 rebase 遠端機器人 commit，失敗（衝突）時給出明確指示後中止。
+- 預期結果：bash -n 通過
+- 實際結果：兩支均完成，bash -n 通過。注意：本次腳本修改尚未 commit，會隨 YJ 下次 push 一併上去
+- 異常／差異：無
+
+---
+
 最後修訂：2026-06-11 — Claude (Cowork)
