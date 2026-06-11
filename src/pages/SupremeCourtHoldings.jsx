@@ -1,15 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { useHoldingsIndex, getJudicialUrl } from '../hooks/useData';
 import {
-  Lock, Shield, Coins, ExternalLink, Download, Copy, Check,
+  Lock, Shield, Coins, Calculator, Users, Key, Gavel, ExternalLink, Download, Copy, Check,
   FileText, Scale, AlertCircle, Filter, ChevronRight, ChevronDown
 } from 'lucide-react';
 
 /**
  * 最高法院見解比對頁
  *
- * 針對營業秘密法§2 三要件（秘密性、合理保密措施、經濟價值性）預索引
- * 74 筆最高法院裁判之 keyword 命中段落，提供：
+ * 議題定義於 config/holdings_topics.json（可擴充式；現為 §2 三要件＋損害賠償＋共犯），
+ * 預索引 74 筆最高法院裁判之 keyword 命中段落，提供：
  * - 議題切換
  * - 案件列表 with checkbox 多選
  * - 命中 snippet 展開檢視
@@ -18,15 +18,22 @@ import {
  * 資料源：data/supreme_court_holdings_index.json（由 scripts/build_holdings_index.py 產出）
  */
 
+// 議題 icon 對照；config/holdings_topics.json 之 icon 值未列於此者 fallback 為 FileText
 const ICON_MAP = {
   lock: Lock,
   shield: Shield,
   coin: Coins,
+  calculator: Calculator,
+  users: Users,
+  scale: Scale,
+  key: Key,
+  gavel: Gavel,
+  file: FileText,
 };
 
 export default function SupremeCourtHoldings() {
   const { data, loading, error } = useHoldingsIndex();
-  const [activeTopic, setActiveTopic] = useState('reasonable_measures'); // 預設「合理保密措施」
+  const [selectedTopic, setSelectedTopic] = useState(null); // null = 用預設
   const [docTypeFilter, setDocTypeFilter] = useState('all'); // all / 判決 / 裁定
   const [selectedJids, setSelectedJids] = useState(new Set());
   const [expandedJids, setExpandedJids] = useState(new Set());
@@ -35,6 +42,13 @@ export default function SupremeCourtHoldings() {
   const topics = data?.topics || [];
   const cases = data?.cases || {};
   const stats = data?.stats;
+
+  // data-driven 預設議題：偏好「合理保密措施」，不存在時取 config 第一個
+  const activeTopic = useMemo(() => {
+    if (selectedTopic && topics.some((t) => t.id === selectedTopic)) return selectedTopic;
+    if (topics.some((t) => t.id === 'reasonable_measures')) return 'reasonable_measures';
+    return topics[0]?.id || null;
+  }, [selectedTopic, topics]);
 
   const topicMeta = useMemo(() => topics.find((t) => t.id === activeTopic), [topics, activeTopic]);
 
@@ -156,6 +170,8 @@ export default function SupremeCourtHoldings() {
     lines.push('**已知限制**：');
     lines.push('- snippet 採 keyword 抓 ±250 字上下文，可能含與該議題無關之段落（false positive），建議律師複核。');
     lines.push('- 程序裁定（秘密保持命令／限制閱覽）可能因引用§2 條文而被歸類；此類裁定通常以審查保護標的之要件為脈絡，與實體判決對要件之認定不完全等同。');
+    lines.push('- 「損害賠償」「共犯」之寬鬆 pattern 會命中案由與判決首部；僅命中寬鬆詞且次數低者多屬此類。');
+    lines.push('- 最高法院為法律審；「損害賠償」議題之價值在計算方法論之法律意見，金額酌定多在事實審。');
     lines.push('- 索引僅含最高法院 74 筆裁判；事實審見解（智財商業法院、智財法院、地院）未納入此頁。');
     return lines.join('\n');
   };
@@ -206,18 +222,19 @@ export default function SupremeCourtHoldings() {
           最高法院見解比對
         </h1>
         <p className="text-sm text-[var(--text-secondary)] mt-1">
-          針對營業秘密法 §2 <strong>三要件</strong>之預索引：從 {stats?.totalSC} 筆最高法院裁判中，提取討論
-          「秘密性」「合理保密措施」「經濟價值性」之段落，並提供比對資料包匯出。
+          針對 <strong>{topics.length} 大爭點</strong>之預索引：從 {stats?.totalSC} 筆最高法院裁判中，提取討論
+          {topics.map((t) => `「${t.name}」`).join('')}之段落，並提供比對資料包匯出。
         </p>
         <p className="text-xs text-[var(--text-muted)] mt-1">
-          ✅ 適合：「對方主張我方未盡合理保密措施」「客戶名單是否具經濟價值」這類具體爭點之研究。
+          ✅ 適合：「對方主張我方未盡合理保密措施」「客戶名單是否具經濟價值」「法院如何酌定賠償額」
+          「離職員工與新雇主是否成立共同正犯」這類具體爭點之研究。
           匯出後可直接複製進 Claude／Cowork 對話框讓 LLM 做比對分析。
         </p>
       </div>
 
       {/* Topic chips */}
       <div className="bg-[var(--bg-card)] border border-[var(--border)] p-4 space-y-3">
-        <div className="text-xs text-[var(--text-secondary)] font-semibold">議題（營業秘密法§2 三要件）：</div>
+        <div className="text-xs text-[var(--text-secondary)] font-semibold">議題（定義於 config/holdings_topics.json，可擴充）：</div>
         <div className="flex flex-wrap gap-2">
           {topics.map((t) => {
             const Icon = ICON_MAP[t.icon] || FileText;
@@ -227,7 +244,7 @@ export default function SupremeCourtHoldings() {
               <button
                 key={t.id}
                 onClick={() => {
-                  setActiveTopic(t.id);
+                  setSelectedTopic(t.id);
                   setExpandedJids(new Set());
                   setSelectedJids(new Set());
                 }}
@@ -389,8 +406,10 @@ export default function SupremeCourtHoldings() {
       {/* Caveats */}
       <div className="bg-[var(--bg-secondary)] border-l-4 border-[var(--accent-green)] p-4 text-xs text-[var(--text-secondary)] space-y-1">
         <div className="font-semibold text-[var(--text-primary)]">資料抽取說明</div>
-        <p>· 索引以正則 keyword pattern 抓取（每要件 6-13 個常見用語），可能含與該議題無關之段落（false positive）；建議律師複核 snippet 前後文後再引註。</p>
+        <p>· 索引以正則 keyword pattern 抓取（每議題 6-13 個常見用語），可能含與該議題無關之段落（false positive）；建議律師複核 snippet 前後文後再引註。</p>
         <p>· 程序裁定（秘密保持命令／限制閱覽）可能因引用§2 條文而被納入；此類裁定通常以審查保護標的之要件為脈絡，與實體判決對要件之認定不完全等同。可用上方「文書類型」filter 切到「判決」聚焦實體論述。</p>
+        <p>· 「損害賠償」「共犯」之寬鬆 pattern（即該四字／二字本身）會命中案由、判決首部及程序性段落（例：限制閱覽裁定僅於案件名稱提及損害賠償）；命中數低（1-2 次）且僅命中寬鬆詞者，多屬此類，引註前請特別複核。</p>
+        <p>· 最高法院為法律審，判准金額之具體酌定多在事實審；本索引之「損害賠償」段落主要價值在計算方法論（民§216、民訴§222 II、合理權利金、懲罰性賠償）之法律意見，非金額本身。</p>
         <p>· 本頁僅含最高法院 {stats?.totalSC} 筆裁判；事實審見解（智財商業法院、智財法院、地院）未納入。</p>
         <p>· 索引預先在 build 階段產出（`scripts/build_holdings_index.py`）；新案件入庫後須重跑腳本才會更新。</p>
       </div>

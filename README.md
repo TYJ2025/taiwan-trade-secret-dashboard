@@ -32,6 +32,15 @@
 python3 build_dashboard.py
 ```
 
+## 最高法院見解索引（/holdings 頁）— 如何新增議題
+
+議題定義集中於 **`config/holdings_topics.json`**（可擴充式），新增議題零程式碼改動：
+
+1. 編輯 `config/holdings_topics.json`，複製一個 topic 物件修改（規則見檔內 `_howToExtend`：id 唯一、icon 限既定清單、每個 pattern 須附 `ref` 標明法條依據、寬鬆變體置末）。
+2. 執行 `python3 scripts/build_holdings_index.py`（腳本會驗證 config，違規即報錯）。
+3. 依 `CLAUDE.md` §2 抽樣驗證新議題 snippet 之相關性，並記入當日 SESSION_LOG。
+4. 前端 `/holdings` 頁為 data-driven，會自動渲染新議題；本機 `npx vite build` 後部署。
+
 ## 資料來源與授權
 
 判決資料來源為**司法院法學資料檢索系統**（公開資料，依《政府資訊公開法》及司法院相關規定使用）。本專案僅進行整理、結構化與可視化，不對原始判決內容承擔任何法律意義。

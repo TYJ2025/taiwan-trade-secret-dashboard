@@ -3,15 +3,19 @@
 最高法院見解預索引腳本
 
 針對 data/supreme_court_judgments_fulltext.json 之 74 筆裁判，
-以營業秘密法 §2 三要件為議題，用 keyword pattern 抓出命中段落並抽 ±250 字
-context snippet，輸出 data/supreme_court_holdings_index.json
-供前端 /holdings 頁面使用。
+依 config/holdings_topics.json 定義之議題，用 keyword pattern 抓出
+命中段落並抽 ±250 字 context snippet，
+輸出 data/supreme_court_holdings_index.json 供前端 /holdings 頁面使用。
 
 Usage:
     python3 scripts/build_holdings_index.py
 
+擴充議題：
+    編輯 config/holdings_topics.json（規則見該檔 _howToExtend 欄位），
+    重跑本腳本即可；前端為 data-driven，無需改碼。
+
 Design notes:
-- 每個議題定義 6-10 個 keyword pattern（含正式法律用語 + 實務常見變體）。
+- 議題定義（含每個 pattern 之法條依據 ref）集中於 config，本腳本不含議題內容。
 - snippet 為 ±SNIPPET_RADIUS（預設 250 字）；overlap 之命中段落合併避免重複。
 - 索引不做「是否真正屬於該要件之論述」之判斷；可能 false positive（例：
   「保密措施」可能命中秘密保持命令之程序段落）。前端 UI 應提示使用者複核。
@@ -25,78 +29,70 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 FULLTEXT_FILE = ROOT / "data" / "supreme_court_judgments_fulltext.json"
+CONFIG_FILE = ROOT / "config" / "holdings_topics.json"
 OUT_FILE = ROOT / "data" / "supreme_court_holdings_index.json"
 PUBLIC_OUT = ROOT / "public" / "data" / "supreme_court_holdings_index.json"
 
 SNIPPET_RADIUS = 250  # 命中位置前後各 250 字
 MERGE_OVERLAP = 100   # 兩段 snippet 距離 < 100 字則合併
 
+# 前端 ICON_MAP 已知之 icon 值；未知值前端 fallback 為 file（僅警告不報錯）
+KNOWN_ICONS = {"lock", "shield", "coin", "calculator", "users", "scale", "key", "gavel", "file"}
+
 # ─────────────────────────────────────────────────────────────────
-# 議題定義（先做營業秘密法§2 三要件）
+# 議題定義：自 config/holdings_topics.json 載入（可擴充式）
 # ─────────────────────────────────────────────────────────────────
-TOPICS = [
-    {
-        "id": "secrecy",
-        "name": "秘密性",
-        "icon": "lock",
-        "lawArticle": "營業秘密法 §2(1)",
-        "description": "非一般涉及該類資訊之人所知者",
-        "patterns": [
-            "非一般涉及該類資訊之人所知",
-            "並非一般涉及該類資訊之人所知",
-            "為一般涉及該類資訊之人所知",
-            "一般涉及該類資訊之人所知",
-            "不為公眾所知悉",
-            "公眾所知悉",
-            "一般大眾所知悉",
-            "可由公開資訊取得",
-            "由公開資料取得",
-            "秘密性要件",
-            # 較寬鬆變體（最後加）
-            "秘密性",
-        ],
-    },
-    {
-        "id": "reasonable_measures",
-        "name": "合理保密措施",
-        "icon": "shield",
-        "lawArticle": "營業秘密法 §2(3)",
-        "description": "所有人已採取合理之保密措施者",
-        "patterns": [
-            "合理之保密措施",
-            "合理保密措施",
-            "相當之保密措施",
-            "相當保密措施",
-            "採取合理保密",
-            "已採取保密措施",
-            "未採取保密措施",
-            "未盡合理保密措施",
-            "採取保密措施",
-            "保密措施之要件",
-            # 較寬鬆變體
-            "保密措施",
-            "保密義務之約定",
-            "保密協議",
-        ],
-    },
-    {
-        "id": "economic_value",
-        "name": "經濟價值性",
-        "icon": "coin",
-        "lawArticle": "營業秘密法 §2(2)",
-        "description": "因其秘密性而具有實際或潛在之經濟價值者",
-        "patterns": [
-            "實際或潛在之經濟價值",
-            "因其秘密性而具有實際或潛在之經濟價值",
-            "實際或潛在價值",
-            "潛在之經濟價值",
-            "經濟價值要件",
-            "商業價值",
-            # 較寬鬆變體
-            "經濟價值",
-        ],
-    },
-]
+def load_topics(config_file=CONFIG_FILE):
+    """載入並驗證議題 config；違反規則即報錯退出。
+
+    回傳之 topic dict 內 patterns 為字串 list（依 config 順序），
+    並另附 patternRefs（term -> 法條依據）供輸出 metadata。
+    """
+    if not config_file.exists():
+        print(f"ERROR: 議題設定檔不存在：{config_file}")
+        sys.exit(1)
+    cfg = json.loads(config_file.read_text(encoding="utf-8"))
+    raw_topics = cfg.get("topics", [])
+    if not raw_topics:
+        print("ERROR: config 內無任何 topic")
+        sys.exit(1)
+
+    topics = []
+    seen_ids = set()
+    required = ("id", "name", "icon", "lawArticle", "description", "patterns")
+    for i, t in enumerate(raw_topics):
+        missing = [k for k in required if not t.get(k)]
+        assert not missing, f"topic[{i}] 缺必填欄位：{missing}"
+        assert t["id"] not in seen_ids, f"topic id 重複：{t['id']}"
+        seen_ids.add(t["id"])
+        if t["icon"] not in KNOWN_ICONS:
+            print(f"WARN: topic '{t['id']}' icon '{t['icon']}' 非前端已知值，將 fallback 為 file")
+        terms = []
+        refs = {}
+        seen_terms = set()
+        for j, pat in enumerate(t["patterns"]):
+            term = pat.get("term", "").strip()
+            ref = pat.get("ref", "").strip()
+            assert term, f"topic '{t['id']}' patterns[{j}] term 為空"
+            assert ref, f"topic '{t['id']}' pattern「{term}」缺 ref（法條依據，守則§5）"
+            assert term not in seen_terms, f"topic '{t['id']}' pattern 重複：{term}"
+            seen_terms.add(term)
+            terms.append(term)
+            refs[term] = ref
+        topics.append({
+            "id": t["id"],
+            "name": t["name"],
+            "icon": t["icon"],
+            "lawArticle": t["lawArticle"],
+            "description": t["description"],
+            "patterns": terms,
+            "patternRefs": refs,
+        })
+    print(f"Loaded {len(topics)} topics from {config_file.name}: {[t['id'] for t in topics]}")
+    return cfg.get("configVersion", "?"), topics
+
+
+CONFIG_VERSION, TOPICS = load_topics()
 
 
 def find_all_matches(text, patterns):
@@ -147,7 +143,7 @@ def extract_snippets(text, hits, radius=SNIPPET_RADIUS, merge_overlap=MERGE_OVER
             "start": r["start"],
             "end": r["end"],
             "text": snippet_text,
-            "matchedTerms": list(set(h[1] for h in r["hits"])),
+            "matchedTerms": sorted(set(h[1] for h in r["hits"])),  # sorted 確保重跑產出 deterministic
             "hitCount": len(r["hits"]),
         })
     return snippets
@@ -199,7 +195,8 @@ def main():
             }
 
     out = {
-        "version": "1.0",
+        "version": "1.1",
+        "configVersion": CONFIG_VERSION,
         "generatedAt": datetime.now().isoformat(timespec="seconds"),
         "sourceFile": FULLTEXT_FILE.name,
         "snippetRadius": SNIPPET_RADIUS,
@@ -211,6 +208,7 @@ def main():
                 "lawArticle": t["lawArticle"],
                 "description": t["description"],
                 "patterns": t["patterns"],
+                "patternRefs": t["patternRefs"],
             }
             for t in TOPICS
         ],
