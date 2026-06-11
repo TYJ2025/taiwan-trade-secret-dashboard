@@ -207,6 +207,34 @@ export function useCuratedHoldings() {
   return { data, loading };
 }
 
+// ─────────────────────────────────────────────────────────────────
+// 最高法院 74 件逐案重點摘要（AI 產製；/supreme 頁用）
+// ─────────────────────────────────────────────────────────────────
+
+let _scSummariesCache = null;
+
+export function useScSummaries() {
+  const [data, setData] = useState(_scSummariesCache || null);
+
+  useEffect(() => {
+    if (_scSummariesCache) return;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/supreme_court_case_summaries.json`);
+        if (!res.ok) return; // 缺檔靜默：摘要屬加值層
+        const json = await res.json();
+        _scSummariesCache = json;
+        setData(json);
+      } catch {
+        // 靜默
+      }
+    }
+    load();
+  }, []);
+
+  return { data };
+}
+
 export function useCases() {
   const [cases, setCases] = useState([]);
   const [stats, setStats] = useState(null);

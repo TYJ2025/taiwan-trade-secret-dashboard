@@ -1,6 +1,18 @@
 import React, { useState, useMemo } from 'react';
-import { useSupremeCourt, getJudicialUrl } from '../hooks/useData';
-import { ExternalLink, Search, FileText, Scale, AlertCircle, Building2 } from 'lucide-react';
+import { useSupremeCourt, useScSummaries, getJudicialUrl } from '../hooks/useData';
+import { ExternalLink, Search, FileText, Scale, AlertCircle, Building2, Sparkles } from 'lucide-react';
+
+// outcome 顏色：廢棄／發回類＝醒目（值得讀）、駁回類＝中性、其他＝弱化
+const OUTCOME_STYLE = {
+  '廢棄發回': 'bg-[var(--vermillion)] text-white',
+  '部分廢棄發回、部分駁回': 'bg-[rgba(192,57,43,0.14)] text-[var(--vermillion)]',
+  '廢棄自為裁判': 'bg-[var(--vermillion)] text-white',
+  '上訴駁回': 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]',
+  '抗告駁回': 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]',
+  '聲請駁回': 'bg-[var(--bg-secondary)] text-[var(--text-secondary)]',
+  '移送': 'bg-[var(--bg-secondary)] text-[var(--text-muted)]',
+  '其他': 'bg-[var(--bg-secondary)] text-[var(--text-muted)]',
+};
 
 /**
  * 最高法院營業秘密相關裁判專頁
@@ -13,6 +25,8 @@ import { ExternalLink, Search, FileText, Scale, AlertCircle, Building2 } from 'l
  */
 export default function SupremeCourt() {
   const { data, loading, error } = useSupremeCourt();
+  const { data: summariesData } = useScSummaries();
+  const summaries = summariesData?.cases || {};
   const [q, setQ] = useState('');
   const [docType, setDocType] = useState('all'); // all / 判決 / 裁定
   const [caseType, setCaseType] = useState('all'); // all / 刑事 / 民事
@@ -150,8 +164,20 @@ export default function SupremeCourt() {
                 <div className="text-xs text-[var(--text-secondary)] mt-0.5 line-clamp-1">
                   {x.reason}
                 </div>
-                <div className="text-[10px] text-[var(--text-muted)] mt-1">
-                  {x.charCount?.toLocaleString()} 字
+                <div className="flex items-center gap-1.5 flex-wrap mt-1">
+                  {summaries[x.jid] && (
+                    <span className={`px-1.5 py-0.5 text-[10px] font-medium ${OUTCOME_STYLE[summaries[x.jid].outcome] || ''}`}>
+                      {summaries[x.jid].outcome}
+                    </span>
+                  )}
+                  {summaries[x.jid]?.mainIssues?.slice(0, 3).map((t) => (
+                    <span key={t} className="px-1.5 py-0.5 text-[10px] border border-[var(--border)] text-[var(--text-muted)]">
+                      {t}
+                    </span>
+                  ))}
+                  <span className="text-[10px] text-[var(--text-muted)]">
+                    {x.charCount?.toLocaleString()} 字
+                  </span>
                 </div>
               </button>
             ))}
@@ -199,6 +225,33 @@ export default function SupremeCourt() {
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto max-h-[700px] p-4">
+                {summaries[selected.jid] && (
+                  <div className="mb-4 bg-[rgba(200,164,90,0.07)] border-l-2 border-[var(--gold)] p-3">
+                    <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] mb-1.5">
+                      <Sparkles size={11} className="text-[var(--gold)]" />
+                      重點摘要
+                      <span className="px-1.5 py-0.5 bg-[rgba(200,164,90,0.18)] text-[var(--gold)]">
+                        {summaries[selected.jid].reviewed ? '已複核' : 'AI 產製・未複核'}
+                      </span>
+                      <span className={`px-1.5 py-0.5 font-medium ${OUTCOME_STYLE[summaries[selected.jid].outcome] || ''}`}>
+                        {summaries[selected.jid].outcome}
+                      </span>
+                    </div>
+                    <p className="text-[13px] leading-relaxed text-[var(--text-primary)]">
+                      {summaries[selected.jid].gist}
+                    </p>
+                    <div className="mt-1.5 text-[11px] text-[var(--text-muted)]">
+                      主文：「{summaries[selected.jid].outcomeVerbatim}」（原文逐字，經程式驗證）
+                    </div>
+                    <div className="flex gap-1.5 flex-wrap mt-1.5">
+                      {summaries[selected.jid].mainIssues?.map((t) => (
+                        <span key={t} className="px-1.5 py-0.5 text-[10px] border border-[var(--border)] text-[var(--text-secondary)]">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <pre className="text-[13px] leading-relaxed text-[var(--text-primary)] whitespace-pre-wrap break-words font-sans">
                   {selected.fullText}
                 </pre>
@@ -225,6 +278,7 @@ export default function SupremeCourt() {
         <p>· 39 筆判決之全文沿用既有 `data/judgments_fulltext.json`；35 筆裁定全文於 2026-05-17 透過司法院 EXPORTFILE/reformat 端點下載。</p>
         <p>· 全文以 regex 去除 HTML 標籤後保留；換行、空白已正規化。文末「中華民國 XX 年 XX 月 XX 日」之發文／公告日期保留原樣。</p>
         <p>· 本頁不參與損害賠償統計；最高法院多為法律審，判准金額之決定通常在事實審（智財法院／高等法院）。</p>
+        <p>· 「重點摘要」（含 outcome 分類與爭點標籤）由 Claude 通讀 74 件全文產製，<strong>未經律師逐案複核</strong>（已複核者會標示）；「主文」引文經程式驗證為原文逐字，摘要與分類屬 AI 詮釋，引用前請以司法院原文為準。</p>
         <p>· <strong>檢索式已知漏案類型</strong>：以刑法§317-318 妨害工商秘密罪起訴而全文未提及營業秘密法、以競業禁止或不正競爭為案由而實質涉營業秘密、及國安法§8（2022 年後國家核心關鍵技術營業秘密）案件，可能未被「案由含營業秘密 OR 全文含營業秘密法」檢索式涵蓋；引用本頁統計時請注意此範圍限制。</p>
       </div>
     </div>

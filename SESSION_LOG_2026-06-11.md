@@ -504,4 +504,61 @@ User: YJ
 
 ---
 
+## Session 8（06:00 UTC）— /supreme 頁逐案重點摘要（74 件全覆蓋）
+
+### 0. 目標（動手前填）
+
+- 主要目標（YJ 指示）：/supreme 頁僅有案件列表＋全文，補逐案重點摘要。範圍為全部 74 件（含 keyword 索引未涵蓋之 16 件）。
+- 設計：新資料檔 `data/supreme_court_case_summaries.json`，每案含 outcome（主文結果分類）、gist（2-3 句：主要爭點＋本院處理）、mainIssues（爭點標籤）、reviewed。前端：列表顯示 outcome badge＋爭點標籤；詳目面板頂部顯示摘要框；明示 AI 產製。
+- 成功條件：
+  1. 74/74 有摘要；outcome 分類經主 agent 以主文關鍵字程式複驗。
+  2. 主 agent 親自抽驗 ≥3 件。
+  3. vite build 通過。
+- 不做事項：不動 /holdings 與 curated JSON；不動 keyword 索引。
+
+### 執行紀錄
+
+#### [06:05-06:25] 4 子代理並行產製 74 件摘要
+- 74 件（合計 234,912 字）按字數均分 4 組（各約 58.7K 字）。每案輸出 outcome（8 類枚舉）、outcomeVerbatim（主文原文逐字）、gist（2-3 句）、mainIssues（17 類標籤選 1-4）。
+- 實際結果：74/74 完成；各組均自驗 verbatim。
+- 異常／差異：G1 發現 113台上274 裁判標題即列「（商標）」，與 Session 7 之條文脈絡標記一致。
+
+#### [06:30] 主 agent 合併＋獨立重驗
+- 實際結果：74 件 verbatim 逐字重驗通過；outcome／mainIssues 枚舉檢查通過；outcome 與主文用語一致性軟檢查無疑義。outcome 分布：上訴駁回 30、廢棄發回 16、抗告駁回 15、部分廢棄發回 7、其他 4（律師酬金核定等）、移送 1、廢棄自為裁判 1。寫入 data/＋public/data/supreme_court_case_summaries.json
+- 異常／差異：無
+
+#### [06:35] 前端 /supreme 渲染
+- useScSummaries hook（缺檔靜默）；列表加 outcome badge（廢棄/發回類紅色醒目、駁回類中性）＋爭點標籤（至多 3 個）；詳目面板全文上方加重點摘要框（gist＋主文逐字引文＋標籤＋AI 產製標示）；資料說明加揭露 1 段。
+
+#### [06:40] 抽樣驗證（守則§2）
+| # | 案號 | 驗證項 | 結果 |
+|---|---|---|---|
+| 1 | 111台上3655（聯電美光） | gist「主文與理由矛盾」之主張 | 全文確有「主文，與所載之事實及理由必須互相適合，否則即屬理由矛盾」之發回理由 ✅ |
+| 2 | 109台抗483 | 「廢棄自為裁判」分類＋主文「原裁定廢棄。」 | verbatim 屬實 ✅ |
+| 3 | 104台上1589（台積電） | gist 之競業禁止 vs §11 I 防止侵害請求權區辨 | 與 Session 6 已驗證之原文論旨一致 ✅ |
+- vite build ✓ 2322 modules
+
+### 檔案異動摘要（Session 8）
+
+新增：
+- `data/`＋`public/data/supreme_court_case_summaries.json` — 74 件逐案摘要
+
+修改：
+- `src/hooks/useData.js` — useScSummaries hook
+- `src/pages/SupremeCourt.jsx` — outcome badge、爭點標籤、詳目摘要框、揭露
+
+### 已知限制（Session 8）
+
+1. 74 件 reviewed 均為 false，待 YJ 複核；gist 屬 AI 詮釋。
+2. 一部廢棄案件之 outcomeVerbatim 因 ≤60 字限制僅錄主文片段（廢棄發回段），非完整主文。
+3. mainIssues 為固定 17 類標籤，少數案件之特殊爭點（如 §13-2 域外使用意圖之證明）落入「其他」，由 gist 補述。
+
+### 建議 YJ 本人抽查（Session 8）
+
+1. /supreme 列表掃一眼 outcome badge 分布（紅色＝廢棄/發回類 24 件，即最值得讀的案件）。
+2. 點開 111台上3655（聯電美光，§13-2 域外使用意圖），確認 gist 精確。
+3. 點開任一台聲字（律師酬金核定），確認摘要如實標明「未涉實體爭點」。
+
+---
+
 最後修訂：2026-06-11 — Claude (Cowork)
