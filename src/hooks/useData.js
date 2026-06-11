@@ -176,6 +176,37 @@ export function useHoldingsIndex() {
   return { data, loading, error };
 }
 
+// ─────────────────────────────────────────────────────────────────
+// 最高法院 curated holdings（AI 產製逐案摘要＋比對分析；可能僅部分議題有資料）
+// ─────────────────────────────────────────────────────────────────
+
+let _curatedCache = null;
+
+export function useCuratedHoldings() {
+  const [data, setData] = useState(_curatedCache || null);
+  const [loading, setLoading] = useState(!_curatedCache);
+
+  useEffect(() => {
+    if (_curatedCache) return;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/supreme_court_holdings_curated.json`);
+        if (!res.ok) return; // 檔案不存在時靜默略過（其餘議題尚未產製）
+        const json = await res.json();
+        _curatedCache = json;
+        setData(json);
+      } catch {
+        // 靜默：curated 資料屬加值層，缺檔不影響索引頁
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  return { data, loading };
+}
+
 export function useCases() {
   const [cases, setCases] = useState([]);
   const [stats, setStats] = useState(null);

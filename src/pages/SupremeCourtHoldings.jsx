@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useHoldingsIndex, getJudicialUrl } from '../hooks/useData';
+import { useHoldingsIndex, useCuratedHoldings, getJudicialUrl } from '../hooks/useData';
 import {
   Lock, Shield, Coins, Calculator, Users, Key, Gavel, ExternalLink, Download, Copy, Check,
   FileText, Scale, AlertCircle, Filter, ChevronRight, ChevronDown
@@ -31,8 +31,15 @@ const ICON_MAP = {
   file: FileText,
 };
 
+const NATURE_STYLE = {
+  '實體認定': 'bg-[rgba(46,125,50,0.12)] text-[var(--accent-green)]',
+  '程序脈絡': 'bg-[rgba(41,128,185,0.12)] text-[var(--accent-blue)]',
+  '未實質論述': 'bg-[var(--bg-secondary)] text-[var(--text-muted)]',
+};
+
 export default function SupremeCourtHoldings() {
   const { data, loading, error } = useHoldingsIndex();
+  const { data: curated } = useCuratedHoldings();
   const [selectedTopic, setSelectedTopic] = useState(null); // null = 用預設
   const [docTypeFilter, setDocTypeFilter] = useState('all'); // all / 判決 / 裁定
   const [excludeProcedural, setExcludeProcedural] = useState(false); // 排除含程序駁回語句之裁判
@@ -52,6 +59,11 @@ export default function SupremeCourtHoldings() {
   }, [selectedTopic, topics]);
 
   const topicMeta = useMemo(() => topics.find((t) => t.id === activeTopic), [topics, activeTopic]);
+
+  // Curated holdings（AI 產製摘要＋比對分析）— 僅部分議題有資料
+  const curatedTopic = curated?.topics?.[activeTopic] || null;
+  const curatedCases = curatedTopic?.cases || {};
+  const [showComparison, setShowComparison] = useState(true);
 
   // 篩選命中當前議題且符合 docType filter 的案件
   const filteredCases = useMemo(() => {
@@ -130,6 +142,13 @@ export default function SupremeCourtHoldings() {
       if ((c.proceduralHits || []).length > 0) {
         lines.push(`- **⚠ 含程序駁回語句**：${c.proceduralHits.join('、')}（可能為形式駁回或一部不合法；引註前請確認實體論述部分）`);
       }
+      const cur = curatedCases[c.jid];
+      if (cur) {
+        lines.push(`- **定性**：${cur.natureOfDiscussion}（AI 產製${cur.reviewed ? '，已複核' : '，未複核'}）`);
+        lines.push(`- **認定摘要**：${cur.holding}`);
+        if (cur.quotable) lines.push(`- **可引註原文**：「${cur.quotable}」`);
+        if (cur.contextNote) lines.push(`- **脈絡**：${cur.contextNote}`);
+      }
       lines.push('');
       c.hit.snippets.forEach((s, si) => {
         lines.push(`**段落 ${si + 1}**（位置 ${s.start}-${s.end}，命中 ${s.hitCount} 次）：`);
@@ -177,6 +196,7 @@ export default function SupremeCourtHoldings() {
     lines.push('- 程序裁定（秘密保持命令／限制閱覽）可能因引用§2 條文而被歸類；此類裁定通常以審查保護標的之要件為脈絡，與實體判決對要件之認定不完全等同。');
     lines.push('- 「損害賠償」「共犯」之寬鬆 pattern 會命中案由與判決首部；僅命中寬鬆詞且次數低者多屬此類。');
     lines.push('- 「程序駁回語句」標記以結論性用語偵測，僅表示裁判含此類語句、非案件定性；多上訴人案件常一部程序駁回、一部實體論述。');
+    lines.push('- 「定性」「認定摘要」由 Claude 通讀全文產製、未經律師逐案複核（標示已複核者除外）；「可引註原文」經程式驗證為逐字照錄，摘要屬 AI 詮釋，引用前請核對司法院原文。');
     lines.push('- 最高法院為法律審；「損害賠償」議題之價值在計算方法論之法律意見，金額酌定多在事實審。');
     lines.push('- 索引僅含最高法院 74 筆裁判；事實審見解（智財商業法院、智財法院、地院）未納入此頁。');
     return lines.join('\n');
@@ -281,6 +301,65 @@ export default function SupremeCourtHoldings() {
         )}
       </div>
 
+      {/* 比對分析（curated，AI 產製） */}
+      {curatedTopic?.comparison && (
+        <div className="bg-[var(--bg-card)] border-2 border-[var(--gold)] p-4 space-y-3">
+          <button onClick={() => setShowComparison((v) => !v)} className="w-full flex items-center justify-between text-left">
+            <div className="flex items-center gap-2">
+              <Scale size={16} className="text-[var(--gold)]" />
+              <span className="font-display text-sm font-bold text-[var(--text-primary)]">
+                跨案比對分析：{curatedTopic.topicName}
+              </span>
+              <span className="px-1.5 py-0.5 text-[10px] bg-[rgba(200,164,90,0.18)] text-[var(--gold)]">
+                AI 產製・未經律師複核
+              </span>
+            </div>
+            {showComparison ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </button>
+          {showComparison && (
+            <div className="space-y-4 text-[13px] leading-relaxed">
+              <div>
+                <div className="text-xs font-semibold text-[var(--accent-green)] mb-1.5">共通點（法院反覆採取之認定標準）</div>
+                {curatedTopic.comparison.common.map((p, i) => (
+                  <div key={i} className="mb-2 pl-3 border-l-2 border-[var(--accent-green)]">
+                    <span className="text-[var(--text-primary)]">{p.point}</span>
+                    <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{p.cases.join('、')}</span>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-[var(--vermillion)] mb-1.5">分歧點／特殊見解</div>
+                {curatedTopic.comparison.divergence.map((d, i) => (
+                  <div key={i} className="mb-2 pl-3 border-l-2 border-[var(--vermillion)]">
+                    <div className="font-medium text-[var(--text-primary)]">{d.issue}</div>
+                    {d.positions.map((pos, j) => (
+                      <div key={j} className="mt-1">
+                        <span className="text-[var(--text-secondary)]">‣ {pos.view}</span>
+                        <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{pos.cases.join('、')}</span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-[var(--accent-blue)] mb-1.5">時間演進</div>
+                {curatedTopic.comparison.evolution.map((e, i) => (
+                  <div key={i} className="mb-2 pl-3 border-l-2 border-[var(--accent-blue)]">
+                    <div className="font-medium text-[var(--text-primary)]">{e.period}</div>
+                    <span className="text-[var(--text-secondary)]">{e.trend}</span>
+                    <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{e.keyCases.join('、')}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="text-[11px] text-[var(--text-muted)] border-t border-[var(--border)] pt-2">
+                定性分布：實體認定 {curatedTopic.natureStats?.['實體認定'] ?? 0}、程序脈絡 {curatedTopic.natureStats?.['程序脈絡'] ?? 0}、未實質論述 {curatedTopic.natureStats?.['未實質論述'] ?? 0} 件。
+                本分析由 Claude 通讀 {Object.keys(curatedCases).length} 件全文產製（{curated?.generatedAt?.slice(0, 10)}），引註原文句均經程式驗證為逐字照錄；引用前請以司法院原文為準。
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Filter + action bar */}
       <div className="flex flex-wrap items-center gap-3 sticky top-[7.5rem] z-30 bg-[var(--bg-primary)]/95 backdrop-blur-sm py-2 border-b border-[var(--border)]">
         <Filter size={14} className="text-[var(--text-muted)]" />
@@ -380,6 +459,14 @@ export default function SupremeCourtHoldings() {
                               程序駁回語句
                             </span>
                           )}
+                          {curatedCases[c.jid] && (
+                            <span
+                              className={`px-1.5 py-0.5 text-[10px] ${NATURE_STYLE[curatedCases[c.jid].natureOfDiscussion] || ''}`}
+                              title="AI 通讀全文之定性（未經律師複核）"
+                            >
+                              {curatedCases[c.jid].natureOfDiscussion}
+                            </span>
+                          )}
                         </div>
                         <div className="text-sm font-medium text-[var(--text-primary)] mt-1">
                           {c.title.replace('最高法院 ', '')}
@@ -405,6 +492,28 @@ export default function SupremeCourtHoldings() {
                 </div>
                 {isExpanded && (
                   <div className="px-3 pb-3 pl-10 space-y-2 border-t border-[var(--border)]">
+                    {curatedCases[c.jid] && (
+                      <div className="bg-[rgba(200,164,90,0.07)] border-l-2 border-[var(--gold)] p-3 mt-2">
+                        <div className="text-[10px] text-[var(--text-muted)] mb-1">
+                          就「{curatedTopic?.topicName}」之認定摘要
+                          <span className="ml-1.5 px-1.5 py-0.5 bg-[rgba(200,164,90,0.18)] text-[var(--gold)]">
+                            {curatedCases[c.jid].reviewed ? '已複核' : 'AI 產製・未複核'}
+                          </span>
+                        </div>
+                        <p className="text-[13px] leading-relaxed text-[var(--text-primary)]">
+                          {curatedCases[c.jid].holding}
+                        </p>
+                        {curatedCases[c.jid].quotable && (
+                          <blockquote className="mt-2 pl-3 border-l-2 border-[var(--border)] text-[12px] text-[var(--text-secondary)] italic">
+                            「{curatedCases[c.jid].quotable}」
+                            <span className="not-italic text-[10px] text-[var(--text-muted)] ml-1">（原文逐字，經程式驗證）</span>
+                          </blockquote>
+                        )}
+                        {curatedCases[c.jid].contextNote && (
+                          <div className="mt-1.5 text-[11px] text-[var(--text-muted)]">脈絡：{curatedCases[c.jid].contextNote}</div>
+                        )}
+                      </div>
+                    )}
                     {c.hit.snippets.map((s, si) => (
                       <div key={si} className="bg-[var(--bg-secondary)] p-3 border-l-2 border-[var(--gold)]">
                         <div className="text-[10px] text-[var(--text-muted)] mb-1">
@@ -434,6 +543,7 @@ export default function SupremeCourtHoldings() {
         <p>· 「損害賠償」「共犯」之寬鬆 pattern（即該四字／二字本身）會命中案由、判決首部及程序性段落（例：限制閱覽裁定僅於案件名稱提及損害賠償）；命中數低（1-2 次）且僅命中寬鬆詞者，多屬此類，引註前請特別複核。</p>
         <p>· 最高法院為法律審，判准金額之具體酌定多在事實審；本索引之「損害賠償」段落主要價值在計算方法論（民§216、民訴§222 II、合理權利金、懲罰性賠償）之法律意見，非金額本身。</p>
         <p>· 「程序駁回語句」標記（{stats?.proceduralCaseCount ?? '—'} 筆）以結論性用語偵測（如「上訴自非合法」「未合法表明上訴理由」），僅表示裁判<strong>含</strong>此類語句、非案件定性——多上訴人案件常一部程序駁回、一部實體論述。刻意不以「違背法律上之程式」偵測，因刑事判決例稿引用刑訴§395 標準時必然出現該語，會誤標實體判決。</p>
+        <p>· 「認定摘要」「跨案比對分析」由 Claude 通讀判決全文產製，<strong>未經律師逐案複核</strong>（已複核者會標示）；「可引註原文」句經程式驗證為判決原文逐字照錄，摘要與定性則屬 AI 詮釋，引用前請以司法院原文為準。目前僅「合理保密措施」議題有此加值層，其餘議題尚未產製。</p>
         <p>· 本頁僅含最高法院 {stats?.totalSC} 筆裁判；事實審見解（智財商業法院、智財法院、地院）未納入。</p>
         <p>· 索引預先在 build 階段產出（`scripts/build_holdings_index.py`）；新案件入庫後須重跑腳本才會更新。</p>
       </div>
