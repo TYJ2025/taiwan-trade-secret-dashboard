@@ -35,6 +35,7 @@ export default function SupremeCourtHoldings() {
   const { data, loading, error } = useHoldingsIndex();
   const [selectedTopic, setSelectedTopic] = useState(null); // null = 用預設
   const [docTypeFilter, setDocTypeFilter] = useState('all'); // all / 判決 / 裁定
+  const [excludeProcedural, setExcludeProcedural] = useState(false); // 排除含程序駁回語句之裁判
   const [selectedJids, setSelectedJids] = useState(new Set());
   const [expandedJids, setExpandedJids] = useState(new Set());
   const [copied, setCopied] = useState(false);
@@ -58,6 +59,7 @@ export default function SupremeCourtHoldings() {
     for (const [jid, c] of Object.entries(cases)) {
       if (!c.topicHits[activeTopic]) continue;
       if (docTypeFilter !== 'all' && c.docType !== docTypeFilter) continue;
+      if (excludeProcedural && (c.proceduralHits || []).length > 0) continue;
       out.push({ jid, ...c, hit: c.topicHits[activeTopic] });
     }
     // 依日期新到舊；同日依命中數降序
@@ -67,7 +69,7 @@ export default function SupremeCourtHoldings() {
       return b.hit.hitCount - a.hit.hitCount;
     });
     return out;
-  }, [cases, activeTopic, docTypeFilter]);
+  }, [cases, activeTopic, docTypeFilter, excludeProcedural]);
 
   const toggleSelect = (jid) => {
     setSelectedJids((prev) => {
@@ -125,6 +127,9 @@ export default function SupremeCourtHoldings() {
       lines.push(`- **日期**：${c.adDate}`);
       lines.push(`- **司法院原文**：${getJudicialUrl(c.jid)}`);
       lines.push(`- **命中關鍵字**：${[...new Set(c.hit.snippets.flatMap((s) => s.matchedTerms))].join('、')}`);
+      if ((c.proceduralHits || []).length > 0) {
+        lines.push(`- **⚠ 含程序駁回語句**：${c.proceduralHits.join('、')}（可能為形式駁回或一部不合法；引註前請確認實體論述部分）`);
+      }
       lines.push('');
       c.hit.snippets.forEach((s, si) => {
         lines.push(`**段落 ${si + 1}**（位置 ${s.start}-${s.end}，命中 ${s.hitCount} 次）：`);
@@ -171,6 +176,7 @@ export default function SupremeCourtHoldings() {
     lines.push('- snippet 採 keyword 抓 ±250 字上下文，可能含與該議題無關之段落（false positive），建議律師複核。');
     lines.push('- 程序裁定（秘密保持命令／限制閱覽）可能因引用§2 條文而被歸類；此類裁定通常以審查保護標的之要件為脈絡，與實體判決對要件之認定不完全等同。');
     lines.push('- 「損害賠償」「共犯」之寬鬆 pattern 會命中案由與判決首部；僅命中寬鬆詞且次數低者多屬此類。');
+    lines.push('- 「程序駁回語句」標記以結論性用語偵測，僅表示裁判含此類語句、非案件定性；多上訴人案件常一部程序駁回、一部實體論述。');
     lines.push('- 最高法院為法律審；「損害賠償」議題之價值在計算方法論之法律意見，金額酌定多在事實審。');
     lines.push('- 索引僅含最高法院 74 筆裁判；事實審見解（智財商業法院、智財法院、地院）未納入此頁。');
     return lines.join('\n');
@@ -292,6 +298,15 @@ export default function SupremeCourtHoldings() {
             {v === 'all' ? '全部' : v}
           </button>
         ))}
+        <label className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)] cursor-pointer ml-1">
+          <input
+            type="checkbox"
+            checked={excludeProcedural}
+            onChange={(e) => setExcludeProcedural(e.target.checked)}
+            className="w-3.5 h-3.5 accent-[var(--vermillion)]"
+          />
+          排除含程序駁回語句
+        </label>
         <span className="text-xs text-[var(--text-muted)]">
           ({filteredCases.length} 筆)
         </span>
@@ -357,6 +372,14 @@ export default function SupremeCourtHoldings() {
                           <span className="text-[10px] text-[var(--text-muted)]">
                             命中 {c.hit.hitCount} 次／{c.hit.snippetCount} 段
                           </span>
+                          {(c.proceduralHits || []).length > 0 && (
+                            <span
+                              className="px-1.5 py-0.5 text-[10px] bg-[rgba(200,164,90,0.18)] text-[var(--gold)]"
+                              title={`命中語句：${c.proceduralHits.join('、')}（可能為形式駁回或一部不合法；非案件定性）`}
+                            >
+                              程序駁回語句
+                            </span>
+                          )}
                         </div>
                         <div className="text-sm font-medium text-[var(--text-primary)] mt-1">
                           {c.title.replace('最高法院 ', '')}
@@ -410,6 +433,7 @@ export default function SupremeCourtHoldings() {
         <p>· 程序裁定（秘密保持命令／限制閱覽）可能因引用§2 條文而被納入；此類裁定通常以審查保護標的之要件為脈絡，與實體判決對要件之認定不完全等同。可用上方「文書類型」filter 切到「判決」聚焦實體論述。</p>
         <p>· 「損害賠償」「共犯」之寬鬆 pattern（即該四字／二字本身）會命中案由、判決首部及程序性段落（例：限制閱覽裁定僅於案件名稱提及損害賠償）；命中數低（1-2 次）且僅命中寬鬆詞者，多屬此類，引註前請特別複核。</p>
         <p>· 最高法院為法律審，判准金額之具體酌定多在事實審；本索引之「損害賠償」段落主要價值在計算方法論（民§216、民訴§222 II、合理權利金、懲罰性賠償）之法律意見，非金額本身。</p>
+        <p>· 「程序駁回語句」標記（{stats?.proceduralCaseCount ?? '—'} 筆）以結論性用語偵測（如「上訴自非合法」「未合法表明上訴理由」），僅表示裁判<strong>含</strong>此類語句、非案件定性——多上訴人案件常一部程序駁回、一部實體論述。刻意不以「違背法律上之程式」偵測，因刑事判決例稿引用刑訴§395 標準時必然出現該語，會誤標實體判決。</p>
         <p>· 本頁僅含最高法院 {stats?.totalSC} 筆裁判；事實審見解（智財商業法院、智財法院、地院）未納入。</p>
         <p>· 索引預先在 build 階段產出（`scripts/build_holdings_index.py`）；新案件入庫後須重跑腳本才會更新。</p>
       </div>

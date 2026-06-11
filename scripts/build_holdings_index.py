@@ -88,11 +88,24 @@ def load_topics(config_file=CONFIG_FILE):
             "patterns": terms,
             "patternRefs": refs,
         })
+    # 程序駁回 markers（選用；僅結論性語句，理由見 config _proceduralMarkersNote）
+    markers = []
+    marker_refs = {}
+    for j, pat in enumerate(cfg.get("proceduralMarkers", [])):
+        term = pat.get("term", "").strip()
+        ref = pat.get("ref", "").strip()
+        assert term, f"proceduralMarkers[{j}] term 為空"
+        assert ref, f"proceduralMarkers「{term}」缺 ref（守則§5）"
+        assert term not in marker_refs, f"proceduralMarker 重複：{term}"
+        markers.append(term)
+        marker_refs[term] = ref
+
     print(f"Loaded {len(topics)} topics from {config_file.name}: {[t['id'] for t in topics]}")
-    return cfg.get("configVersion", "?"), topics
+    print(f"Loaded {len(markers)} procedural markers")
+    return cfg.get("configVersion", "?"), topics, markers, marker_refs
 
 
-CONFIG_VERSION, TOPICS = load_topics()
+CONFIG_VERSION, TOPICS, PROC_MARKERS, PROC_MARKER_REFS = load_topics()
 
 
 def find_all_matches(text, patterns):
@@ -184,6 +197,8 @@ def main():
             any_hit = True
 
         if any_hit:
+            # 程序駁回語句偵測（中性標記，非案件定性；多被告案常一部不合法一部實體）
+            proc_hits = sorted(m for m in PROC_MARKERS if m in text)
             cases[jid] = {
                 "title": sc.get("title", ""),
                 "adDate": sc.get("adDate", ""),
@@ -191,12 +206,16 @@ def main():
                 "docType": "判決" if sc.get("title", "").endswith("判決") else "裁定",
                 "reason": sc.get("reason", ""),
                 "charCount": sc.get("charCount", len(text)),
+                "proceduralHits": proc_hits,
                 "topicHits": topic_hits,
             }
 
     out = {
-        "version": "1.1",
+        "version": "1.2",
         "configVersion": CONFIG_VERSION,
+        "proceduralMarkers": [
+            {"term": m, "ref": PROC_MARKER_REFS[m]} for m in PROC_MARKERS
+        ],
         "generatedAt": datetime.now().isoformat(timespec="seconds"),
         "sourceFile": FULLTEXT_FILE.name,
         "snippetRadius": SNIPPET_RADIUS,
@@ -216,6 +235,7 @@ def main():
         "stats": {
             "totalSC": len(sc_data),
             "casesWithAnyHit": len(cases),
+            "proceduralCaseCount": sum(1 for c in cases.values() if c["proceduralHits"]),
             "topicCaseCounts": topic_case_counts,
             "topicHitCounts": topic_hit_counts,
         },

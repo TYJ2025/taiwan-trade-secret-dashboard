@@ -232,4 +232,115 @@ User: YJ
 
 ---
 
+## Session 3（01:45 UTC）— 清理過時 .command 部署腳本
+
+### 0. 目標（動手前填）
+
+- 主要目標：兩個過時腳本（指向舊路徑 /Users/jesuisjane/Documents/Claude/Projects/...、且為舊版單檔儀表板流程）**均改寫**（YJ 於 01:47 指示「改寫」，不刪除）：
+  1. `rebuild_and_push.command` → 本機 vite build 驗證 → commit → push（實際部署由 .github/workflows/deploy.yml 自動執行）
+  2. `push_to_github.command` → 輕量版：僅 status 預覽 → commit → push（不 build；日常資料/文件異動用）
+- 成功條件：新腳本路徑正確、不含寫死 commit message、push 前須使用者確認、bash -n 語法檢查通過、可執行權限。
+- 不做事項：不動 copy_data.command／cleanup_nested_dirs.command／remove_temp_from_history.command（另案評估）；不動 workflows。
+
+### 執行紀錄
+
+#### [01:48] 改寫 rebuild_and_push.command
+- 意圖：修正 REPO_DIR 至現行路徑（ClaudeProjects）；流程改為「異動預覽 → 本機 vite build 驗證 → 自填 commit message → 確認後 push」；移除過時的 fetch_news/build_dashboard 步驟與寫死 commit 訊息；標明正式部署由 deploy.yml 自動執行。
+- 實際結果：完成；bash -n 通過；chmod +x 完成
+- 異常／差異：無
+
+#### [01:50] 改寫 push_to_github.command
+- 意圖：由「首次 import」腳本改為輕量日常版（不 build；status 預覽 → commit → push），移除有風險之 `-X ours` merge 與寫死 initial commit 訊息；若偵測 src/ 異動會提示改用 rebuild 版。保留 temp/ 誤 track 保險與 >95MB 檔案檢查。
+- 實際結果：完成；bash -n 通過；chmod +x 完成
+- 異常／差異：盤點時發現另有 `rebuild_dashboard.command`（未在本次範圍），路徑可能同樣過時，待 YJ 指示
+
+### 檔案異動摘要（Session 3）
+
+修改：
+- `rebuild_and_push.command` — 改寫（本機 build 驗證 + commit + push）
+- `push_to_github.command` — 改寫（輕量 commit + push）
+
+### 建議 YJ 本人抽查（Session 3）
+
+1. 雙擊 `push_to_github.command`，確認異動預覽正確後，以它完成本次五大爭點＋config 化之 push（src/ 有異動會提示改用 rebuild 版——本次建議用 `rebuild_and_push.command`）。
+2. 確認 push 後 Actions「Deploy to GitHub Pages」綠燈、/holdings 頁出現 5 個議題。
+3. 裁示 `rebuild_dashboard.command`、`copy_data.command`、`cleanup_nested_dirs.command`、`remove_temp_from_history.command` 是否一併清理。
+
+---
+
+## Session 4（02:00 UTC）— 見解價值標記＋統計 bug 修正＋漏案揭露
+
+### 0. 目標（動手前填）
+
+- 主要目標（架構檢視清單第 2、9、5 項）：
+  1. **見解價值標記**：config 增 proceduralMarkers（上訴不合法等形式駁回用語），索引對每案標 proceduralHits；前端 /holdings 加「排除疑似程序駁回」filter＋案件列 badge。
+  2. **useAnalytics 勝訴統計 bug**：一部勝訴／部分有罪目前被計入敗訴；先盤點 result 實際值域再修。
+  3. **漏案揭露**：/supreme 頁資料說明補充檢索式已知漏案類型（刑§317-318 妨害工商秘密、國安法§8 核心關鍵技術等）。
+- 成功條件：
+  1. 重跑索引後五議題 counts 不變（標記為新增欄位，不影響命中）；抽樣 ≥3 筆驗證標記正確性（程序駁回裁判被標、實體判決不被標）。
+  2. useAnalytics 修正後，「部分」類結果計入勝訴方並於 log 記 before/after 件數。
+  3. vite build 通過。
+- 不做事項：不動歷審串連／裁定資料集／canonical registry（大型項目另案）；不改 492 筆資料。
+
+### 執行紀錄
+
+#### [02:02] Marker 設計試驗（重要發現）
+- 意圖：先在 74 筆全文上試跑候選 marker，再定案。
+- 實際結果：初版含「違背法律上之程式」「不合法律上之程式」時命中 31/74，**但實體判決（112台上13、112台上229）被誤標**——刑事判決開頭例稿引用刑訴§395 標準時必出現該語。改用 8 個結論性語句（「上訴自非合法」「其上訴為不合法」「未合法表明上訴理由」等）後命中 17/74（判決 5、裁定 12），誤標消除。
+- 異常／差異：無（試驗即為了發現此問題）
+- 後續行動：marker 定案寫入 config，並於 config _proceduralMarkersNote 記錄此設計理由
+
+#### [02:05] config＋腳本＋重跑
+- 意圖：proceduralMarkers 進 config（可擴充、每個附 ref）；腳本對每案輸出 proceduralHits（sorted、中性標記）；stats 加 proceduralCaseCount；version 1.1→1.2。
+- 實際結果：重跑後**五議題 counts 與 topicHits 逐案零變動**（回歸 assert 通過）；58 筆索引案件中 11 筆含程序駁回語句（9 裁定＋2 判決）；public/ md5 同步一致
+- 異常／差異：無
+
+#### [02:08] 抽樣驗證（標記正確性）
+| # | 案號 | 類型 | proceduralHits | 驗證 |
+|---|---|---|---|---|
+| 1 | 110 台上 13（民事裁定） | 形式駁回裁定 | 上訴自非合法／其上訴為不合法 | ✅ 應標而標 |
+| 2 | 108 台上 2125（民事判決） | 實體損害賠償判決 | （空） | ✅ 不應標而未標 |
+| 3 | 112 台上 13（刑事判決） | 實體判決（共犯論述） | （空） | ✅ 初版誤標、收斂後正確 |
+| 4 | 109 台抗 483（民事裁定） | 抗告形式駁回 | 抗告自非合法 | ✅ 應標而標 |
+
+#### [02:10] 前端 /holdings：filter＋badge＋揭露
+- 意圖：「排除含程序駁回語句」checkbox、案件列金色 badge（hover 顯示命中語句）、頁尾與匯出包揭露各加 1 段（強調非案件定性）。
+- 實際結果：完成
+- 異常／差異：無
+
+#### [02:12] useAnalytics 一部勝訴 bug 修正
+- 意圖：convictionByIndustry 原僅認「有罪」「原告勝訴」，致「部分勝訴」計入敗訴。
+- Before/after（52 筆 cases.json 值域：有罪 26、原告勝訴 8、無罪 6、部分勝訴 4、審理中 3、駁回 3、調解中 1、偵查中 1）：勝訴方計數 34 → 38（+4 筆部分勝訴）。「部分有罪」現值域無、為防禦性納入。
+- 實際結果：完成（附 inline comment 記錄修正緣由）
+- 異常／差異：無
+
+#### [02:14] /supreme 漏案揭露＋build
+- 意圖：資料說明補「檢索式已知漏案類型」（刑§317-318、競業禁止／不正競爭包裝、國安法§8）。
+- 實際結果：完成；vite build ✓ 2322 modules
+- 異常／差異：無
+
+### 檔案異動摘要（Session 4）
+
+修改：
+- `config/holdings_topics.json` — 增 proceduralMarkers（8 個結論性語句）＋設計理由註記
+- `scripts/build_holdings_index.py` — 載入／驗證 markers、每案輸出 proceduralHits、stats.proceduralCaseCount、version 1.2
+- `data/`＋`public/data/supreme_court_holdings_index.json` — 重建（議題命中零變動，新增標記欄位）
+- `src/pages/SupremeCourtHoldings.jsx` — 排除 filter、badge、揭露（頁面＋匯出包）
+- `src/hooks/useData.js` — useAnalytics 一部勝訴修正
+- `src/pages/SupremeCourt.jsx` — 檢索式漏案揭露
+
+### 已知限制（Session 4）
+
+1. 程序駁回標記為「含語句」之中性標記，無法區分「全案形式駁回」與「一部不合法一部實體」；已在 UI 與匯出包明示，引註前仍須律師複核。
+2. 結論性語句清單僅 8 個，可能漏標用語特殊之形式駁回（false negative）；config 可隨時擴充。
+3. useAnalytics 母體仍為 52 筆審理中資料集（檢視清單第 8 項「統計母體改 492 筆」屬大型重構，未在本 session 處理）。
+
+### 建議 YJ 本人抽查（Session 4）
+
+1. /holdings 勾「排除含程序駁回語句」後，「共犯」議題應看不到 110 台上 13 等形式駁回裁定。
+2. 點開任一帶金色「程序駁回語句」badge 之案件，hover badge 應顯示命中語句。
+3. /supreme 頁尾應有「檢索式已知漏案類型」段落。
+
+---
+
 最後修訂：2026-06-11 — Claude (Cowork)

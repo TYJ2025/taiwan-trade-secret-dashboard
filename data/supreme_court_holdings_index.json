@@ -1,7 +1,41 @@
 {
- "version": "1.1",
+ "version": "1.2",
  "configVersion": "1.0",
- "generatedAt": "2026-06-11T03:00:28",
+ "proceduralMarkers": [
+  {
+   "term": "上訴自非合法",
+   "ref": "民訴§481 準用§444 形式駁回結論語"
+  },
+  {
+   "term": "其上訴為不合法",
+   "ref": "形式駁回結論語"
+  },
+  {
+   "term": "其上訴均為不合法",
+   "ref": "形式駁回結論語（多上訴人）"
+  },
+  {
+   "term": "未合法表明上訴理由",
+   "ref": "民訴§470 II 未表明上訴理由"
+  },
+  {
+   "term": "其抗告為不合法",
+   "ref": "形式駁回結論語（抗告）"
+  },
+  {
+   "term": "抗告自非合法",
+   "ref": "形式駁回結論語（抗告）"
+  },
+  {
+   "term": "上訴不合法",
+   "ref": "刑訴§395 形式駁回"
+  },
+  {
+   "term": "聲請不合法",
+   "ref": "形式駁回結論語（聲請）"
+  }
+ ],
+ "generatedAt": "2026-06-11T05:06:48",
  "sourceFile": "supreme_court_judgments_fulltext.json",
  "snippetRadius": 250,
  "topics": [
@@ -173,6 +207,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償，聲請發秘密保持命令",
    "charCount": 1830,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 4,
@@ -258,6 +293,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 5262,
+   "proceduralHits": [],
    "topicHits": {
     "reasonable_measures": {
      "hitCount": 1,
@@ -298,6 +334,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法請求損害賠償等",
    "charCount": 3990,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 5,
@@ -350,6 +387,7 @@
    "docType": "裁定",
    "reason": "違反營業秘密法附帶民事訴訟限制閱覽",
    "charCount": 2735,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 6,
@@ -455,6 +493,7 @@
    "docType": "裁定",
    "reason": "聲請撤銷營業秘密限制閱覽",
    "charCount": 1595,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 8,
@@ -480,6 +519,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法附帶民訴損害賠償",
    "charCount": 932,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -505,6 +545,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等(商標)",
    "charCount": 5046,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 7,
@@ -554,6 +595,7 @@
    "docType": "裁定",
    "reason": "違反營業秘密法限制閱覽",
    "charCount": 2484,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -609,6 +651,7 @@
    "docType": "裁定",
    "reason": "違反營業秘密法聲請再審及停止刑罰執行",
    "charCount": 2592,
+   "proceduralHits": [],
    "topicHits": {
     "accomplice": {
      "hitCount": 1,
@@ -634,6 +677,9 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償事件",
    "charCount": 2287,
+   "proceduralHits": [
+    "上訴自非合法"
+   ],
    "topicHits": {
     "damages": {
      "hitCount": 4,
@@ -683,6 +729,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等(勞動)",
    "charCount": 9789,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 3,
@@ -798,6 +845,9 @@
    "docType": "裁定",
    "reason": "違反營業秘密法等罪刑事附帶民訴損害賠償",
    "charCount": 633,
+   "proceduralHits": [
+    "上訴不合法"
+   ],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -823,6 +873,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 6061,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 13,
@@ -987,6 +1038,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法等罪",
    "charCount": 6274,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 11,
@@ -1123,6 +1175,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法等罪附帶民訴損害賠償",
    "charCount": 681,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -1148,6 +1201,9 @@
    "docType": "裁定",
    "reason": "違反營業秘密法聲請再審暨停止刑罰執行",
    "charCount": 3339,
+   "proceduralHits": [
+    "上訴不合法"
+   ],
    "topicHits": {
     "accomplice": {
      "hitCount": 3,
@@ -1182,6 +1238,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償(勞動)聲",
    "charCount": 1287,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -1252,6 +1309,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密法損害賠償等聲請",
    "charCount": 270,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -1277,6 +1335,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償聲請核定",
    "charCount": 266,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -1302,6 +1361,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 3340,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 5,
@@ -1336,6 +1396,10 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償",
    "charCount": 1803,
+   "proceduralHits": [
+    "上訴自非合法",
+    "其上訴為不合法"
+   ],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -1393,6 +1457,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密排除侵害等(移轉管轄)",
    "charCount": 2444,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 2,
@@ -1418,6 +1483,7 @@
    "docType": "判決",
    "reason": "營業秘密排除侵害",
    "charCount": 3486,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 6,
@@ -1482,6 +1548,9 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 6080,
+   "proceduralHits": [
+    "上訴不合法"
+   ],
    "topicHits": {
     "reasonable_measures": {
      "hitCount": 2,
@@ -1549,6 +1618,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償等聲請法官迴避",
    "charCount": 963,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 2,
@@ -1574,6 +1644,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償等聲請限制閱覽",
    "charCount": 1624,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -1629,6 +1700,10 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償等",
    "charCount": 1476,
+   "proceduralHits": [
+    "上訴自非合法",
+    "其上訴為不合法"
+   ],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -1654,6 +1729,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法等罪",
    "charCount": 5627,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 3,
@@ -1738,6 +1814,7 @@
    "docType": "裁定",
    "reason": "請求營業秘密排除侵害等",
    "charCount": 1235,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -1763,6 +1840,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 3743,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 9,
@@ -1824,6 +1902,7 @@
    "docType": "裁定",
    "reason": "違反營業秘密法聲請撤銷秘密保持命令",
    "charCount": 1939,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 7,
@@ -1885,6 +1964,10 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償",
    "charCount": 1486,
+   "proceduralHits": [
+    "上訴自非合法",
+    "其上訴為不合法"
+   ],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -1955,6 +2038,7 @@
    "docType": "裁定",
    "reason": "營業秘密損害賠償等聲請核定第三審律師酬金",
    "charCount": 286,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -1980,6 +2064,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法附帶民訴損害賠償",
    "charCount": 707,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 1,
@@ -2005,6 +2090,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法等罪",
    "charCount": 6379,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 3,
@@ -2086,6 +2172,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法等罪",
    "charCount": 6759,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 14,
@@ -2174,6 +2261,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法等罪",
    "charCount": 3860,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 9,
@@ -2255,6 +2343,10 @@
    "docType": "裁定",
    "reason": "營業秘密損害賠償等",
    "charCount": 1631,
+   "proceduralHits": [
+    "上訴自非合法",
+    "其上訴為不合法"
+   ],
    "topicHits": {
     "reasonable_measures": {
      "hitCount": 2,
@@ -2296,6 +2388,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等",
    "charCount": 4040,
+   "proceduralHits": [],
    "topicHits": {
     "damages": {
      "hitCount": 5,
@@ -2357,6 +2450,7 @@
    "docType": "裁定",
    "reason": "違反營業秘密法聲請撤銷秘密保持命令等",
    "charCount": 4307,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 4,
@@ -2413,6 +2507,7 @@
    "docType": "裁定",
    "reason": "違反營業秘密法聲請撤銷秘密保持命令",
    "charCount": 2396,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -2471,6 +2566,7 @@
    "docType": "裁定",
    "reason": "違反營業秘密法聲請撤銷秘密保持命令等",
    "charCount": 3275,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 4,
@@ -2527,6 +2623,9 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 7122,
+   "proceduralHits": [
+    "其上訴為不合法"
+   ],
    "topicHits": {
     "secrecy": {
      "hitCount": 4,
@@ -2602,6 +2701,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法等罪",
    "charCount": 2347,
+   "proceduralHits": [],
    "topicHits": {
     "accomplice": {
      "hitCount": 7,
@@ -2629,6 +2729,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等",
    "charCount": 7840,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 5,
@@ -2780,6 +2881,9 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償",
    "charCount": 1273,
+   "proceduralHits": [
+    "抗告自非合法"
+   ],
    "topicHits": {
     "damages": {
      "hitCount": 3,
@@ -2805,6 +2909,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 3216,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 9,
@@ -2900,6 +3005,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 4730,
+   "proceduralHits": [],
    "topicHits": {
     "reasonable_measures": {
      "hitCount": 15,
@@ -2938,6 +3044,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 3547,
+   "proceduralHits": [],
    "topicHits": {
     "economic_value": {
      "hitCount": 2,
@@ -2963,6 +3070,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 1838,
+   "proceduralHits": [],
    "topicHits": {
     "accomplice": {
      "hitCount": 2,
@@ -2988,6 +3096,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等",
    "charCount": 5010,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 11,
@@ -3128,6 +3237,7 @@
    "docType": "裁定",
    "reason": "侵害營業秘密損害賠償等聲請核發秘密保持命令",
    "charCount": 1699,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -3168,6 +3278,7 @@
    "docType": "判決",
    "reason": "違反營業秘密法",
    "charCount": 3788,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 5,
@@ -3259,6 +3370,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等",
    "charCount": 6440,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 10,
@@ -3389,6 +3501,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等",
    "charCount": 3150,
+   "proceduralHits": [],
    "topicHits": {
     "reasonable_measures": {
      "hitCount": 2,
@@ -3454,6 +3567,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償",
    "charCount": 5430,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 3,
@@ -3561,6 +3675,10 @@
    "docType": "裁定",
    "reason": "請求營業秘密損害賠償",
    "charCount": 1266,
+   "proceduralHits": [
+    "上訴自非合法",
+    "其上訴為不合法"
+   ],
    "topicHits": {
     "secrecy": {
      "hitCount": 1,
@@ -3601,6 +3719,7 @@
    "docType": "判決",
    "reason": "請求營業秘密損害賠償等",
    "charCount": 6146,
+   "proceduralHits": [],
    "topicHits": {
     "secrecy": {
      "hitCount": 3,
@@ -3699,6 +3818,7 @@
  "stats": {
   "totalSC": 74,
   "casesWithAnyHit": 58,
+  "proceduralCaseCount": 11,
   "topicCaseCounts": {
    "secrecy": 31,
    "reasonable_measures": 30,

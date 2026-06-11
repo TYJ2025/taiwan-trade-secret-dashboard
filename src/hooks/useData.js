@@ -318,7 +318,9 @@ export function useAnalytics(cases) {
         industryResults[ind] = { total: 0, convicted: 0 };
       }
       industryResults[ind].total++;
-      if (c.result === '有罪' || c.result === '原告勝訴') {
+      // 「部分勝訴」「部分有罪」屬一部勝訴，計入勝訴方（2026-06-11 修正：
+      // 原僅認「有罪」「原告勝訴」，致一部勝訴被計入敗訴而低估勝訴率）
+      if (['有罪', '原告勝訴', '部分勝訴', '部分有罪'].includes(c.result)) {
         industryResults[ind].convicted++;
       }
     });

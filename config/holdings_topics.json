@@ -1,6 +1,17 @@
 {
   "configVersion": "1.0",
   "_howToExtend": "新增議題：複製一個 topic 物件並修改。規則：(1) id 須唯一（英文小寫＋底線）；(2) icon 限 lock/shield/coin/calculator/users/scale/key/gavel/file，未知值前端會 fallback 為 file；(3) patterns 由嚴格（完整法條用語）到寬鬆（單詞）排序，寬鬆變體置末；(4) 每個 pattern 之 ref 須標明法條依據或實務用語出處（守則§5）；(5) 改完執行 python3 scripts/build_holdings_index.py 重建索引，並依 CLAUDE.md§2 抽樣驗證。",
+  "_proceduralMarkersNote": "程序駁回偵測：僅用『結論性語句』，刻意排除「違背法律上之程式」「不合法律上之程式」——刑事判決開頭例稿引用刑訴§395 標準時必出現，會把實體判決誤標（2026-06-11 實測 112台上13 等案即此類 false positive）。命中僅表示該裁判『含程序駁回語句』（多被告案常一部不合法、一部實體），非案件定性。",
+  "proceduralMarkers": [
+    { "term": "上訴自非合法", "ref": "民訴§481 準用§444 形式駁回結論語" },
+    { "term": "其上訴為不合法", "ref": "形式駁回結論語" },
+    { "term": "其上訴均為不合法", "ref": "形式駁回結論語（多上訴人）" },
+    { "term": "未合法表明上訴理由", "ref": "民訴§470 II 未表明上訴理由" },
+    { "term": "其抗告為不合法", "ref": "形式駁回結論語（抗告）" },
+    { "term": "抗告自非合法", "ref": "形式駁回結論語（抗告）" },
+    { "term": "上訴不合法", "ref": "刑訴§395 形式駁回" },
+    { "term": "聲請不合法", "ref": "形式駁回結論語（聲請）" }
+  ],
   "topics": [
     {
       "id": "secrecy",
