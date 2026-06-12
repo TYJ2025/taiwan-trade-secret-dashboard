@@ -561,4 +561,74 @@ User: YJ
 
 ---
 
+## Session 9（07:00 UTC）— 最高法院裁判持續搜集管線
+
+### 0. 目標（動手前填）
+
+- 主要目標（YJ 指示「需要持續搜集最高法院裁判」）：將 74 件一次性快照改為每日自動增補。
+- 設計：
+  1. 新增 `scripts/scrape_sc.mjs`：重用 judicial-api.js（每日 JList 異動清單→篩 TPS 開頭之最高法院 JID→JDoc 全文→「案由含營業秘密 OR 全文含營業秘密法」雙路篩選，與既有 74 件檢索定義一致）→去重後增補 `data/supreme_court_judgments_fulltext.json`。
+  2. `scrape.yml` 加一步驟執行之（沿用既有 JUDICIAL_USER/PASS secrets，每日 04:06 台灣時間）。
+  3. `deploy.yml` 在 copy data 前加 `python3 scripts/build_holdings_index.py`——新案入庫後 keyword 索引自動重建；curated 摘要屬 AI 加值層，新案暫無摘要時前端已靜默容忍。
+  4. 前端 /supreme：寫死的「日期範圍 2009-03-19 ~ 2026-02-11」「74 筆」改為由資料動態計算；無摘要案件顯示「尚未產製 AI 摘要」提示。
+- 成功條件：
+  1. scrape_sc.mjs 以 mock JDoc 做離線 dry-run：最高法院營業秘密案被收、非最高法院／無關案被排除、重複 jid 被跳過、API 失敗時不毀損既有資料檔。
+  2. workflows 變更依守則§4 記錄原因並 dry-run（yaml 語法驗證＋邏輯模擬）。
+  3. vite build 通過。
+- 不做事項：不動 52 筆 cases.json 抓取邏輯；AI 摘要之自動補產另以排程任務提案，不寫入 CI。
+
+### 執行紀錄
+
+#### [07:05] 新增 scripts/scrape_sc.mjs
+- 重用 judicial-api.js；篩選邏輯與既有 74 件雙路檢索定義一致；防呆：資料檔不存在即中止、合併後筆數只增不減否則拒寫、API 單筆失敗僅略過、無憑證時靜默跳過（不視為錯誤）；支援 --dry-run-fixture 離線測試。
+
+#### [07:10] workflows 變更（守則§4）
+- scrape.yml：加「Run Supreme Court scraper」步驟（continue-on-error，避免影響既有 52 筆抓取之 commit），沿用既有 secrets。原因：YJ 指示持續搜集最高法院裁判。
+- deploy.yml：copy data 前加「Rebuild holdings index」步驟（有 config 與 SC 資料檔時才跑），新案入庫後 keyword 索引自動重建。
+- 兩檔 yaml.safe_load 語法驗證通過。
+
+#### [07:15] Dry-run（離線，於 /tmp 複本執行）
+| 測項 | 結果 |
+|---|---|
+| 新的最高法院營業秘密案（mock TPSM 115台上999） | ✅ 正確新增，title/adDate 正規化、HTML 清除 |
+| 最高法院但無關案件（清償借款） | ✅ 正確排除 |
+| 已存在 jid（104台上1589） | ✅ 去重未重複 |
+| 合併後依日期排序 | ✅ |
+| 真實 data/ 檔 | 未被碰觸（dry-run 於 /tmp 複本） |
+- 註：首次真實執行將於下次 GitHub Actions 排程（每日 04:06 台灣時間）發生，屆時應檢查 Actions log。
+
+#### [07:20] 前端動態化＋build
+- /supreme 頁：寫死之「74 筆」「日期範圍 2009-03-19 ~ 2026-02-11」改由資料動態計算；資料說明改述自動增補機制；新增補案件（無 AI 摘要）在詳目面板顯示「尚未產製 AI 重點摘要」提示。README 增持續搜集一節。
+- vite build ✓ 2322 modules
+
+### 檔案異動摘要（Session 9）
+
+新增：
+- `scripts/scrape_sc.mjs`
+
+修改：
+- `.github/workflows/scrape.yml`、`.github/workflows/deploy.yml`
+- `src/pages/SupremeCourt.jsx` — 日期範圍動態化、自動增補揭露、無摘要提示
+- `README.md` — 持續搜集一節
+
+### 已知限制（Session 9）
+
+1. JList 為「7 日前異動」清單，每日執行即無缺漏；若 Actions 連續多日失敗會產生 gap，須以網站檢索補抓（可用 tw-judgment-downloader skill）。建議 YJ 每月瞄一眼 /supreme 最新日期。
+2. 開放資料 API 僅 00:00-06:00（台灣時間）可用，現行排程 04:06 在窗口內；如改排程須注意。
+3. 雙路檢索定義之既有漏案類型（刑§317-318 等，見 /supreme 揭露）同樣適用於自動增補。
+4. 新案件之 AI 摘要不自動產製——已於頁面、README、scrape log 三處揭露；補產流程見 Session 6-8。
+
+### 建議 YJ 本人抽查（Session 9）
+
+1. Push 後次日檢查 Actions「Daily Scrape」log 中「Run Supreme Court scraper」步驟有無錯誤。
+2. 約一週後看 /supreme 頁日期範圍是否更新（有新案時）。
+3. 決定是否要我建立 Cowork 排程任務：定期檢查新增補案件並自動補產 AI 摘要供您複核。
+
+#### [07:35] 建立 Cowork 排程任務（YJ 同意）
+- 任務 ID：sc-judgment-summary-backfill；每週一 09:00 執行。
+- 內容：git pull 取得每日增補 → 比對 fulltext 與 summaries/curated 覆蓋差集 → 有新案則依 Session 6-8 流程補產 AI 摘要草稿（reviewed=false）→ 本機 commit【不 push】→ 回報 YJ 複核後自行推送。比對分析不自動改寫，僅建議。
+- 注意：排程任務於 Claude 桌面 App 開啟時執行；App 關閉則下次啟動補跑。
+
+---
+
 最後修訂：2026-06-11 — Claude (Cowork)

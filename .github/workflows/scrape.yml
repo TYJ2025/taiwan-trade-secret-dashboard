@@ -32,6 +32,15 @@ jobs:
           JUDICIAL_PASS: ${{ secrets.JUDICIAL_PASS }}
         run: node scripts/scrape-api.js
 
+      # 2026-06-11 新增：最高法院營業秘密裁判每日增補（YJ 指示持續搜集）
+      # 失敗不中斷既有 52 筆抓取之 commit（continue-on-error）
+      - name: Run Supreme Court scraper
+        continue-on-error: true
+        env:
+          JUDICIAL_USER: ${{ secrets.JUDICIAL_USER }}
+          JUDICIAL_PASS: ${{ secrets.JUDICIAL_PASS }}
+        run: node scripts/scrape_sc.mjs
+
       - name: Check for changes
         id: changes
         run: |

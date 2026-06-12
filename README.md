@@ -26,6 +26,12 @@
 | 4 | `extract_fields.py` | Regex 抽取主文、當事人、判決結論、法官、援引法條 |
 | 5 | `build_dashboard.py` | 產生單一檔案 `index.html` |
 
+### 最高法院裁判持續搜集（2026-06-11 起）
+
+- `scripts/scrape_sc.mjs` 由 `.github/workflows/scrape.yml` 每日 04:06（台灣時間）執行：自司法院開放資料 API 之異動清單篩出最高法院（TPSV/TPSM）且「案由含營業秘密 OR 全文含營業秘密法」之裁判，去重後增補 `data/supreme_court_judgments_fulltext.json`。
+- push 後 `deploy.yml` 自動重跑 `build_holdings_index.py`，新案件即出現於 /supreme 與 /holdings 之關鍵字索引。
+- **AI 摘要不自動產製**：新增補案件之重點摘要（/supreme）與五議題認定摘要（/holdings curated）須在 Cowork session 以既有流程補產並經 YJ 複核（見 SESSION_LOG_2026-06-11 Session 6-8）。
+
 ### 重新建置
 
 ```bash

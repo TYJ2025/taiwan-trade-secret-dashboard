@@ -39,6 +39,13 @@ export default function SupremeCourt() {
     return Array.from(s).sort((a, b) => b.localeCompare(a));
   }, [data]);
 
+  // 日期範圍由資料動態計算（每日自動增補後不需改碼）
+  const dateRange = useMemo(() => {
+    if (!data || data.length === 0) return null;
+    const ds = data.map((x) => x.adDate).filter(Boolean).sort();
+    return { min: ds[0], max: ds[ds.length - 1] };
+  }, [data]);
+
   const filtered = useMemo(() => {
     if (!data) return [];
     const qLower = q.trim().toLowerCase();
@@ -89,7 +96,8 @@ export default function SupremeCourt() {
         </h1>
         <p className="text-sm text-[var(--text-secondary)] mt-1">
           以「法院＝最高法院、案由含營業秘密 OR 全文含營業秘密法」雙路檢索之聯集，共 <strong>{stats?.total ?? 0}</strong> 筆（
-          <strong>{stats?.judgments ?? 0}</strong> 判決 + <strong>{stats?.rulings ?? 0}</strong> 裁定），日期範圍 2009-03-19 ~ 2026-02-11。
+          <strong>{stats?.judgments ?? 0}</strong> 判決 + <strong>{stats?.rulings ?? 0}</strong> 裁定）
+          {dateRange && <>，日期範圍 {dateRange.min} ~ {dateRange.max}</>}。每日由司法院開放資料 API 自動增補。
         </p>
         <p className="text-xs text-[var(--text-muted)] mt-1">
           資料來源：司法院裁判書系統（judgment.judicial.gov.tw）。本頁資料與既有 492 筆判決儀表板統計獨立，不混入 KPI／損害賠償分析。
@@ -225,6 +233,11 @@ export default function SupremeCourt() {
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto max-h-[700px] p-4">
+                {!summaries[selected.jid] && summariesData && (
+                  <div className="mb-4 text-[11px] text-[var(--text-muted)] border border-dashed border-[var(--border)] p-2">
+                    本案為自動增補之新案件，尚未產製 AI 重點摘要；以下為司法院原文全文。
+                  </div>
+                )}
                 {summaries[selected.jid] && (
                   <div className="mb-4 bg-[rgba(200,164,90,0.07)] border-l-2 border-[var(--gold)] p-3">
                     <div className="flex items-center gap-2 text-[10px] text-[var(--text-muted)] mb-1.5">
@@ -274,8 +287,8 @@ export default function SupremeCourt() {
           <Building2 size={14} />
           <span>資料抽取說明</span>
         </div>
-        <p>· 案件數 74 筆＝法院＝最高法院、（案由含「營業秘密」OR 全文含「營業秘密法」）兩條檢索之聯集去重。</p>
-        <p>· 39 筆判決之全文沿用既有 `data/judgments_fulltext.json`；35 筆裁定全文於 2026-05-17 透過司法院 EXPORTFILE/reformat 端點下載。</p>
+        <p>· 案件範圍＝法院＝最高法院、（案由含「營業秘密」OR 全文含「營業秘密法」）兩條檢索之聯集去重。</p>
+        <p>· 初始 74 筆（截至 2026-02-11）以司法院網站檢索＋EXPORTFILE 端點建置；2026-06-11 起由 GitHub Actions 每日透過司法院開放資料 API 自動增補（`scripts/scrape_sc.mjs`）。新增補案件之「重點摘要」與 /holdings 認定摘要須另行產製，補產前僅顯示全文與關鍵字段落。</p>
         <p>· 全文以 regex 去除 HTML 標籤後保留；換行、空白已正規化。文末「中華民國 XX 年 XX 月 XX 日」之發文／公告日期保留原樣。</p>
         <p>· 本頁不參與損害賠償統計；最高法院多為法律審，判准金額之決定通常在事實審（智財法院／高等法院）。</p>
         <p>· 「重點摘要」（含 outcome 分類與爭點標籤）由 Claude 通讀 74 件全文產製，<strong>未經律師逐案複核</strong>（已複核者會標示）；「主文」引文經程式驗證為原文逐字，摘要與分類屬 AI 詮釋，引用前請以司法院原文為準。</p>

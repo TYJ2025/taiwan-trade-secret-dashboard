@@ -42,6 +42,16 @@ jobs:
             echo "Skipping damages extraction — fulltext/structured JSON not present in repo."
           fi
 
+      # 2026-06-11 新增：最高法院資料異動時自動重建見解 keyword 索引
+      # （curated AI 摘要不在 CI 產製，新案件補產前頁面僅顯示全文與 snippet）
+      - name: Rebuild holdings index
+        run: |
+          if [ -f config/holdings_topics.json ] && [ -f data/supreme_court_judgments_fulltext.json ]; then
+            python3 scripts/build_holdings_index.py
+          else
+            echo "Skipping holdings index — config or SC fulltext not present."
+          fi
+
       - name: Copy data to public
         run: mkdir -p public/data && cp -r data/* public/data/
 
