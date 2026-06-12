@@ -629,6 +629,11 @@ User: YJ
 - 內容：git pull 取得每日增補 → 比對 fulltext 與 summaries/curated 覆蓋差集 → 有新案則依 Session 6-8 流程補產 AI 摘要草稿（reviewed=false）→ 本機 commit【不 push】→ 回報 YJ 複核後自行推送。比對分析不自動改寫，僅建議。
 - 注意：排程任務於 Claude 桌面 App 開啟時執行；App 關閉則下次啟動補跑。
 
+#### [07:50] 異常處置：YJ 本機 commit 失敗
+- 原因：Claude 沙箱先前對掛載 repo 執行 git 操作（fetch／commit）時，沙箱對既有檔案無刪除權限，`.git/` 殘留 HEAD.lock、index.lock、maintenance.lock 等暫存檔，致 YJ 本機 git 拒絕 commit。責任在 agent 之沙箱 git 寫入操作。
+- 處置：Session 9 變更已由 agent 在沙箱完成 commit（2a8a0e7，成功但留 lock）；指示 YJ 本機 `rm -f` 三個 lock 檔後 push。
+- 教訓（後續遵守）：沙箱對掛載 repo 之 git 僅做唯讀操作（status/log/diff/ls-remote）；commit/fetch 等寫入操作一律交由 YJ 本機腳本執行，避免再產生無法清除之 lock 檔。
+
 ---
 
 最後修訂：2026-06-11 — Claude (Cowork)
