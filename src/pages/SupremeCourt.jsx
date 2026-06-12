@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useSupremeCourt, useScSummaries, getJudicialUrl } from '../hooks/useData';
+import { useSupremeCourt, useScSummaries, useScMeta, getJudicialUrl } from '../hooks/useData';
 import { ExternalLink, Search, FileText, Scale, AlertCircle, Building2, Sparkles } from 'lucide-react';
 
 // outcome 顏色：廢棄／發回類＝醒目（值得讀）、駁回類＝中性、其他＝弱化
@@ -27,6 +27,7 @@ export default function SupremeCourt() {
   const { data, loading, error } = useSupremeCourt();
   const { data: summariesData } = useScSummaries();
   const summaries = summariesData?.cases || {};
+  const { meta } = useScMeta();
   const [q, setQ] = useState('');
   const [docType, setDocType] = useState('all'); // all / 判決 / 裁定
   const [caseType, setCaseType] = useState('all'); // all / 刑事 / 民事
@@ -49,16 +50,19 @@ export default function SupremeCourt() {
   const filtered = useMemo(() => {
     if (!data) return [];
     const qLower = q.trim().toLowerCase();
-    return data.filter((x) => {
-      if (docType !== 'all' && !x.title.endsWith(docType)) return false;
-      if (caseType !== 'all' && !x.title.includes(caseType)) return false;
-      if (year !== 'all' && !x.adDate?.startsWith(year)) return false;
-      if (qLower) {
-        const hay = (x.title + x.reason + (x.excerpt || '') + (x.fullText || '')).toLowerCase();
-        if (!hay.includes(qLower)) return false;
-      }
-      return true;
-    });
+    return data
+      .filter((x) => {
+        if (docType !== 'all' && !x.title.endsWith(docType)) return false;
+        if (caseType !== 'all' && !x.title.includes(caseType)) return false;
+        if (year !== 'all' && !x.adDate?.startsWith(year)) return false;
+        if (qLower) {
+          const hay = (x.title + x.reason + (x.excerpt || '') + (x.fullText || '')).toLowerCase();
+          if (!hay.includes(qLower)) return false;
+        }
+        return true;
+      })
+      // 明確依日期新到舊排序——資料檔順序不可依賴（每日增補腳本以日期舊到新寫入）
+      .sort((a, b) => (b.adDate || '').localeCompare(a.adDate || ''));
   }, [data, q, docType, caseType, year]);
 
   const stats = useMemo(() => {
@@ -97,7 +101,12 @@ export default function SupremeCourt() {
         <p className="text-sm text-[var(--text-secondary)] mt-1">
           以「法院＝最高法院、案由含營業秘密 OR 全文含營業秘密法」雙路檢索之聯集，共 <strong>{stats?.total ?? 0}</strong> 筆（
           <strong>{stats?.judgments ?? 0}</strong> 判決 + <strong>{stats?.rulings ?? 0}</strong> 裁定）
-          {dateRange && <>，日期範圍 {dateRange.min} ~ {dateRange.max}</>}。每日由司法院開放資料 API 自動增補。
+          {dateRange && <>，日期範圍 {dateRange.min} ~ {dateRange.max}</>}。
+          {meta && (
+            <span className="inline-block ml-1 px-2 py-0.5 text-xs bg-[var(--bg-secondary)] border border-[var(--border)] text-[var(--text-secondary)]">
+              收錄截止：{meta.lastChecked}（{meta.method === 'daily_api' ? '每日自動檢查' : '人工檢索'}）
+            </span>
+          )}
         </p>
         <p className="text-xs text-[var(--text-muted)] mt-1">
           資料來源：司法院裁判書系統（judgment.judicial.gov.tw）。本頁資料與既有 492 筆判決儀表板統計獨立，不混入 KPI／損害賠償分析。

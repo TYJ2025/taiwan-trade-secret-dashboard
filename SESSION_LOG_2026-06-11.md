@@ -634,6 +634,11 @@ User: YJ
 - 處置：Session 9 變更已由 agent 在沙箱完成 commit（2a8a0e7，成功但留 lock）；指示 YJ 本機 `rm -f` 三個 lock 檔後 push。
 - 教訓（後續遵守）：沙箱對掛載 repo 之 git 僅做唯讀操作（status/log/diff/ls-remote）；commit/fetch 等寫入操作一律交由 YJ 本機腳本執行，避免再產生無法清除之 lock 檔。
 
+#### [08:20] 上線驗證＋排序修正
+- 線上 /supreme 驗證：74 件 outcome badge／爭點標籤／動態日期範圍／自動增補揭露全部正常。
+- 發現問題：列表標示「依日期新到舊」但實際依資料檔原始順序（98台抗170 在首位）；且 scrape_sc.mjs 增補時以日期舊→新寫檔，明日首次增補後列表會整個反轉。
+- 修正：SupremeCourt.jsx filtered 加明確 `sort` 依 adDate 降冪；build ✓。**此修正尚未 push**，待 YJ 下次推送（或週一排程任務 commit 時一併）。
+
 ---
 
 最後修訂：2026-06-11 — Claude (Cowork)

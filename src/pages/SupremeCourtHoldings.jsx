@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useHoldingsIndex, useCuratedHoldings, getJudicialUrl } from '../hooks/useData';
+import { useHoldingsIndex, useCuratedHoldings, useScMeta, getJudicialUrl } from '../hooks/useData';
 import {
   Lock, Shield, Coins, Calculator, Users, Key, Gavel, ExternalLink, Download, Copy, Check,
   FileText, Scale, AlertCircle, Filter, ChevronRight, ChevronDown
@@ -40,6 +40,7 @@ const NATURE_STYLE = {
 export default function SupremeCourtHoldings() {
   const { data, loading, error } = useHoldingsIndex();
   const { data: curated } = useCuratedHoldings();
+  const { meta: scMeta } = useScMeta();
   const [selectedTopic, setSelectedTopic] = useState(null); // null = 用預設
   const [docTypeFilter, setDocTypeFilter] = useState('all'); // all / 判決 / 裁定
   const [excludeProcedural, setExcludeProcedural] = useState(false); // 排除含程序駁回語句之裁判
@@ -569,7 +570,9 @@ export default function SupremeCourtHoldings() {
         <p>· 最高法院為法律審，判准金額之具體酌定多在事實審；本索引之「損害賠償」段落主要價值在計算方法論（民§216、民訴§222 II、合理權利金、懲罰性賠償）之法律意見，非金額本身。</p>
         <p>· 「程序駁回語句」標記（{stats?.proceduralCaseCount ?? '—'} 筆）以結論性用語偵測（如「上訴自非合法」「未合法表明上訴理由」），僅表示裁判<strong>含</strong>此類語句、非案件定性——多上訴人案件常一部程序駁回、一部實體論述。刻意不以「違背法律上之程式」偵測，因刑事判決例稿引用刑訴§395 標準時必然出現該語，會誤標實體判決。</p>
         <p>· 「認定摘要」「跨案比對分析」由 Claude 通讀判決全文產製，<strong>未經律師逐案複核</strong>（已複核者會標示）；「可引註原文」句經程式驗證為判決原文逐字照錄，摘要與定性則屬 AI 詮釋，引用前請以司法院原文為準。五議題均已產製；113台上274 之損害計算論述係商標法§71 I (2) 脈絡（該案實體爭點為商標侵權），參照營業秘密法§13 時請注意條文依據之別。</p>
-        <p>· 本頁僅含最高法院 {stats?.totalSC} 筆裁判；事實審見解（智財商業法院、智財法院、地院）未納入。</p>
+        <p>· 本頁僅含最高法院 {stats?.totalSC} 筆裁判
+          {scMeta && <>（收錄截止：{scMeta.lastChecked}，{scMeta.method === 'daily_api' ? '每日自動檢查' : '人工檢索'}）</>}
+          ；事實審見解（智財商業法院、智財法院、地院）未納入。</p>
         <p>· 索引預先在 build 階段產出（`scripts/build_holdings_index.py`）；新案件入庫後須重跑腳本才會更新。</p>
       </div>
     </div>

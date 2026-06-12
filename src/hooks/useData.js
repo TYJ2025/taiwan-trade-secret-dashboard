@@ -208,6 +208,34 @@ export function useCuratedHoldings() {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 最高法院收錄狀態 meta（收錄截止時點；scrape_sc.mjs 每次執行時更新）
+// ─────────────────────────────────────────────────────────────────
+
+let _scMetaCache = null;
+
+export function useScMeta() {
+  const [meta, setMeta] = useState(_scMetaCache || null);
+
+  useEffect(() => {
+    if (_scMetaCache) return;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/sc_meta.json`);
+        if (!res.ok) return;
+        const json = await res.json();
+        _scMetaCache = json;
+        setMeta(json);
+      } catch {
+        // 靜默
+      }
+    }
+    load();
+  }, []);
+
+  return { meta };
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 最高法院 74 件逐案重點摘要（AI 產製；/supreme 頁用）
 // ─────────────────────────────────────────────────────────────────
 

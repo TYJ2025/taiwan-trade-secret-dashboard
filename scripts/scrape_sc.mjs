@@ -29,6 +29,20 @@ import { authenticate, fetchJList, fetchJDoc, delay } from './utils/judicial-api
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SC_FILE = path.join(__dirname, '..', 'data', 'supreme_court_judgments_fulltext.json');
+const META_FILE = path.join(__dirname, '..', 'data', 'sc_meta.json');
+
+/** 每次成功檢查（含無新案）都更新 meta，供前端顯示「收錄截止時點」 */
+function writeMeta(totalCases, addedCount, method) {
+  const meta = {
+    lastChecked: new Date().toISOString().slice(0, 10),
+    lastCheckedAt: new Date().toISOString(),
+    method, // 'daily_api' | 'manual_website'
+    totalCases,
+    lastRunAdded: addedCount,
+  };
+  fs.writeFileSync(META_FILE, JSON.stringify(meta, null, 1), 'utf-8');
+  console.log(`meta 已更新：lastChecked=${meta.lastChecked}, total=${totalCases}, added=${addedCount}`);
+}
 
 // ─── 純函式（可離線測試） ─────────────────────────────────────
 
@@ -161,6 +175,7 @@ async function main() {
   const { all, added } = mergeCases(existing, incoming);
   if (added.length === 0) {
     console.log('無新增案件，資料檔不變動。');
+    writeMeta(existing.length, 0, fixtureIdx !== -1 ? 'dry_run' : 'daily_api');
     return;
   }
   for (const x of added) console.log(`  ✓ 新增：${x.title}（${x.adDate}，${x.charCount.toLocaleString()} 字）`);
@@ -171,6 +186,7 @@ async function main() {
     process.exit(1);
   }
   fs.writeFileSync(SC_FILE, JSON.stringify(all, null, 1), 'utf-8');
+  writeMeta(all.length, added.length, fixtureIdx !== -1 ? 'dry_run' : 'daily_api');
   console.log(`已寫入 ${SC_FILE}：${existing.length} → ${all.length} 筆`);
   console.log('提醒：新案件之 AI 摘要（curated）尚未產製，請於 Cowork session 補產後複核。');
 }

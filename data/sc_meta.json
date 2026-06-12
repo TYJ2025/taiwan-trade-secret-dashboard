@@ -1,0 +1,8 @@
+{
+ "lastChecked": "2026-05-17",
+ "lastCheckedAt": "2026-05-17T00:00:00",
+ "method": "manual_website",
+ "totalCases": 74,
+ "lastRunAdded": null,
+ "note": "初始值＝資料集建置時之人工檢索；2026-06-12 起由每日 API 排程自動更新本檔"
+}
