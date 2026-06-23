@@ -34,6 +34,12 @@ const SC_FILE = path.join(ROOT, 'data', 'supreme_court_judgments_fulltext.json')
 const SUMMARY_FILE = path.join(ROOT, 'data', 'supreme_court_case_summaries.json');
 const BASELINE_FILE = path.join(ROOT, 'data', 'sc_weekly_baseline.json');
 const REPORTS_DIR = path.join(ROOT, 'reports');
+// feed 必須放 data/：deploy.yml 只把 data/* 複製進站台（public/data 為 gitignore、CI 由 data/ 重生）。
+// 部署後可由 https://tyj2025.github.io/taiwan-trade-secret-dashboard/data/runs.json 跨域 fetch（Pages 提供 CORS *）。
+const RUNS_FILE = path.join(ROOT, 'data', 'runs.json');
+const PAGES_DATA = 'https://tyj2025.github.io/taiwan-trade-secret-dashboard/data';
+const GH_BLOB = 'https://github.com/TYJ2025/taiwan-trade-secret-dashboard/blob/main'; // reports/ 不部署到 Pages，改連 GitHub blob
+const MAX_RUNS = 26; // 約半年週數
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const NO_FETCH = process.argv.includes('--no-fetch');
@@ -102,6 +108,33 @@ function maybeFetch() {
     return { ran: true, ok: false };
   }
   return { ran: true, ok: true };
+}
+
+/** 追加一筆 run 紀錄到 data/runs.json feed（供 main-board 儀表板 fetch 顯示） */
+function writeRunFeed({ today, status, newCount, totalCount, missingSummaries, reportFile }) {
+  const prev = readJson(RUNS_FILE) || { runs: [] };
+  const entry = {
+    date: today,
+    ranAt: new Date().toISOString(),
+    status, // 'first-run' | 'no-new' | 'new-cases'
+    newCount,
+    totalCount,
+    missingSummaries,
+    reportFile: `reports/${reportFile}`,
+    reportUrl: `${GH_BLOB}/reports/${reportFile}`,
+  };
+  // 同日重跑則取代當日該筆，避免重複
+  const runs = [entry, ...(prev.runs || []).filter((r) => r.date !== today)].slice(0, MAX_RUNS);
+  const feed = {
+    schema: 'sc-weekly-runs/v1',
+    note: '最高法院營業秘密每週更新執行紀錄；由 scripts/weekly_sc_renewal.mjs 維護，供儀表板 fetch。',
+    feedUrl: `${PAGES_DATA}/runs.json`,
+    updatedAt: entry.ranAt,
+    latest: entry,
+    runs,
+  };
+  fs.writeFileSync(RUNS_FILE, JSON.stringify(feed, null, 1), 'utf-8');
+  console.log(`✓ run feed 已更新：${path.relative(ROOT, RUNS_FILE)}（保留 ${runs.length} 筆；部署後 ${PAGES_DATA}/runs.json）`);
 }
 
 // ─── 報告產製 ─────────────────────────────────────────────────
@@ -285,6 +318,17 @@ function main() {
   };
   fs.writeFileSync(BASELINE_FILE, JSON.stringify(newBaseline, null, 1), 'utf-8');
   console.log(`✓ 週基準已更新：${path.relative(ROOT, BASELINE_FILE)}（${current.length} 筆）`);
+
+  // run feed（供儀表板顯示）
+  const status = isFirstRun ? 'first-run' : addedRecs.length > 0 ? 'new-cases' : 'no-new';
+  writeRunFeed({
+    today,
+    status,
+    newCount: addedRecs.length,
+    totalCount: current.length,
+    missingSummaries: missing.length,
+    reportFile: `SC_WEEKLY_${today}.md`,
+  });
 
   console.log('\n提醒：本腳本未執行 git commit/push。請 YJ 本機 push（見報告 §5）。');
 }

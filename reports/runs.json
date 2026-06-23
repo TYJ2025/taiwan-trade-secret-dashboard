@@ -1,0 +1,25 @@
+{
+ "updatedAt": "2026-06-14T08:02:26.480Z",
+ "latest": {
+  "date": "2026-06-14",
+  "ranAt": "2026-06-14T08:02:26.480Z",
+  "status": "no-new",
+  "newCount": 0,
+  "totalCount": 74,
+  "missingSummaries": 0,
+  "reportFile": "reports/SC_WEEKLY_2026-06-14.md",
+  "reportUrl": "https://tyj2025.github.io/taiwan-trade-secret-dashboard/reports/SC_WEEKLY_2026-06-14.md"
+ },
+ "runs": [
+  {
+   "date": "2026-06-14",
+   "ranAt": "2026-06-14T08:02:26.480Z",
+   "status": "no-new",
+   "newCount": 0,
+   "totalCount": 74,
+   "missingSummaries": 0,
+   "reportFile": "reports/SC_WEEKLY_2026-06-14.md",
+   "reportUrl": "https://tyj2025.github.io/taiwan-trade-secret-dashboard/reports/SC_WEEKLY_2026-06-14.md"
+  }
+ ]
+}

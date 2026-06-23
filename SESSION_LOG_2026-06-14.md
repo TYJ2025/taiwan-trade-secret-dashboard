@@ -128,4 +128,16 @@ User: YJ
 
 ---
 
+---
+
+## Session (續) — 為儀表板新增 run feed
+
+### [意圖] 讓每週執行結果可顯示在 YJ 的 main-board.vercel.app
+- 背景：YJ 從未收到通知（app 內通知需 app 前景、且任務尚未首跑）。YJ 選擇「儀表板面板」管道。
+- 設計：`weekly_sc_renewal.mjs` 每次正式執行時，除報告外另**追加一筆 run 紀錄**到 `reports/runs.json` 並鏡像 `public/data/runs.json`（後者經 deploy 部署為 GitHub Pages 之 `/data/runs.json`，CORS `*` 可供 vercel 儀表板跨域 fetch）。
+- feed 結構：`{ updatedAt, latest, runs:[{date,ranAt,status,newCount,totalCount,missingSummaries,reportFile,reportUrl}] }`，保留最近 26 筆。
+- 預期：dry-run 不寫；正式跑後兩檔皆有 1 筆且 latest 一致。
+- 待 YJ：提供 main-board 原始碼位置／資料來源，才能在儀表板加通知區塊。
+- 實際結果：<待回填>
+
 最後修訂：2026-06-14 — Claude (Cowork)
