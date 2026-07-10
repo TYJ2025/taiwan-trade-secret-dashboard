@@ -2,18 +2,38 @@
  "schema": "sc-weekly-runs/v1",
  "note": "最高法院營業秘密每週更新執行紀錄；由 scripts/weekly_sc_renewal.mjs 維護，供儀表板 fetch。",
  "feedUrl": "https://tyj2025.github.io/taiwan-trade-secret-dashboard/data/runs.json",
- "updatedAt": "2026-06-22T00:08:43.081Z",
+ "updatedAt": "2026-07-06T00:08:38.283Z",
  "latest": {
-  "date": "2026-06-22",
-  "ranAt": "2026-06-22T00:08:43.081Z",
+  "date": "2026-07-06",
+  "ranAt": "2026-07-06T00:08:38.283Z",
   "status": "no-new",
   "newCount": 0,
   "totalCount": 74,
   "missingSummaries": 0,
-  "reportFile": "reports/SC_WEEKLY_2026-06-22.md",
-  "reportUrl": "https://github.com/TYJ2025/taiwan-trade-secret-dashboard/blob/main/reports/SC_WEEKLY_2026-06-22.md"
+  "reportFile": "reports/SC_WEEKLY_2026-07-06.md",
+  "reportUrl": "https://github.com/TYJ2025/taiwan-trade-secret-dashboard/blob/main/reports/SC_WEEKLY_2026-07-06.md"
  },
  "runs": [
+  {
+   "date": "2026-07-06",
+   "ranAt": "2026-07-06T00:08:38.283Z",
+   "status": "no-new",
+   "newCount": 0,
+   "totalCount": 74,
+   "missingSummaries": 0,
+   "reportFile": "reports/SC_WEEKLY_2026-07-06.md",
+   "reportUrl": "https://github.com/TYJ2025/taiwan-trade-secret-dashboard/blob/main/reports/SC_WEEKLY_2026-07-06.md"
+  },
+  {
+   "date": "2026-06-29",
+   "ranAt": "2026-06-29T00:08:52.211Z",
+   "status": "no-new",
+   "newCount": 0,
+   "totalCount": 74,
+   "missingSummaries": 0,
+   "reportFile": "reports/SC_WEEKLY_2026-06-29.md",
+   "reportUrl": "https://github.com/TYJ2025/taiwan-trade-secret-dashboard/blob/main/reports/SC_WEEKLY_2026-06-29.md"
+  },
   {
    "date": "2026-06-22",
    "ranAt": "2026-06-22T00:08:43.081Z",

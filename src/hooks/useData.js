@@ -177,6 +177,63 @@ export function useHoldingsIndex() {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 事實審（智慧財產法院）見解預索引（與 SC 索引平行；前端載入時合併）
+// 來源：scripts/build_holdings_index_factcourt.py → factcourt_holdings_index.json
+// ─────────────────────────────────────────────────────────────────
+
+let _factHoldingsCache = null;
+
+export function useFactcourtHoldings() {
+  const [data, setData] = useState(_factHoldingsCache || null);
+  const [loading, setLoading] = useState(!_factHoldingsCache);
+
+  useEffect(() => {
+    if (_factHoldingsCache) return;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/factcourt_holdings_index.json`);
+        if (!res.ok) return; // 缺檔靜默：智財索引屬加值層，不影響 SC 索引頁
+        const json = await res.json();
+        _factHoldingsCache = json;
+        setData(json);
+      } catch {
+        // 靜默
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  return { data, loading };
+}
+
+// 事實審 curated holdings（Phase 2 AI 認定摘要；缺檔時靜默）
+let _factCuratedCache = null;
+
+export function useFactcourtCurated() {
+  const [data, setData] = useState(_factCuratedCache || null);
+
+  useEffect(() => {
+    if (_factCuratedCache) return;
+    async function load() {
+      try {
+        const res = await fetch(`${BASE}data/factcourt_holdings_curated.json`);
+        if (!res.ok) return;
+        const json = await res.json();
+        _factCuratedCache = json;
+        setData(json);
+      } catch {
+        // 靜默
+      }
+    }
+    load();
+  }, []);
+
+  return { data };
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 最高法院 curated holdings（AI 產製逐案摘要＋比對分析；可能僅部分議題有資料）
 // ─────────────────────────────────────────────────────────────────
 
