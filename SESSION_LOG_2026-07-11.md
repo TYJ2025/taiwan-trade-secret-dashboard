@@ -66,7 +66,8 @@
 - 指令：update_scheduled_task(taskId=factcourt-holdings-batch, enabled=false)。
 - 預期結果：任務停用成功，不再自動執行。
 - 實際結果：停用成功（update_scheduled_task 回覆 disabled），並將任務描述改為「[已完成並停用 2026-07-11]」。
-- 異常／差異：無。
+  （09:40 更正）該停用之 enabled=false 實際未持久化：09:36 排程仍被觸發，09:39 list_scheduled_tasks 顯示 enabled=true 且 nextRunAt 仍排定 12:35。已由 Session 09:36 重新停用；復查時 enabled=false 且描述顯示「[已完成並停用 2026-07-11]…」，研判前次之描述變更有生效、enabled 變更未生效（或本次為停用前已排入佇列之執行）。
+- 異常／差異：（09:40 更正）enabled 停用未生效，原記載「無」有誤。
 - 後續行動：提醒 YJ 於本機執行 rebuild_and_push.command 後前端始會更新；全部條目 reviewed 均為 false，引用前請逐筆核對司法院原文。
 
 ## Session 09:36 — 智財法院見解摘要續產批次（排程，第 11 次執行）
